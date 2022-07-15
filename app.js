@@ -38,7 +38,7 @@ app.listen(3000)
 
 // Middleware
 function isAuth(req, res, next) {
-    if (req.session.cookie.auth) {
+    if (session.auth) {
       next();
     } else {
       res.redirect('/');
@@ -69,19 +69,18 @@ app.get('/', (req, res) => {
 
 app.get('/items/:id', (req, res) => {
     connection.query("SELECT * FROM items WHERE id=?", [req.params.id],
-        (err, data, fields) => {
+    (err, data, fields) => {
+        if (err) throw err;
+        connection.query("SELECT * FROM comment_"+String(data[0].id),
+        (err, data2, field) => {
             if (err) throw err;
-            connection.query("SELECT * FROM comment_"+String(data[0].id),
-            (err, data2, field) => {
-                if (err) throw err;
-                
-                console.log(data2);
-                res.render('item', {
-                    item: data[0],
-                    comments: data2,
-                    auth: session.auth
-                })
-            })        
+            
+            res.render('item', {
+                item: data[0],
+                comments: data2,
+                auth: session.auth
+            })
+        })        
     });
 })
 
@@ -115,6 +114,7 @@ app.post('/register', (req, res) =>{
                     if(err) throw err;
                     session.auth = true;
                     session.freeUsername = true;
+                    session.username = [req.body.username][0];
                 })
             }
         });
@@ -134,6 +134,7 @@ app.post('/login', (req,res)=> {
         {
             redir = '/';
             session.auth = true;
+            session.username = [req.body.username][0];
         }
         else
         {
@@ -142,6 +143,7 @@ app.post('/login', (req,res)=> {
         res.redirect(redir);
     })
 })
+
 
 app.post('/store', (req, res) => {
     connection.query(
@@ -180,4 +182,13 @@ app.post('/delete', (req, res) =>{
   
         res.redirect('/')
     })
+})
+
+app.post('/addCommentary', (req, res) => {
+    connection.query(
+        "INSERT INTO comment_"+String([req.body.id])+" (author, commentary) VALUES (?, ?)",
+        [session.username, [req.body.commentary]], (err, data, fields) => {
+          if (err) throw err;
+      });
+    res.redirect('/')
 })

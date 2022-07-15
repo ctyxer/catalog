@@ -102,6 +102,7 @@ html{
 
 
 .item__block{
+  margin-top: 5px;
   padding: 17px;
   width: min-content;
   height: auto;
@@ -135,7 +136,7 @@ html{
 
 .comment{
   margin: 20px;
-  padding: 10px;
+  padding: 5px;
   border-radius: 16px;
   border: 4px solid blue;
   display: block;
@@ -143,4 +144,13 @@ html{
   height: auto;
   margin-left: auto;
   margin-right: auto;
+}
+
+.comment__description{
+  margin: 3px; 
+  width: 357px; 
+  height: 20px; 
+  border: 2px solid blue; 
+  background-color: lightblue; 
+  border-radius: 4px;
 }

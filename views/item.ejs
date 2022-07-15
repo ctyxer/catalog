@@ -2,16 +2,7 @@
 
 <%- include('particles/navigation.ejs') %>
 
-<div class="section__item">
-    <h2 class="section__title">
-        <%= item.title %>
-    </h2>
-    <img class="section__image" src="/img/<%= item.image %>">
-    <p class="section__description"><%= item.description %></p>
-</div>
-
 <% if(auth) { %>
-
 <form action="/update" method="post">
     <div class="item__block">
         <div class="form-group">
@@ -38,11 +29,34 @@
 </form>
 <% } %>
 
+
+<div class="section__item">
+    <h2 class="section__title">
+        <%= item.title %>
+    </h2>
+    <img class="section__image" src="/img/<%= item.image %>">
+    <p class="section__description"><%= item.description %></p>
+</div>
+
 <% for (let i = 0; i < comments.length; i++) { %>
+<div class="comment">
+    <p><%=comments[i].author%></p>
+    <p class="section__description"><%=comments[i].commentary%></p>
+</div>
+<% } %>
+
+<% if(auth) { %>
+<form action="/addCommentary" method="post">
+    
     <div class="comment">
-        <p><%=comments[i].author%></p>
-        <p class="section__description"><%=comments[i].commentary%></p>
+        <p style="margin-left: 5px;">Добавить комментарий</p>
+        <span>
+            <input type="text" name="commentary" class="comment__description">
+            <input type="hidden" value="<%= item.id %>" type="text" name="id">
+            <input type="submit" class="form-button" value="Обновить">
+        </span>
     </div>
+</form>
 <% } %>
 
 <%- include('particles/footer.ejs') %>
