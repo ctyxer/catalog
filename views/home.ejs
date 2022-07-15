@@ -1,0 +1,23 @@
+<%- include('particles/header.ejs') %>
+
+<%- include('particles/navigation.ejs') %>
+
+<% for (let i = 0; i < items.length; i++) { %>
+
+    <div class="section">
+        <a href="/items/<%= items[i].id %>">
+            <h2 class="section__title"><%= items[i].title %></h2>
+            <img class="section__image" src="img/<%= items[i].image %>">
+        </a>
+        <p class="section__description"><%= items[i].description %></p>
+        <% if(auth) { %>
+        <form action="/delete" method="post">
+            <input type="hidden" value="<%= items[i].id %>" type="text" name="id">
+            <input class="form-button" type="submit" value="Удалить">
+        </form>
+        <% } %>
+    </div>
+
+<% } %>
+
+<%- include('particles/footer.ejs') %>

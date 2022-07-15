@@ -1,0 +1,146 @@
+html{
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.section{
+  margin: 20px;
+  padding: 20px;
+  border-radius: 16px;
+  border: 4px solid blue;
+  display: inline-block;
+  width: min-content;
+  height: auto;
+}
+
+.section__item{
+  margin: 20px;
+  padding: 20px;
+  border-radius: 16px;
+  border: 4px solid blue;
+  display: inline-block;
+  width: 300px;
+  height: auto;
+  display: block;
+  margin-left: auto;
+  margin-right: auto 
+}
+
+.section__image{
+  width: 250px;
+  height: 250px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto 
+}
+
+.section__title{
+  padding: 6px;
+  margin-top: 0;
+  text-align: center;
+}
+
+.section__description{
+  border: 2px solid lightblue;
+  border-radius: 16px;
+  background-color: lightblue;
+  padding: 7px;
+  height: auto;
+}
+
+.form-button{
+  background-color: blue;
+  color: white;
+  padding: 5px;
+  border: 2px solid black;
+  border-radius: 8px
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group__label {
+  display: block;
+  margin-bottom: 3px;
+  margin-left: auto;
+  margin-right: auto 
+}
+
+
+.form-group__input {
+  padding: 7px;
+  border: 2px solid black;
+  border-radius: 4px;
+}
+.err__form-group__input{
+  padding: 7px;
+  border: 2px solid red;
+  border-radius: 4px;
+}
+
+
+.navigation{
+  margin: 0px;
+  background-color: black
+}
+
+.navigation__item{
+  display: inline-block;
+  text-decoration: none;
+  margin: 5px;
+  border: 2px solid black;
+  border-radius: 4px;
+  background-color: black;
+  color: white;
+  font-size: 11pt;
+}
+
+.navigation__item:hover{
+  border: 2px solid #3b3b3b;
+  background-color: #3b3b3b;
+}
+
+
+.item__block{
+  padding: 17px;
+  width: min-content;
+  height: auto;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  border: 2px solid lightblue;
+  border-radius: 16px;
+  background-color: lightblue;
+  color: black;
+}
+
+.login__title{
+  font-size: large;
+  font-weight: bold;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.login__link{
+  font-size: large;
+  font-weight: bold;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  text-decoration: none;
+}
+
+.comment{
+  margin: 20px;
+  padding: 10px;
+  border-radius: 16px;
+  border: 4px solid blue;
+  display: block;
+  width: 450px;
+  height: auto;
+  margin-left: auto;
+  margin-right: auto;
+}

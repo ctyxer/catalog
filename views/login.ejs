@@ -1,0 +1,30 @@
+<%- include('particles/header.ejs') %>
+
+<%- include('particles/navigation.ejs') %>
+
+<p class='login__title'>Войти в аккаунт</p>
+<form action="/login" method="post" class="item__block">
+    <div class="form-group">
+        <label for="username" class="form-group__label">Имя пользователя</label>
+        <% if(loyalPass != false) { %>
+        <input type="text" class="form-group__input" name="username">
+        <% }else{ %>
+        <input type="text" class="err__form-group__input" name="username">
+        <% } %>
+    </div>
+    <div class="form-group">
+        <label for="password" class="form-group__label">Пароль</label>
+        <% if(loyalPass != false) { %>
+        <input type="password" class="form-group__input" name="password">
+        <% }else{ %>
+        <input type="password" class="err__form-group__input" name="password">
+        <% } %>
+    </div>
+    <% if(loyalPass == false) { %>
+        <p style="color: red;">Имя или пароль неверны</p>
+    <% } %>
+    <input type="submit" value="Войти" class="form-button">
+</form>
+<p class="login__link">Еще не зарегестрированы? <a href="/register">Зарегестрироваться</a></p>
+
+<%- include('particles/footer.ejs') %>

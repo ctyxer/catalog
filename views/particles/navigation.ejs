@@ -1,0 +1,16 @@
+<div class="navigation">
+    <span>
+        <form action="/logout" method="post">
+            <a href="/" class="navigation__item">Главная</a>
+            
+            <% if(auth) { %>
+            <a href="/add" class="navigation__item">Добавить</a>
+            
+            <input class="navigation__item" type="submit" value="Выйти">
+                
+            <% } else {%>
+            <a href="/login" class="navigation__item">Авторизоваться</a>
+            <% } %>
+        </form>
+    </span>
+</div>
