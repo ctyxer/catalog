@@ -1,59 +1,80 @@
 <%- include('particles/header.ejs') %>
 
 <%- include('particles/navigation.ejs') %>
-
-<% if(auth) { %>
-<form action="/update" method="post">
-    <div class="item__block">
-        <div class="form-group">
-            <label class="form-group__label" for="title">title</label>
-            <input value="<%= item.title %>" class="form-group__input" type="text" name="title"
-                placeholder="title">
-        </div>
-
-        <div class="form-group">
-            <label class="form-group__label" for="image">image</label>
-            <input value="<%= item.image %>" class="form-group__input" type="text" name="image"
-                placeholder="image">
-        </div>
-
-        <div class="form-group">
-            <label class="form-group__label" for="description">description</label>
-            <input value="<%= item.description %>" class="form-group__input" type="text" name="description"
-                placeholder="description">
-        </div>
-
-        <input type="hidden" value="<%= item.id %>" type="text" name="id">
-        <input class="form-button" type="submit" value="Обновить">
+<center>
+    <div class="section__item">
+        <h2 class="section__title">
+            <%= item.title %>
+        </h2>
+        <img class="section__image" src="/img/<%= item.image %>">
+        <p class="section__description">
+            <%= item.description %>
+        </p>
     </div>
-</form>
-<% } %>
 
+    <% if(auth) { %>
+        <div class="item__rename">
+            <form action="/update" method="post">
+                <div class="form-group">
+                    <label class="form-group__label" for="title">title</label>
+                    <input value="<%= item.title %>" class="form-group__input" type="text" name="title"
+                        placeholder="title">
+                </div>
+            
+                <div class="form-group">
+                    <label class="form-group__label" for="image">image</label>
+                    <input value="<%= item.image %>" class="form-group__input" type="text" name="image"
+                        placeholder="image">
+                </div>
+            
+                <div class="form-group">
+                    <label class="form-group__label" for="description">description</label>
+                    <input value="<%= item.description %>" class="form-group__input" type="text" name="description"
+                        placeholder="description">
+                </div>        
+                <input type="hidden" value="<%= item.id %>" type="text" name="id">
+                <input class="form-button" type="submit" value="Обновить">
+            </form>
+        </div>
+    <% } %>
+</center>
+<p class="comment__title">Комментарии<%if(comments.length==0){%> отсутствуют<%}else{%>:<%}%></p>
 
-<div class="section__item">
-    <h2 class="section__title">
-        <%= item.title %>
-    </h2>
-    <img class="section__image" src="/img/<%= item.image %>">
-    <p class="section__description"><%= item.description %></p>
-</div>
+<% for (let i=0; i < comments.length; i++) { %>
 
-<% for (let i = 0; i < comments.length; i++) { %>
-<div class="comment">
-    <p><%=comments[i].author%></p>
-    <p class="section__description"><%=comments[i].commentary%></p>
+<div class="comment__block">
+    <div style="width: auto; padding: 0%;">
+        <p
+            style="width: max-content; color: blue; font-weight: bold; display: inline; margin-right: 10px;">
+            <%=comments[i].author%>
+        </p>
+        <p style="color: gray; display: inline; position: static; right: 100px; ">
+            Добавлено - <%=comments[i].date%>
+        </p>
+    </div>
+
+    <p class="comment__description">
+        <%=comments[i].commentary%>
+    </p>
+    <% if(comments[i].author == username){ %>
+    <form action="/deleteCommentary" method="post">
+        <input type="hidden" value="<%=comments[i].id%>" type="text" name="idComment">
+        <input type="hidden" value="<%= item.id %>" type="text" name="id">
+        <input type="submit" class="form-button" value="Удалить">
+    </form>
+    <% } %>
 </div>
 <% } %>
 
 <% if(auth) { %>
 <form action="/addCommentary" method="post">
-    
-    <div class="comment">
+
+    <div class="comment__block">
         <p style="margin-left: 5px;">Добавить комментарий</p>
         <span>
-            <input type="text" name="commentary" class="comment__description">
+            <input type="text" name="commentary" class="comment">
             <input type="hidden" value="<%= item.id %>" type="text" name="id">
-            <input type="submit" class="form-button" value="Обновить">
+            <input type="submit" class="form-button" value="Добавить">
         </span>
     </div>
 </form>

@@ -1,8 +1,12 @@
-html{
+html {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.section{
+body{
+  margin: 0%;
+}
+
+.section {
   margin: 20px;
   padding: 20px;
   border-radius: 16px;
@@ -12,7 +16,7 @@ html{
   height: auto;
 }
 
-.section__item{
+.section__item {
   margin: 20px;
   padding: 20px;
   border-radius: 16px;
@@ -20,34 +24,33 @@ html{
   display: inline-block;
   width: 300px;
   height: auto;
-  display: block;
-  margin-left: auto;
-  margin-right: auto 
 }
 
-.section__image{
+.section__image {
   width: 250px;
   height: 250px;
   display: block;
   margin-left: auto;
-  margin-right: auto 
+  margin-right: auto
 }
 
-.section__title{
+.section__title {
   padding: 6px;
   margin-top: 0;
   text-align: center;
 }
 
-.section__description{
+.section__description {
   border: 2px solid lightblue;
   border-radius: 16px;
   background-color: lightblue;
   padding: 7px;
   height: auto;
+  width: max-content;
+  min-width: 280px;
 }
 
-.form-button{
+.form-button {
   background-color: blue;
   color: white;
   padding: 5px;
@@ -63,7 +66,7 @@ html{
   display: block;
   margin-bottom: 3px;
   margin-left: auto;
-  margin-right: auto 
+  margin-right: auto
 }
 
 
@@ -72,36 +75,37 @@ html{
   border: 2px solid black;
   border-radius: 4px;
 }
-.err__form-group__input{
+
+.err__form-group__input {
   padding: 7px;
   border: 2px solid red;
   border-radius: 4px;
 }
 
 
-.navigation{
+.navigation {
   margin: 0px;
+  padding: 10px;
   background-color: black
 }
 
-.navigation__item{
+.navigation__item {
   display: inline-block;
   text-decoration: none;
   margin: 5px;
-  border: 2px solid black;
+  border: 2px solid white;
   border-radius: 4px;
   background-color: black;
   color: white;
   font-size: 11pt;
 }
 
-.navigation__item:hover{
-  border: 2px solid #3b3b3b;
+.navigation__item:hover {
+  border: 2px solid white;
   background-color: #3b3b3b;
 }
 
-
-.item__block{
+.item__block {
   margin-top: 5px;
   padding: 17px;
   width: min-content;
@@ -115,7 +119,19 @@ html{
   color: black;
 }
 
-.login__title{
+.item__rename {
+  margin-top: 5px;
+  padding: 17px;
+  width: min-content;
+  height: auto;
+  display: inline-block;
+  border: 2px solid lightblue;
+  border-radius: 16px;
+  background-color: lightblue;
+  color: black;
+}
+
+.login__title {
   font-size: large;
   font-weight: bold;
   display: block;
@@ -124,7 +140,7 @@ html{
   text-align: center;
 }
 
-.login__link{
+.login__link {
   font-size: large;
   font-weight: bold;
   display: block;
@@ -134,23 +150,44 @@ html{
   text-decoration: none;
 }
 
-.comment{
+.comment__block {
   margin: 20px;
   padding: 5px;
   border-radius: 16px;
   border: 4px solid blue;
   display: block;
-  width: 450px;
+  min-width: 450px;
+  width: fit-content;
   height: auto;
   margin-left: auto;
   margin-right: auto;
 }
 
-.comment__description{
-  margin: 3px; 
-  width: 357px; 
-  height: 20px; 
-  border: 2px solid blue; 
-  background-color: lightblue; 
+.comment {
+  margin: 3px;
+  width: 357px;
+  height: 20px;
+  border: 2px solid blue;
+  background-color: lightblue;
   border-radius: 4px;
+}
+
+.comment__title {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: fit-content;
+  font-weight: bold;
+  font-size: large;
+}
+
+.comment__description {
+  border: 2px solid lightblue;
+  border-radius: 16px;
+  background-color: lightblue;
+  padding: 7px;
+  height: auto;
+  min-width: 430px;
+  width: max-content;
+  text-align: justify;
 }

@@ -1,15 +1,16 @@
 const express = require('express')
 const mysql = require('mysql');
 const path = require('path')
+var md5 = require('md5');
 const session = require('express-session');
 const app = express()
 
 // Соединение с базой данных
 const connection = mysql.createConnection({
-  host: "127.0.0.1",
-  database: "project_database",
-  user: "root",
-  password: "secret"
+    host: "127.0.0.1",
+    database: "project_database",
+    user: "root",
+    password: "secret"
 });
 
 connection.connect(function (err) { if (err) throw err; });
@@ -27,168 +28,193 @@ app.set('views', path.join(__dirname, 'views'))
 app.use(express.urlencoded({ extended: true }))
 
 // Инициализация сессии
-app.use(session({secret: "Secret", resave: false, saveUninitialized: true}));
+app.use(session({ secret: "Secret", resave: false, saveUninitialized: true }));
 
 // Запуск веб-сервера по адресу http://localhost:3000
 app.listen(3000)
+
+let accountShow = false;
+
+session.auth = false;
+
+function stringData() {
+    let date = new Date();
+    return String(date.getHours() + ":" + date.getMinutes() + " " + date.getDate() + "." + Number(date.getMonth() + 1) + "." + date.getFullYear());
+}
 
 /**
  * Маршруты
  */
 
-// Middleware
-function isAuth(req, res, next) {
-    if (session.auth) {
-      next();
-    } else {
-      res.redirect('/');
-    }
-  }
-
-function hashingStr(string) {
-    var hash = 5;
-    string = String(string);
-    if (string.length == 5) return hash;
-    for (a = 5; a <string.length; a++) {
-    ch = string.charCodeAt(a);
-            hash = ((hash <<5) - hash) + ch;
-            hash = hash & hash;
-        }
-    return hash;
-}
+//getters
 
 app.get('/', (req, res) => {
+    session.loyalPass = true;
     connection.query('SELECT * FROM ITEMS', (err, data, firlds) => {
-        if(err) throw err;
+        if (err) throw err;
         res.render('home', {
             items: data,
-            auth: session.auth
+            auth: session.auth,
+            username: session.username
         })
     })
 })
 
 app.get('/items/:id', (req, res) => {
     connection.query("SELECT * FROM items WHERE id=?", [req.params.id],
-    (err, data, fields) => {
-        if (err) throw err;
-        connection.query("SELECT * FROM comment_"+String(data[0].id),
-        (err, data2, field) => {
+        (err, data, fields) => {
             if (err) throw err;
-            
-            res.render('item', {
-                item: data[0],
-                comments: data2,
-                auth: session.auth
-            })
-        })        
-    });
+            connection.query("SELECT * FROM comment_" + String(data[0].id),
+                (err, data2, field) => {
+                    if (err) throw err;
+
+                    res.render('item', {
+                        item: data[0],
+                        comments: data2,
+                        auth: session.auth,
+                        username: session.username
+                    })
+                })
+        });
 })
 
 app.get('/add', (req, res) => {
-    res.render('add', {auth: req.session.auth})   
+    if (session.auth == false) {
+        res.redirect('/');
+    }
+    else {
+        res.render('add', { auth: session.auth, username: session.username })
+    }
+
 })
 
-app.get('/login', (req,res) => {
-    res.render('login', {auth: session.auth, loyalPass: session.loyalPass}) 
+app.get('/login', (req, res) => {
+    if (session.loyalPass == undefined) { session.loyalPass = true; }
+    res.render('login', { auth: session.auth, loyalPass: session.loyalPass, username: session.username })
 })
 
-app.get('/register', (req,res) => {
-    res.render('register', {auth: session.auth, freeUsername: session.freeUsername}) 
+app.get('/register', (req, res) => {
+    if(session.errRegist == undefined){session.errRegist = true;}
+    res.render('register', { auth: session.auth, errRegist: session.errRegist, username: session.username })
 })
 
-app.post('/register', (req, res) =>{
+//postes
+
+app.post('/register', (req, res) => {
     let redir = '/'
-    connection.query(
-        "SELECT * FROM users WHERE username=?",
-        [[req.body.username]], (err, data, fields) => {
-            if (err) throw err;
-            if(data[0] != undefined)
-            {
-                session.freeUsername = false;
-                redir = '/register';
-            }
-            else
-            {
-                connection.query('INSERT INTO users (username, password) VALUES (?, ?) ', 
-                [[req.body.username], hashingStr(String([req.body.password]))], (err, data, field) => {
-                    if(err) throw err;
-                    session.auth = true;
-                    session.freeUsername = true;
-                    session.username = [req.body.username][0];
-                })
-            }
-        });
-    res.redirect(redir);    
+    if(req.body.username == '' || req.body.password == '')
+    {
+        session.errRegist = "Ни одно поле не может быть пустым";
+        redir = '/register';
+        res.redirect(redir);
+    }
+    else
+    {
+        connection.query(
+            "SELECT * FROM users WHERE username=?",
+            [[req.body.username]], (err, data, fields) => {
+                if (err) throw err;
+                if (data[0] != undefined) {
+                    session.errRegist = "Имя уже занято";
+                    redir = '/register';
+                }
+                else {
+                    connection.query('INSERT INTO users (username, password) VALUES (?, ?) ',
+                        [[req.body.username], md5(String([req.body.password]))], (err, data, field) => {
+                            if (err) throw err;
+                            session.auth = true;
+                            session.errRegist = true;
+                            session.username = [req.body.username][0];
+                        })
+                }
+                res.redirect(redir);
+            });
+    }
+    
+    
 })
 
-app.post('/logout', (req,res)=> {
+app.post('/logout', (req, res) => {
     session.auth = false;
     res.redirect('/');
 })
 
-app.post('/login', (req,res)=> {
+app.post('/login', (req, res) => {
     let redir = '/login';
-    connection.query("SELECT * FROM users WHERE username=?", 
-    [[req.body.username]], (err, data, field) => {
-        if(hashingStr(String([req.body.password])) == String(data[0].password))
-        {
-            redir = '/';
-            session.auth = true;
-            session.username = [req.body.username][0];
-        }
-        else
-        {
-            session.loyalPass = false;
-        }
-        res.redirect(redir);
-    })
+    connection.query("SELECT * FROM users WHERE username=?",
+        [[req.body.username]], (err, data, field) => {
+            if (data[0] == undefined) {
+                session.loyalPass = "Аккаунт не существует";
+
+            }
+            else if (md5(String([req.body.password])) == String(data[0].password)) {
+                redir = '/';
+                session.auth = true;
+                session.username = [req.body.username][0];
+                session.loyalPass = true;
+            }
+            else {
+                session.loyalPass = "Неверный логин или пароль";
+            }
+            res.redirect(redir);
+        })
+
 })
 
 
 app.post('/store', (req, res) => {
     connection.query(
-      "INSERT INTO items (title, image, description) VALUES (?, ?, ?)",
-      [[req.body.title], [req.body.image], [req.body.description]], (err, data, fields) => {
-        if (err) throw err;
-    });
+        "INSERT INTO items (title, image, description) VALUES (?, ?, ?)",
+        [[req.body.title], [req.body.image], [req.body.description]], (err, data, fields) => {
+            if (err) throw err;
+        });
     connection.query("SELECT * FROM items WHERE title=?", [[req.body.title]], (err, data, field) => {
-        connection.query("CREATE TABLE comment_"+String(data[0].id)+"(id int primary key auto_increment, author varchar(255), commentary varchar(255));", 
-        (err, data, field) =>{ if (err) throw err; })
+        connection.query("CREATE TABLE comment_" + String(data[0].id) + "(id int primary key auto_increment, author varchar(255), commentary varchar(255), date varchar(16));",
+            (err, data, field) => { if (err) throw err; })
     })
-    
-  
-    res.redirect('/')
-  })
 
-app.post('/update', (req, res) =>{
-    connection.query("UPDATE items SET title=?, image=?, description=? WHERE id=?",
-    [[req.body.title], [req.body.image], [req.body.description], Number([req.body.id])], (err,data,fields) => {
-        if (err) throw err;
-  
-        res.redirect('/')
-    })
+
+    res.redirect('/')
 })
 
-app.post('/delete', (req, res) =>{
+app.post('/update', (req, res) => {
+    connection.query("UPDATE items SET title=?, image=?, description=? WHERE id=?",
+        [[req.body.title], [req.body.image], [req.body.description], Number([req.body.id])], (err, data, fields) => {
+            if (err) throw err;
+
+            res.redirect('/')
+        })
+})
+
+app.post('/delete', (req, res) => {
     connection.query("DELETE FROM items WHERE id=?",
-    [Number([req.body.id])], (err,data,fields) => {
-        if (err) throw err;
-  
-        res.redirect('/')
-    })
-    connection.query("DELETE FROM comment_?",
-    [Number([req.body.id])], (err,data,fields) => {
-        if (err) throw err;
-  
-        res.redirect('/')
-    })
+        [Number([req.body.id])], (err, data, fields) => {
+            if (err) throw err;
+        })
+    connection.query("DROP TABLE comment_?",
+        [Number([req.body.id])], (err, data, fields) => {
+            if (err) throw err;
+
+            res.redirect('/')
+        })
 })
 
 app.post('/addCommentary', (req, res) => {
-    connection.query(
-        "INSERT INTO comment_"+String([req.body.id])+" (author, commentary) VALUES (?, ?)",
-        [session.username, [req.body.commentary]], (err, data, fields) => {
-          if (err) throw err;
-      });
-    res.redirect('/')
+    if (req.body.commentary != '') {
+        let date = new Date();
+        connection.query(
+            "INSERT INTO comment_" + String([req.body.id]) + " (author, commentary, date) VALUES (?, ?, ?)",
+            [session.username, [req.body.commentary], stringData()], (err, data, fields) => {
+                if (err) throw err;
+            });
+    }
+    res.redirect('/items/' + String([req.body.id]));
+})
+
+app.post('/deleteCommentary', (req, res) => {
+    connection.query("DELETE FROM comment_" + String([req.body.id]) + " WHERE id=?",
+        [Number([req.body.idComment])], (err, data, fields) => {
+            if (err) throw err;
+        })
+    res.redirect('/items/' + String([req.body.id]));
 })

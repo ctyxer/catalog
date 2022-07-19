@@ -2,7 +2,7 @@
 
 <%- include('particles/navigation.ejs') %>
 
-<form action="/store" method="post">
+<form action="/store" method="post" class="item__block"> 
     <div class="form-group">
         <label class="form-group__label" for="title">title</label>
         <input class="form-group__input" type="text" id="title" name="title" placeholder="title">
@@ -17,8 +17,9 @@
         <label class="form-group__label" for="description">description</label>
         <input class="form-group__input" type="text" id="description" name="description" placeholder="description">
     </div>
-
+    <% if(auth){ %>
     <input class="form-button" type="submit" value="Создать">
+    <% } %>
 </form>
 
 <%- include('particles/footer.ejs') %>
