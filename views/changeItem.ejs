@@ -1,0 +1,34 @@
+<%- include('particles/header.ejs') %>
+
+<%- include('particles/navigation.ejs') %>
+
+<div style="display: block; margin-left: auto; margin-right: auto; width: min-content;" class="item-rename">
+    <form action="/update" method="post" style="display: inline;">
+        <div class="form-group">
+            <label class="form-group__label" for="title">title</label>
+            <input value="<%= item.title %>" class="form-group__input" type="text" name="title"
+                placeholder="title">
+        </div>
+    
+        <div class="form-group">
+            <label class="form-group__label" for="image">image</label>
+            <input value="<%= item.image %>" class="form-group__input" type="text" name="image"
+                placeholder="image">
+        </div>
+    
+        <div class="form-group">
+            <label class="form-group__label" for="description">description</label>
+            <input value="<%= item.description %>" class="form-group__input" type="text" name="description"
+                placeholder="description">
+        </div>        
+        <input type="hidden" value="<%= item.id %>" type="text" name="id">
+        <input class="form-button" type="submit" value="Обновить">
+    </form>
+    <form action="/delete" method="post" style="display: inline; float: right;">
+            
+        <input type="hidden" value="<%= item.id %>" type="text" name="id">
+        <input class="form-button" type="submit" value="Удалить">
+    </form>
+</div>
+
+<%- include('particles/footer.ejs') %>

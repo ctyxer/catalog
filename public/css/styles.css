@@ -1,6 +1,5 @@
-@charset "UTF-8";
 html {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .section {
@@ -12,6 +11,7 @@ html {
   width: min-content;
   height: auto;
 }
+
 .section__item {
   margin: 20px;
   padding: 20px;
@@ -21,18 +21,21 @@ html {
   width: 300px;
   height: auto;
 }
+
 .section__image {
   width: 250px;
   height: 250px;
   display: block;
   margin-left: auto;
-  margin-right: auto;
+  margin-right: auto
 }
+
 .section__title {
   padding: 6px;
   margin-top: 0;
   text-align: center;
 }
+
 .section__description {
   border: 2px solid lightblue;
   border-radius: 16px;
@@ -48,11 +51,21 @@ html {
   color: white;
   padding: 5px;
   border: 2px solid black;
-  border-radius: 8px;
+  border-radius: 8px
 }
+
 .form-group {
   margin-bottom: 20px;
 }
+
+.form-group__label {
+  display: block;
+  margin-bottom: 3px;
+  margin-left: auto;
+  margin-right: auto
+}
+
+
 .form-group__input {
   padding: 7px;
   border: 2px solid black;
@@ -64,31 +77,25 @@ html {
   border: 2px solid red;
   border-radius: 4px;
 }
-.err__form-group__input:focus {
-  padding: 7px;
-  border: 2px solid red;
-  border-radius: 4px;
-  outline: 0px solid red; /* Параметры рамки */
-}
+
 
 .navigation {
   margin: 0px;
   padding: 10px;
-  background-color: black;
+  background-color: black
 }
+
 .navigation__item {
-  display: block;
-  width: fit-content;
+  display: inline-block;
   text-decoration: none;
-  margin: 0px;
+  margin: 5px;
   border: 2px solid white;
   border-radius: 4px;
   background-color: black;
   color: white;
   font-size: 11pt;
-  margin: 5px;
-  padding: 2px;
 }
+
 .navigation__item:hover {
   border: 2px solid white;
   background-color: #3b3b3b;
@@ -107,6 +114,7 @@ html {
   background-color: lightblue;
   color: black;
 }
+
 .item-rename {
   margin-top: 5px;
   padding: 17px;
@@ -127,6 +135,7 @@ html {
   margin-right: auto;
   text-align: center;
 }
+
 .login__link {
   font-size: large;
   font-weight: bold;
@@ -137,22 +146,6 @@ html {
   text-decoration: none;
 }
 
-.comment {
-  margin: 3px;
-  width: 357px;
-  height: 20px;
-  border: 2px solid blue;
-  background-color: lightblue;
-  border-radius: 4px;
-}
-.comment__title {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  width: fit-content;
-  font-weight: bold;
-  font-size: large;
-}
 .comment__block {
   margin: 20px;
   padding: 5px;
@@ -165,6 +158,25 @@ html {
   margin-left: auto;
   margin-right: auto;
 }
+
+.comment {
+  margin: 3px;
+  width: 357px;
+  height: 20px;
+  border: 2px solid blue;
+  background-color: lightblue;
+  border-radius: 4px;
+}
+
+.comment__title {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: fit-content;
+  font-weight: bold;
+  font-size: large;
+}
+
 .comment__description {
   border: 2px solid lightblue;
   border-radius: 16px;
@@ -175,5 +187,3 @@ html {
   width: max-content;
   text-align: justify;
 }
-
-/*# sourceMappingURL=style.css.map */

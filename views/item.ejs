@@ -1,7 +1,11 @@
 <%- include('particles/header.ejs') %>
 
 <%- include('particles/navigation.ejs') %>
-<center>
+
+<div style="display: block; margin-left: auto; margin-right: auto; width: min-content; margin-top: 20px;">
+    <% if(item.author == username) { %>
+    <a href="/item/<%= item.id %>/change" class="form-button" style="float: right; margin-right: 20px; text-decoration: none;">Изменить</a>
+    <% } %>
     <div class="section__item">
         <h2 class="section__title">
             <%= item.title %>
@@ -11,33 +15,7 @@
             <%= item.description %>
         </p>
     </div>
-
-    <% if(auth) { %>
-        <div class="item__rename">
-            <form action="/update" method="post">
-                <div class="form-group">
-                    <label class="form-group__label" for="title">title</label>
-                    <input value="<%= item.title %>" class="form-group__input" type="text" name="title"
-                        placeholder="title">
-                </div>
-            
-                <div class="form-group">
-                    <label class="form-group__label" for="image">image</label>
-                    <input value="<%= item.image %>" class="form-group__input" type="text" name="image"
-                        placeholder="image">
-                </div>
-            
-                <div class="form-group">
-                    <label class="form-group__label" for="description">description</label>
-                    <input value="<%= item.description %>" class="form-group__input" type="text" name="description"
-                        placeholder="description">
-                </div>        
-                <input type="hidden" value="<%= item.id %>" type="text" name="id">
-                <input class="form-button" type="submit" value="Обновить">
-            </form>
-        </div>
-    <% } %>
-</center>
+</div>
 <p class="comment__title">Комментарии<%if(comments.length==0){%> отсутствуют<%}else{%>:<%}%></p>
 
 <% for (let i=0; i < comments.length; i++) { %>
