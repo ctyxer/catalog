@@ -1,5 +1,6 @@
 <div class="navigation">
     <form action="/logout" method="post">
+        <% if(auth) { %><p class="navigation__item" style="float: right;">Аккаунт: <%=username%></p><% } %>
         <a href="/" class="navigation__item">Главная</a>
         
         
@@ -7,7 +8,7 @@
         <a href="/add" class="navigation__item">Добавить</a>
         
         <input class="navigation__item" type="submit" value="Выйти">
-        <p class="navigation__item" >Аккаунт: <%=username%></p>
+        
         <% } else {%>
         <a href="/login" class="navigation__item">Авторизоваться</a>
         <% } %>

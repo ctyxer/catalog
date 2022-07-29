@@ -57,6 +57,13 @@ html {
   padding: 7px;
   border: 2px solid black;
   border-radius: 4px;
+  height: 10px;
+}
+.form-group__label {
+  display: inline-block;
+  margin-bottom: 3px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .err__form-group__input {
@@ -92,6 +99,11 @@ html {
 .navigation__item:hover {
   border: 2px solid white;
   background-color: #3b3b3b;
+}
+@media (max-width: 600px) {
+  .navigation__item {
+    display: inline-block;
+  }
 }
 
 .item-block {

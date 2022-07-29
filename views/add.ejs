@@ -2,15 +2,15 @@
 
 <%- include('particles/navigation.ejs') %>
 
-<form action="/add" method="post" class="item-block"> 
+<form action="/add" method="post" class="item-block" enctype="multipart/form-data"> 
     <div class="form-group">
         <label class="form-group__label" for="title">title</label>
         <input class="form-group__input" type="text" id="title" name="title" placeholder="title">
     </div>
 
     <div class="form-group">
-        <label class="form-group__label" for="image">image</label>
-        <input class="form-group__input" type="text" id="image" name="image" placeholder="image">
+        <label class="form-group__label" for="image" style="cursor: pointer">image</label>
+        <input class="form-group__input" type="file" style="display: none;" id="image" name="image" placeholder="image" accept="image/png, image/jpeg, image/jpg, image/webp">
     </div>
 
     <div class="form-group">

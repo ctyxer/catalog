@@ -1,5 +1,7 @@
 $breakpoints: (
-    'small': (max-width: 600px)
+    "small": (
+        max-width: 600px,
+    ),
 );
 
 @mixin breakpoint($value) {
@@ -10,9 +12,8 @@ $breakpoints: (
     }
 }
 
-
 html {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .section {
@@ -39,7 +40,7 @@ html {
         height: 250px;
         display: block;
         margin-left: auto;
-        margin-right: auto
+        margin-right: auto;
     }
 
     &__title {
@@ -65,7 +66,7 @@ html {
         color: white;
         padding: 5px;
         border: 2px solid black;
-        border-radius: 8px
+        border-radius: 8px;
     }
 
     &-group {
@@ -75,6 +76,14 @@ html {
             padding: 7px;
             border: 2px solid black;
             border-radius: 4px;
+            height: 10px;
+        }
+
+        &__label {
+            display: inline-block;
+            margin-bottom: 3px;
+            margin-left: auto;
+            margin-right: auto;
         }
     }
 }
@@ -83,7 +92,7 @@ html {
     padding: 7px;
     border: 2px solid red;
     border-radius: 4px;
-    &:focus{
+    &:focus {
         padding: 7px;
         border: 2px solid red;
         border-radius: 4px;
@@ -111,6 +120,9 @@ html {
         &:hover {
             border: 2px solid white;
             background-color: #3b3b3b;
+        }
+        @include breakpoint('small') {
+            display: inline-block;
         }
     }
 }

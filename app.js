@@ -1,8 +1,10 @@
 const express = require('express')
 const mysql = require('mysql');
 const path = require('path')
-var md5 = require('md5');
+const md5 = require('md5');
 const session = require('express-session');
+const fileUpload = require('express-fileupload');
+
 const app = express()
 
 // Соединение с базой данных
@@ -29,6 +31,9 @@ app.use(express.urlencoded({ extended: true }))
 
 // Инициализация сессии
 app.use(session({ secret: "Secret", resave: false, saveUninitialized: true }));
+
+// Загрузка изображений на web-сервер
+app.use(fileUpload({}));
 
 // Запуск веб-сервера по адресу http://localhost:3000
 app.listen(3000)
@@ -82,12 +87,10 @@ app.get('/item/:id/change', (req, res) => {
     connection.query("SELECT * FROM items WHERE id=?", [req.params.id],
         (err, data, fields) => {
             if (err) throw err;
-            if(data[0].author != req.session.username)
-            {
+            if (data[0].author != req.session.username) {
                 res.redirect('/');
             }
-            else
-            {
+            else {
                 res.render("changeItem", {
                     item: data[0],
                     auth: req.session.auth,
@@ -113,7 +116,7 @@ app.get('/login', (req, res) => {
 })
 
 app.get('/register', (req, res) => {
-    if(req.session.errRegist == undefined){req.session.errRegist = true;}
+    if (req.session.errRegist == undefined) { req.session.errRegist = true; }
     res.render('register', { auth: req.session.auth, errRegist: req.session.errRegist, username: req.session.username })
 })
 
@@ -121,14 +124,12 @@ app.get('/register', (req, res) => {
 
 app.post('/register', (req, res) => {
     let redir = '/'
-    if(req.body.username == '' || req.body.password == '')
-    {
+    if (req.body.username == '' || req.body.password == '') {
         req.session.errRegist = "Ни одно поле не может быть пустым";
         redir = '/register';
         res.redirect(redir);
     }
-    else
-    {
+    else {
         connection.query(
             "SELECT * FROM users WHERE username=?",
             [[req.body.username]], (err, data, fields) => {
@@ -149,8 +150,8 @@ app.post('/register', (req, res) => {
                 res.redirect(redir);
             });
     }
-    
-    
+
+
 })
 
 app.post('/logout', (req, res) => {
@@ -182,9 +183,10 @@ app.post('/login', (req, res) => {
 
 
 app.post('/add', (req, res) => {
+    req.files.image.mv('public/img/' + req.files.image.name);
     connection.query(
         "INSERT INTO items (title, image, description, author, date_creating) VALUES (?, ?, ?, ?, ?)",
-        [[req.body.title], [req.body.image], [req.body.description], req.session.username, stringData()], (err, data, fields) => {
+        [[req.body.title], req.files.image.name, [req.body.description], req.session.username, stringData()], (err, data, fields) => {
             if (err) throw err;
         });
     connection.query("SELECT * FROM items WHERE title=?", [[req.body.title]], (err, data, field) => {
@@ -197,8 +199,9 @@ app.post('/add', (req, res) => {
 })
 
 app.post('/update', (req, res) => {
+    req.files.image.mv('public/img/' + req.files.image.name);
     connection.query("UPDATE items SET title=?, image=?, description=? WHERE id=?",
-        [[req.body.title], [req.body.image], [req.body.description], Number([req.body.id])], (err, data, fields) => {
+        [[req.body.title], req.files.image.name, [req.body.description], Number([req.body.id])], (err, data, fields) => {
             if (err) throw err;
 
             res.redirect('/')

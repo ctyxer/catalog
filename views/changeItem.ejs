@@ -3,7 +3,7 @@
 <%- include('particles/navigation.ejs') %>
 
 <div style="display: block; margin-left: auto; margin-right: auto; width: min-content;" class="item-rename">
-    <form action="/update" method="post" style="display: inline;">
+    <form action="/update" method="post" style="display: inline;"  enctype="multipart/form-data">
         <div class="form-group">
             <label class="form-group__label" for="title">title</label>
             <input value="<%= item.title %>" class="form-group__input" type="text" name="title"
@@ -11,9 +11,12 @@
         </div>
     
         <div class="form-group">
-            <label class="form-group__label" for="image">image</label>
-            <input value="<%= item.image %>" class="form-group__input" type="text" name="image"
-                placeholder="image">
+            <p>Изображение</p>
+            <input class="form-group__input" type="file" id="image" name="image" placeholder="image" 
+            accept="image/png, image/jpeg, image/jpg, image/webp" style="display:none">
+            <label class="form-group__label" for="image" style="width: 169px; padding: 7px; margin-right: 17px; border: 2px solid black;border-radius: 4px;height: 10px;">
+            </label>
+            
         </div>
     
         <div class="form-group">
