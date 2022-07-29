@@ -9,14 +9,16 @@
     <a href="/item/<%= items[i].id %>" class="section" style="text-decoration: none;">
         <h2 class="section__title"><%= items[i].title %></h2>
         <img class="section__image" src="img/<%= items[i].image %>">
-        <p class="section__description"><%= items[i].description %></p>
-        <div style="width: auto; padding: 0%; font-size: smaller;">
-            <p style="width: max-content; color: blue; font-weight: bold; display: inline; margin-right: 10px;">
-                Автор: <%= items[i].author %>
-            </p>
-            <p style="color: gray; display: block; position: static; right: 100px; ">
-                Добавлено - <%= items[i].date_creating %>
-            </p>
+        <div style="position: static; bottom: 0px;">
+            <p class="section__description"><%= items[i].description %></p>
+            <div style="width: auto; padding: 0%; font-size: smaller;">
+                <p style="width: max-content; color: blue; font-weight: bold; display: inline; margin-right: 10px;">
+                    Автор: <%= items[i].author %>
+                </p>
+                <p style="color: gray; display: block; position: static; right: 100px; ">
+                    Добавлено - <%= items[i].date_creating %>
+                </p>
+            </div>
         </div>
     </a>
 <% } %>

@@ -4,6 +4,7 @@ const path = require('path')
 const md5 = require('md5');
 const session = require('express-session');
 const fileUpload = require('express-fileupload');
+const fs = require('fs');
 
 const app = express()
 
@@ -199,6 +200,7 @@ app.post('/add', (req, res) => {
 })
 
 app.post('/update', (req, res) => {
+    fs.unlinkSync("./public/img/" + req.body.oldImage);
     req.files.image.mv('public/img/' + req.files.image.name);
     connection.query("UPDATE items SET title=?, image=?, description=? WHERE id=?",
         [[req.body.title], req.files.image.name, [req.body.description], Number([req.body.id])], (err, data, fields) => {
@@ -209,6 +211,7 @@ app.post('/update', (req, res) => {
 })
 
 app.post('/delete', (req, res) => {
+    fs.unlinkSync("./public/img/" + req.body.oldImage);
     connection.query("DELETE FROM items WHERE id=?",
         [Number([req.body.id])], (err, data, fields) => {
             if (err) throw err;
