@@ -12,6 +12,13 @@ html {
   width: min-content;
   height: auto;
 }
+@media (max-width: 800px) {
+  .section {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
 .section__item {
   margin: 20px;
   padding: 20px;

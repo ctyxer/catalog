@@ -2,6 +2,9 @@ $breakpoints: (
     "small": (
         max-width: 600px,
     ),
+    "medium-small":(
+        max-width: 800px,
+    )
 );
 
 @mixin breakpoint($value) {
@@ -24,6 +27,12 @@ html {
     display: inline-block;
     width: min-content;
     height: auto;
+
+    @include breakpoint('medium-small') {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
 
     &__item {
         margin: 20px;

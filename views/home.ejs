@@ -2,6 +2,8 @@
 
 <%- include('particles/navigation.ejs') %>
 
+<div style="display: block; margin-left:auto; margin-right:auto; width: fit-content;">
+
 <% for (let i = 0; i < items.length; i++) { %>
 
     <a href="/item/<%= items[i].id %>" class="section" style="text-decoration: none;">
@@ -18,5 +20,7 @@
         </div>
     </a>
 <% } %>
+
+</div>
 
 <%- include('particles/footer.ejs') %>
