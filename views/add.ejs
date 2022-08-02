@@ -2,39 +2,38 @@
 
 <%- include('particles/navigation.ejs') %>
 
-<form action="/add" method="post" class="item-block" enctype="multipart/form-data"> 
-    <div class="form-group">
-        <label class="form-group__label" for="title">title</label>
-        <input class="form-group__input" type="text" id="title" name="title">
-    </div>
+<form action="/add" method="post" class="item-block" enctype="multipart/form-data">
+  <div class="form-group">
+    <label class="form-group__label" for="title">title</label>
+    <input class="form-group__input" type="text" id="title" name="title">
+  </div>
 
-    <div class="form-group">
-        <p>Изображение</p>
-        <label class="form-group__label" for="image" style="width: 161px; padding: 7px; border: 2px solid black;border-radius: 4px; min-height: 10px; background-color: white;">
-        <input class="form-group__input" type="file" id="image" name="image" placeholder="image" 
-        accept="image/png, image/jpeg, image/jpg, image/webp" style="display:none; width: auto; height: auto;">
-        <p id="imageName" style="margin: 0px;"></p>
-        </label>    
-    </div>
+  <div class="form-group">
+    <p>Изображение</p>
+    <label class="form-group__label" for="image" style="min-width: 167px; width: auto; padding: 7px; border: 2px solid black;border-radius: 4px; min-height: 10px; background-color: white;">
+      <input class="form-group__input" type="file" id="image" name="image" placeholder="image" accept="image/png, image/jpeg, image/jpg, image/webp" style="display:none; width: auto; height: auto;">
+      <p id="imageName" style="margin: 0px;"></p>
+    </label>
+  </div>
 
-    <div class="form-group">
-        <label class="form-group__label" for="description">description</label>
-        <input class="form-group__input" type="text" id="description" name="description">
-    </div>
-    <% if(auth){ %>
-    <input class="form-button" type="submit" value="Создать">
-    <% } %>
+  <div class="form-group">
+    <label class="form-group__label" for="description">description</label>
+    <input class="form-group__input" type="text" id="description" name="description">
+  </div>
+  <% if(auth){ %>
+  <input class="form-button" type="submit" value="Создать">
+  <% } %>
 </form>
 
 <script>
-    let input = document.getElementById("image");
-    let imageName = document.getElementById("imageName")
+  let input = document.getElementById("image");
+  let imageName = document.getElementById("imageName")
 
-    input.addEventListener("change", ()=>{
-        let inputImage = document.querySelector("input[type=file]").files[0];
+  input.addEventListener("change", () => {
+    let inputImage = document.querySelector("input[type=file]").files[0];
 
-        imageName.innerText = inputImage.name;
-    })
+    imageName.innerText = inputImage.name;
+  })
 </script>
 
 <%- include('particles/footer.ejs') %>

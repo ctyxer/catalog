@@ -6,14 +6,22 @@
     <% if(item.author == username) { %>
     <a href="/item/<%= item.id %>/change" class="form-button" style="float: right; margin-right: 20px; text-decoration: none;">Изменить</a>
     <% } %>
-    <div class="section__item">
-        <h2 class="section__title">
-            <%= item.title %>
-        </h2>
+    <div class="section">
+      <div style="position: relative; bottom: -75% ;">
+        <p class="section__description"><%= item.description %></p>
+        <div style="width: auto; padding: 0%; font-size: smaller;">
+          <p style="width: max-content; color: blue; font-weight: bold; display: inline; margin-right: 10px;">
+            Автор - <%= item.author %>
+          </p>
+          <p style="color: gray; display: block;">
+            Добавлено - <%= item.date_creating %>
+          </p>
+        </div>
+      </div>
+      <div style="position: relative; bottom: 30% ;">
+        <h2 class="section__title"><%= item.title %></h2>
         <img class="section__image" src="/img/<%= item.image %>">
-        <p class="section__description">
-            <%= item.description %>
-        </p>
+      </div>
     </div>
 </div>
 <p class="comment__title">Комментарии<%if(comments.length==0){%> отсутствуют<%}else{%>:<%}%></p>
