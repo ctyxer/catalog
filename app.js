@@ -84,7 +84,7 @@ app.get("/", (req, res) =>
     });
 });
 
-app.get("/item/:id", (req, res) => 
+app.get("/items/:id", (req, res) => 
 {
     connection.query(
         "SELECT * FROM items WHERE id=?",
@@ -92,8 +92,9 @@ app.get("/item/:id", (req, res) =>
         (err, data, fields) => 
         {
             if (err) throw err;
+
             connection.query(
-                "SELECT * FROM comment_" + String(data[0].id),
+                "SELECT * FROM comments WHERE item_id=" + String(data[0].id),
                 (err, data2, field) => 
                 {
                     if (err) throw err;
@@ -111,7 +112,7 @@ app.get("/item/:id", (req, res) =>
     );
 });
 
-app.get("/item/:id/change", (req, res) => 
+app.get("/items/:id/change", (req, res) => 
 {
     connection.query(
         "SELECT * FROM items WHERE id=?",
@@ -235,7 +236,7 @@ app.post("/register", (req, res) =>
                 } else 
                 {
                     connection.query(
-                        "INSERT INTO users (username, password) VALUES (?, ?) ",
+                        "INSERT INTO users (username, password, role) VALUES (?, ?, 'User') ",
                         [[req.body.username], md5(String([req.body.password]))],
                         (err, data, field) => 
                         {
@@ -245,10 +246,6 @@ app.post("/register", (req, res) =>
                             req.session.auth = true;
                             req.session.errRegist = true;
                             req.session.username = [req.body.username][0];
-                            console.log(req.session.auth);
-                            console.log(req.session.username);
-                            
-                            console.log("registration is ok");
                             res.redirect(redir);
                         }
                     );
@@ -274,26 +271,12 @@ app.post("/add", (req, res) => {
             if (err) throw err;
         }
     );
-    connection.query(
-        "SELECT * FROM items WHERE title=?",
-        [[req.body.title]],
-        (err, data, field) => {
-            connection.query(
-                "CREATE TABLE comment_" +
-                String(data[0].id) +
-                "(id int primary key auto_increment, author varchar(255), commentary varchar(255), date varchar(16));",
-                (err, data, field) => {
-                    if (err) throw err;
-                }
-            );
-        }
-    );
     res.redirect("/");
 });
 
 app.post("/update", (req, res) => {
     fs.unlinkSync("./public/img/" + req.body.oldImage);
-    req.files.image.mv("public/img/" + req.files.image.name);
+    req.files.image.mv("./public/img/" + req.files.image.name);
     connection.query(
         "UPDATE items SET title=?, image=?, description=? WHERE id=?",
         [
@@ -322,7 +305,7 @@ app.post("/delete", (req, res) => {
         }
     );
     connection.query(
-        "DROP TABLE comment_?",
+        "DELETE FROM comments WHERE item_id=?",
         [Number([req.body.id])],
         (err, data, fields) => 
         {
@@ -339,10 +322,8 @@ app.post("/addCommentary", (req, res) =>
     {
         let date = new Date();
         connection.query(
-            "INSERT INTO comment_" +
-            String([req.body.id]) +
-            " (author, commentary, date) VALUES (?, ?, ?)",
-            [req.session.username, [req.body.commentary], stringData()],
+            "INSERT INTO comments(author, commentary, date, item_id) VALUES (?, ?, ?, ?)",
+            [req.session.username, [req.body.commentary], stringData(), String([req.body.id])],
             (err, data, fields) => 
             {
                 if (err) throw err;
@@ -355,7 +336,7 @@ app.post("/addCommentary", (req, res) =>
 app.post("/deleteCommentary", (req, res) => 
 {
     connection.query(
-        "DELETE FROM comment_" + String([req.body.id]) + " WHERE id=?",
+        "DELETE FROM comments" + String([req.body.id]) + " WHERE id=?",
         [Number([req.body.idComment])],
         (err, data, fields) => 
         {

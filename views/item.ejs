@@ -4,7 +4,7 @@
 
 <div style="display: block; margin-left: auto; margin-right: auto; width: min-content; margin-top: 20px;">
     <% if(item.author == username) { %>
-    <a href="/item/<%= item.id %>/change" class="form-button" style="float: right; margin-right: 20px; text-decoration: none;">Изменить</a>
+    <a href="/items/<%= item.id %>/change" class="form-button" style="float: right; margin-right: 20px; text-decoration: none;">Изменить</a>
     <% } %>
     <div class="section">
       <div style="position: relative; bottom: -75% ;">
@@ -44,7 +44,7 @@
     </p>
     <% if(comments[i].author == username){ %>
     <form action="/deleteCommentary" method="post">
-        <input type="hidden" value="<%=comments[i].id%>" type="text" name="idComment">
+        <input type="hidden" value="<%=comments[i].itemId%>" type="text" name="idComment">
         <input type="hidden" value="<%= item.id %>" type="text" name="id">
         <input type="submit" class="form-button" value="Удалить">
     </form>
