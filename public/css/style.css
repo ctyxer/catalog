@@ -47,6 +47,14 @@ body {
   width: max-content;
   min-width: 280px;
 }
+.section__price {
+  margin: 7px;
+  font-weight: bold;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: fit-content;
+}
 
 .form-button {
   background-color: blue;
@@ -206,6 +214,35 @@ body {
 .user-page__username {
   font-weight: bold;
   color: blue;
+}
+
+.sort {
+  margin: 7px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: fit-content;
+  height: min-content;
+}
+.sort input {
+  display: inline-block;
+  width: fit-content;
+  text-decoration: none;
+  margin: 0px;
+  border: 2px solid black;
+  border-radius: 4px;
+  font-size: 11pt;
+  margin: 5px;
+  padding: 2px;
+}
+.sort p {
+  display: inline-block;
+  width: fit-content;
+  text-decoration: none;
+  margin: 0px;
+  font-size: 11pt;
+  margin: 5px;
+  padding: 2px;
 }
 
 /*# sourceMappingURL=style.css.map */

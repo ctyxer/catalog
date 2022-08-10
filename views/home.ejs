@@ -2,12 +2,13 @@
 
 <%- include('particles/navigation.ejs') %>
 
-<div style="display: block; margin-left:auto; margin-right:auto; width: fit-content; height: min-content;">
+<%- include('particles/sorting.ejs') %>
 
+<div style="display: block; margin-left:auto; margin-right:auto; width: fit-content; height: min-content;">
   <% for (let i = 0; i < items.length; i++) { %>
   <a href="/items/<%= items[i].id %>" class="section">
-    <div style="position: relative; bottom: -75% ;">
-      <p class="section__description"><%= items[i].description %></p>
+    <div style="position: relative; bottom: -82% ;">
+      <p class="section__price">Цена: <%= items[i].price %>₽</p>
       <div style="width: auto; padding: 0%; font-size: smaller;">
         <p style="width: fit-content; color: blue; font-weight: bold; display: inline; margin-right: 10px;" href="/users/<%= items[i].author %>">
           Автор - <%= items[i].author %>
@@ -17,7 +18,7 @@
         </p>
       </div>
     </div>
-    <div style="position: relative; bottom: 30% ;">
+    <div style="position: relative; bottom: 18% ;">
       <h2 class="section__title"><%= items[i].title %></h2>
       <img class="section__image" src="img/<%= items[i].image %>">
     </div>

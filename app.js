@@ -10,15 +10,14 @@ const app = express();
 
 // Соединение с базой данных
 const connection = mysql.createConnection(
-{
-    host: "127.0.0.1",
-    database: "project_database",
-    user: "root",
-    password: "secret",
-});
+    {
+        host: "127.0.0.1",
+        database: "project",
+        user: "root",
+        password: "secret",
+    });
 
-connection.connect(function (err) 
-{
+connection.connect(function (err) {
     if (err) throw err;
 });
 
@@ -47,20 +46,52 @@ let accountShow = false;
 
 session.auth = false;
 
-function stringData() 
-{
-    let date = new Date();
+function stringData(data) {
+    let date = new Date(data);
+    function addZero(number, col) {
+        if (Number(col) - Number(String(number).length) >= 0) {
+            return "0".repeat(Number(col) - Number(String(number).length)) + number;
+        }
+        else {
+            return number;
+        }
+    }
     return String(
-        date.getHours() +
+        addZero(date.getHours(), 2) +
         ":" +
-        date.getMinutes() +
+        addZero(date.getMinutes(), 2) +
         " " +
-        date.getDate() +
+        addZero(date.getDate(), 2) +
         "." +
-        Number(date.getMonth() + 1) +
+        addZero(Number(date.getMonth() + 1), 2) +
         "." +
         date.getFullYear()
     );
+
+}
+
+function sortAlfabet(req, mass) {
+    mass.sort(function (a, b) {
+        return a.title - b.title;
+    })
+    if (req.session.sortType < 0) { mass = mass.reverse() }
+    return mass;
+}
+
+function sortDate(req, mass) {
+    mass.sort(function (a, b) {
+        return Number(new Date(a.date_creating).getTime()) - Number(new Date(b.date_creating).getTime());
+    })
+    if (req.session.sortType < 0) { mass.reverse() }
+    return mass;
+}
+
+function sortPrice(req, mass) {
+    mass.sort(function (a, b) {
+        return Number(a.price) - Number(b.price);
+    })
+    if (req.session.sortType < 0) { mass.reverse() }
+    return mass;
 }
 
 /**
@@ -69,137 +100,132 @@ function stringData()
 
 //getters
 
-app.get("/", (req, res) => 
-{
+app.get("/", (req, res) => {
     req.session.loyalPass = true;
-    connection.query("SELECT * FROM ITEMS", (err, data, firlds) => 
-    {
+    connection.query("SELECT * FROM ITEMS", (err, data, firlds) => {
         if (err) throw err;
-        res.render("home", 
-        {
-            items: data,
-            auth: req.session.auth,
-            username: req.session.username,
-        });
+        data = data.map(function (a) {
+            return { ...a, date_creating: stringData(a.date_creating) };
+        })
+        switch (Math.abs(req.session.sortType)) {
+            case 1:
+                data = sortAlfabet(req, data);
+            case 2:
+                data = sortDate(req, data);
+            case 3:
+                data = sortPrice(req, data);
+        }
+        res.render("home",
+            {
+                items: data,
+                auth: req.session.auth,
+                username: req.session.username,
+            });
     });
 });
 
-app.get("/items/:id", (req, res) => 
-{
+app.get("/items/:id", (req, res) => {
     connection.query(
         "SELECT * FROM items WHERE id=?",
         [req.params.id],
-        (err, data, fields) => 
-        {
+        (err, data, fields) => {
             if (err) throw err;
 
             connection.query(
                 "SELECT * FROM comments WHERE item_id=" + String(data[0].id),
-                (err, data2, field) => 
-                {
+                (err, data2, field) => {
                     if (err) throw err;
-
-                    res.render("item", 
-                    {
-                        item: data[0],
-                        comments: data2,
-                        auth: req.session.auth,
-                        username: req.session.username,
-                    });
+                    data = data.map(function (a) {
+                        return { ...a, date_creating: stringData(a.date_creating) };
+                    })
+                    data2 = data2.map(function (a) {
+                        return { ...a, date: stringData(a.date) };
+                    })
+                    res.render("item",
+                        {
+                            item: data[0],
+                            comments: data2,
+                            auth: req.session.auth,
+                            username: req.session.username,
+                        });
                 }
             );
         }
     );
 });
 
-app.get("/items/:id/change", (req, res) => 
-{
+app.get("/items/:id/change", (req, res) => {
     connection.query(
         "SELECT * FROM items WHERE id=?",
         [req.params.id],
-        (err, data, fields) => 
-        {
+        (err, data, fields) => {
             if (err) throw err;
-            if (data[0].author != req.session.username) 
-            {
+            if (data[0].author != req.session.username) {
                 res.redirect("/");
-            } else 
-            {
-                res.render("changeItem", 
-                {
-                    item: data[0],
-                    auth: req.session.auth,
-                    username: req.session.username,
-                });
+            } else {
+                res.render("changeItem",
+                    {
+                        item: data[0],
+                        auth: req.session.auth,
+                        username: req.session.username,
+                    });
             }
         }
     );
 });
 
-app.get("/add", (req, res) => 
-{
-    if (req.session.auth != true) 
-    {
+app.get("/add", (req, res) => {
+    if (req.session.auth != true) {
         res.redirect("/");
-    } else 
-    {
-        res.render("add", 
-        {
-            auth: req.session.auth,
-            username: req.session.username,
-        });
+    } else {
+        res.render("add",
+            {
+                auth: req.session.auth,
+                username: req.session.username,
+            });
     }
 });
 
-app.get("/login", (req, res) => 
-{
-    if (req.session.loyalPass == undefined) 
-    {
+app.get("/login", (req, res) => {
+    if (req.session.loyalPass == undefined) {
         req.session.loyalPass = true;
     }
-    res.render("login", 
-    {
-        auth: req.session.auth,
-        loyalPass: req.session.loyalPass,
-        username: req.session.username,
-    });
+    res.render("login",
+        {
+            auth: req.session.auth,
+            loyalPass: req.session.loyalPass,
+            username: req.session.username,
+        });
 });
 
-app.get("/register", (req, res) => 
-{
-    if (req.session.errRegist == undefined) 
-    {
+app.get("/register", (req, res) => {
+    if (req.session.errRegist == undefined) {
         req.session.errRegist = true;
     }
-    res.render("register", 
-    {
-        auth: req.session.auth,
-        errRegist: req.session.errRegist,
-        username: req.session.username,
-    });
+    res.render("register",
+        {
+            auth: req.session.auth,
+            errRegist: req.session.errRegist,
+            username: req.session.username,
+        });
 });
 
 //postes
 
-app.post("/login", (req, res) => 
-{
+app.post("/login", (req, res) => {
     let redir = "/login";
     connection.query(
         "SELECT * FROM users WHERE username=?",
         [[req.body.username]],
-        (err, data, field) => 
-        {
-            if (data[0] == undefined) 
-            {
+        (err, data, field) => {
+            if (data[0] == undefined) {
                 req.session.loyalPass = "Аккаунт не существует";
-            } else if (md5(String([req.body.password])) == String(data[0].password)) 
-            {
+            } else if (md5(String([req.body.password])) == String(data[0].password)) {
                 redir = "/";
                 req.session.auth = true;
                 req.session.username = [req.body.username][0];
                 req.session.loyalPass = true;
-            } else 
-            {
+            } else {
                 req.session.loyalPass = "Неверный логин или пароль";
             }
             res.redirect(redir);
@@ -207,39 +233,31 @@ app.post("/login", (req, res) =>
     );
 });
 
-app.post("/logout", (req, res) => 
-{
+app.post("/logout", (req, res) => {
     req.session.auth = false;
     req.session.username = undefined;
     res.redirect("/");
 });
 
-app.post("/register", (req, res) => 
-{
+app.post("/register", (req, res) => {
     let redir = "/register";
-    if (req.body.username == "" || req.body.password == "") 
-    {
+    if (req.body.username == "" || req.body.password == "") {
         req.session.errRegist = "Ни одно поле не может быть пустым";
         res.redirect(redir);
-    } else 
-    {
+    } else {
         connection.query(
             "SELECT * FROM users WHERE username=?",
             [[req.body.username]],
-            (err, data, fields) => 
-            {
+            (err, data, fields) => {
                 if (err) throw err;
-                if (data[0] != undefined) 
-                {
+                if (data[0] != undefined) {
                     req.session.errRegist = "Имя уже занято";
                     res.redirect(redir);
-                } else 
-                {
+                } else {
                     connection.query(
                         "INSERT INTO users (username, password, role) VALUES (?, ?, 'User') ",
                         [[req.body.username], md5(String([req.body.password]))],
-                        (err, data, field) => 
-                        {
+                        (err, data, field) => {
                             if (err) throw err;
 
                             redir = "/";
@@ -250,7 +268,7 @@ app.post("/register", (req, res) =>
                         }
                     );
                 }
-                
+
             }
         );
     }
@@ -259,13 +277,14 @@ app.post("/register", (req, res) =>
 app.post("/add", (req, res) => {
     req.files.image.mv("./public/img/" + req.files.image.name);
     connection.query(
-        "INSERT INTO items (title, image, description, author, date_creating) VALUES (?, ?, ?, ?, ?)",
+        "INSERT INTO items (title, image, description, price, author, date_creating) VALUES (?, ?, ?, ?, ?, ?)",
         [
             [req.body.title],
             req.files.image.name,
             [req.body.description],
+            [Number(req.body.price)],
             req.session.username,
-            stringData(),
+            new Date(),
         ],
         (err, data, fields) => {
             if (err) throw err;
@@ -275,18 +294,32 @@ app.post("/add", (req, res) => {
 });
 
 app.post("/update", (req, res) => {
-    fs.unlinkSync("./public/img/" + req.body.oldImage);
-    req.files.image.mv("./public/img/" + req.files.image.name);
+    try {
+        fs.unlinkSync("./public/img/" + req.body.oldImage);
+    }
+    catch (err) { }
+    try {
+        req.files.image.mv("./public/img/" + req.files.image.name);
+    }
+    catch (err) { }
+    function retImage(){
+        try{
+            return req.files.image.name
+        }
+        catch(err){
+            return req.body.oldImage
+        }
+    }
     connection.query(
-        "UPDATE items SET title=?, image=?, description=? WHERE id=?",
+        "UPDATE items SET title=?, image=?, description=?, price=? WHERE id=?",
         [
             [req.body.title],
-            req.files.image.name,
+            retImage(),
             [req.body.description],
+            [Number(req.body.price)],
             Number([req.body.id]),
         ],
-        (err, data, fields) => 
-        {
+        (err, data, fields) => {
             if (err) throw err;
 
             res.redirect("/");
@@ -295,20 +328,21 @@ app.post("/update", (req, res) => {
 });
 
 app.post("/delete", (req, res) => {
-    fs.unlinkSync("./public/img/" + req.body.oldImage);
+    try {
+        fs.unlinkSync("./public/img/" + req.body.oldImage);
+    }
+    catch (err) { }
     connection.query(
         "DELETE FROM items WHERE id=?",
         [Number([req.body.id])],
-        (err, data, fields) => 
-        {
+        (err, data, fields) => {
             if (err) throw err;
         }
     );
     connection.query(
         "DELETE FROM comments WHERE item_id=?",
         [Number([req.body.id])],
-        (err, data, fields) => 
-        {
+        (err, data, fields) => {
             if (err) throw err;
 
             res.redirect("/");
@@ -316,32 +350,45 @@ app.post("/delete", (req, res) => {
     );
 });
 
-app.post("/addCommentary", (req, res) => 
-{
-    if (req.body.commentary != "") 
-    {
+app.post("/addCommentary", (req, res) => {
+    if (req.body.commentary != "") {
         let date = new Date();
         connection.query(
             "INSERT INTO comments(author, commentary, date, item_id) VALUES (?, ?, ?, ?)",
-            [req.session.username, [req.body.commentary], stringData(), String([req.body.id])],
-            (err, data, fields) => 
-            {
+            [req.session.username, [req.body.commentary], new Date(), String([req.body.id])],
+            (err, data, fields) => {
                 if (err) throw err;
             }
         );
     }
-    res.redirect("/item/" + String([req.body.id]));
+    res.redirect("/items/" + String([req.body.id]));
 });
 
-app.post("/deleteCommentary", (req, res) => 
-{
+app.post("/deleteCommentary", (req, res) => {
     connection.query(
         "DELETE FROM comments" + String([req.body.id]) + " WHERE id=?",
         [Number([req.body.idComment])],
-        (err, data, fields) => 
-        {
+        (err, data, fields) => {
             if (err) throw err;
         }
     );
     res.redirect("/items/" + String([req.body.id]));
+});
+
+app.post("/usingSortAlfabet", (req, res) => {
+    if (req.session.sortType == 1) { req.session.sortType = -1 }
+    else { req.session.sortType = 1 }
+    res.redirect("/");
+});
+
+app.post("/usingSortDate", (req, res) => {
+    if (req.session.sortType == 2) { req.session.sortType = -2 }
+    else { req.session.sortType = 2 }
+    res.redirect("/");
+});
+
+app.post("/usingSortPrice", (req, res) => {
+    if (req.session.sortType == 3) { req.session.sortType = -3 }
+    else { req.session.sortType = 3 }
+    res.redirect("/");
 });

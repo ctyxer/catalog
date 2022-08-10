@@ -2,9 +2,9 @@ $breakpoints: (
     "small": (
         max-width: 600px,
     ),
-    "medium-small":(
+    "medium-small": (
         max-width: 800px,
-    )
+    ),
 );
 
 @mixin breakpoint($value) {
@@ -19,7 +19,7 @@ html {
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-body{
+body {
     margin: 0%;
 }
 
@@ -34,8 +34,7 @@ body{
     padding: 20px;
     margin: 20px;
 
-
-    @include breakpoint('medium-small') {
+    @include breakpoint("medium-small") {
         display: block;
         margin-left: auto;
         margin-right: auto;
@@ -64,6 +63,15 @@ body{
         height: auto;
         width: max-content;
         min-width: 280px;
+    }
+
+    &__price {
+        margin: 7px;
+        font-weight: bold;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: fit-content;
     }
 }
 
@@ -128,7 +136,7 @@ body{
             border: 2px solid white;
             background-color: #3b3b3b;
         }
-        @include breakpoint('small') {
+        @include breakpoint("small") {
             display: inline-block;
         }
     }
@@ -225,7 +233,7 @@ body{
     }
 }
 
-.user-page{
+.user-page {
     margin: 20px;
     padding: 20px;
     width: fit-content;
@@ -234,8 +242,40 @@ body{
     margin-left: auto;
     margin-right: auto;
     text-align: center;
-    &__username{
+    &__username {
         font-weight: bold;
         color: blue;
+    }
+}
+
+.sort {
+    margin: 7px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: fit-content;
+    height: min-content;
+    input {
+        display: inline-block;
+        width: fit-content;
+        text-decoration: none;
+        margin: 0px;
+        border: 2px solid black;
+        border-radius: 4px;
+        font-size: 11pt;
+        margin: 5px;
+        padding: 2px;
+    }
+
+    p {
+        display: inline-block;
+        width: fit-content;
+        text-decoration: none;
+        margin: 0px;
+        // border: 2px solid black;
+        // border-radius: 4px;
+        font-size: 11pt;
+        margin: 5px;
+        padding: 2px;
     }
 }
