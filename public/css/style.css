@@ -44,7 +44,7 @@ body {
   background-color: lightblue;
   padding: 7px;
   height: auto;
-  width: max-content;
+  width: fit-content;
   min-width: 280px;
 }
 .section__price {

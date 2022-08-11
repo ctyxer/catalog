@@ -6,8 +6,12 @@
     <% if(item.author == username) { %>
     <a href="/items/<%= item.id %>/change" class="form-button" style="float: right; margin-right: 20px; text-decoration: none;">Изменить</a>
     <% } %>
-    <div class="section">
-      <div style="position: relative; bottom: -75% ;">
+    <div class="section" style="height: fit-content;">
+      <div>
+        <h2 class="section__title"><%= item.title %></h2>
+        <img class="section__image" src="/img/<%= item.image %>">
+      </div>
+      <div>
         <p class="section__description"><%= item.description %></p>
         <div style="width: auto; padding: 0%; font-size: smaller;">
           <p style="width: max-content; color: blue; font-weight: bold; display: inline; margin-right: 10px;">
@@ -17,10 +21,6 @@
             Добавлено - <%= item.date_creating %>
           </p>
         </div>
-      </div>
-      <div style="position: relative; bottom: 30% ;">
-        <h2 class="section__title"><%= item.title %></h2>
-        <img class="section__image" src="/img/<%= item.image %>">
       </div>
     </div>
 </div>
