@@ -5,6 +5,7 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass;
 npm install -g sass;
 
 В консоль базы данных для её установки - 
+
 create database project;
 use project;
 create table items(id int primary key auto_increment, title varchar(255), image varchar(255), description text, date varchar(32), author varchar(255));
