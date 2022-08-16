@@ -139,7 +139,7 @@ app.get("/items/:id", (req, res) => {
                         return { ...a, date_creating: stringData(a.date_creating) };
                     })
                     data2 = data2.map(function (a) {
-                        return { ...a, date: stringData(a.date) };
+                        return { ...a, date: stringData(a.date_creating) };
                     })
                     res.render("item",
                         {
@@ -255,7 +255,7 @@ app.post("/register", (req, res) => {
                     res.redirect(redir);
                 } else {
                     connection.query(
-                        "INSERT INTO users (username, password, role) VALUES (?, ?, 'User') ",
+                        "INSERT INTO users (username, password, role) VALUES (?, ?, 'User')",
                         [[req.body.username], md5(String([req.body.password]))],
                         (err, data, field) => {
                             if (err) throw err;
@@ -354,7 +354,7 @@ app.post("/addCommentary", (req, res) => {
     if (req.body.commentary != "") {
         let date = new Date();
         connection.query(
-            "INSERT INTO comments(author, commentary, date, item_id) VALUES (?, ?, ?, ?)",
+            "INSERT INTO comments(author, commentary, date_creating, item_id) VALUES (?, ?, ?, ?)",
             [req.session.username, [req.body.commentary], new Date(), String([req.body.id])],
             (err, data, fields) => {
                 if (err) throw err;
@@ -366,8 +366,8 @@ app.post("/addCommentary", (req, res) => {
 
 app.post("/deleteCommentary", (req, res) => {
     connection.query(
-        "DELETE FROM comments" + String([req.body.id]) + " WHERE id=?",
-        [Number([req.body.idComment])],
+        "DELETE FROM comments WHERE id=?",
+        [Number([req.body.id])],
         (err, data, fields) => {
             if (err) throw err;
         }
