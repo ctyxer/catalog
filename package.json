@@ -7,6 +7,7 @@
         "express-session": "^1.17.3",
         "md5": "^2.3.0",
         "mysql": "^2.18.1",
-        "sass": "^1.54.0"
+        "sass": "^1.54.0",
+        "webp-converter": "^2.3.3"
     }
 }

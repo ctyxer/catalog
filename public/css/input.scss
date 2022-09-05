@@ -121,7 +121,7 @@ body {
     background-color: black;
 
     &__item {
-        display: block;
+        display: inline-block;
         width: fit-content;
         text-decoration: none;
         margin: 0px;
@@ -137,7 +137,7 @@ body {
             background-color: #3b3b3b;
         }
         @include breakpoint("small") {
-            display: inline-block;
+            display: block;
         }
     }
 }

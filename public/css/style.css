@@ -97,7 +97,7 @@ body {
   background-color: black;
 }
 .navigation__item {
-  display: block;
+  display: inline-block;
   width: fit-content;
   text-decoration: none;
   margin: 0px;
@@ -115,7 +115,7 @@ body {
 }
 @media (max-width: 600px) {
   .navigation__item {
-    display: inline-block;
+    display: block;
   }
 }
 

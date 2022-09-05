@@ -12,9 +12,9 @@ const app = express();
 const connection = mysql.createConnection(
     {
         host: "127.0.0.1",
-        database: "project",
-        user: "root",
-        password: "secret",
+        database: "v_senchuk",
+        user: "v_senchuk",
+        password: "hhbQR!&XyR&65Y5I",
     });
 
 connection.connect(function (err) {
@@ -102,7 +102,7 @@ function sortPrice(req, mass) {
 
 app.get("/", (req, res) => {
     req.session.loyalPass = true;
-    connection.query("SELECT * FROM ITEMS", (err, data, firlds) => {
+    connection.query("SELECT * FROM items", (err, data, firlds) => {
         if (err) throw err;
         data = data.map(function (a) {
             return { ...a, date_creating: stringData(a.date_creating) };
@@ -276,11 +276,15 @@ app.post("/register", (req, res) => {
 
 app.post("/add", (req, res) => {
     req.files.image.mv("./public/img/" + req.files.image.name);
+    let newName = "./public/img/" + md5(req.files.image.name.split(".")[0]) + ".wepb";
+    fs.rename("./public/img/" + req.files.image.name, newName, function (err) {
+        if (err) console.log('ERROR: ' + err);
+    });
     connection.query(
         "INSERT INTO items (title, image, description, price, author, date_creating) VALUES (?, ?, ?, ?, ?, ?)",
         [
             [req.body.title],
-            req.files.image.name,
+            newName,
             [req.body.description],
             [Number(req.body.price)],
             req.session.username,
@@ -300,13 +304,17 @@ app.post("/update", (req, res) => {
     catch (err) { }
     try {
         req.files.image.mv("./public/img/" + req.files.image.name);
+        let newName = "./public/img/" + md5(req.files.image.name.split(".")[0]) + ".wepb";
+        fs.rename("./public/img/" + req.files.image.name, newName, function (err) {
+            if (err) console.log('ERROR: ' + err);
+        });
     }
     catch (err) { }
-    function retImage(){
-        try{
-            return req.files.image.name
+    function retImage() {
+        try {
+            return md5(req.files.image.name.split(".")[0]) + ".wepb"
         }
-        catch(err){
+        catch (err) {
             return req.body.oldImage
         }
     }
