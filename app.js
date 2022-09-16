@@ -379,6 +379,7 @@ app.post("/deleteCommentary", (req, res) => {
         "DELETE FROM comments WHERE id=?",
         [Number([req.body.id])],
         (err, data, fields) => {
+            console.log("delete comment " + Number([req.body.id]));
             if (err) throw err;
         }
     );
