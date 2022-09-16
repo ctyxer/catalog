@@ -44,7 +44,7 @@
     </p>
     <% if(comments[i].author == username){ %>
     <form action="/deleteCommentary" method="post">
-        <input type="hidden" value="<%=comments[i].itemId%>" type="text" name="idComment">
+        <input type="hidden" value="<%=comments[i].item_id%>" type="text" name="idComment">
         <input type="hidden" value="<%= item.id %>" type="text" name="id">
         <input type="submit" class="form-button" value="Удалить">
     </form>
