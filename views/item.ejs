@@ -43,7 +43,7 @@
         <%=comments[i].commentary%>
     </p>
     <% if(comments[i].author == username){ %>
-    <form action="/cs/v.senchuk/catalog//deleteCommentary" method="post">
+    <form action="/deleteCommentary" method="post">
         <input type="hidden" value="<%=comments[i].itemId%>" type="text" name="idComment">
         <input type="hidden" value="<%= item.id %>" type="text" name="id">
         <input type="submit" class="form-button" value="Удалить">
@@ -53,7 +53,7 @@
 <% } %>
 
 <% if(auth) { %>
-<form action="/cs/v.senchuk/catalog//addCommentary" method="post">
+<form action="/addCommentary" method="post">
 
     <div class="comment__block">
         <p style="margin-left: 5px;">Добавить комментарий</p>
