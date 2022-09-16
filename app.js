@@ -278,8 +278,8 @@ app.post("/register", (req, res) => {
 
 app.post("/add", (req, res) => {
     req.files.image.mv("./public/img/" + req.files.image.name);
-    let newName =md5(req.files.image.name.split(".")[0]) + ".wepb";
-    fs.rename("./public/img/" + req.files.image.name,  "/public/img/" + newName, function (err) {
+    let newName = md5(req.files.image.name.split(".")[0]) + ".wepb";
+    fs.rename("./public/img/" + req.files.image.name,  "./public/img/" + newName, function (err) {
         if (err) console.log('ERROR: ' + err);
     });
     connection.query(
