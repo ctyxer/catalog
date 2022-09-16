@@ -277,7 +277,7 @@ app.post("/register", (req, res) => {
 
 app.post("/add", (req, res) => {
     req.files.image.mv("./public/img/" + req.files.image.name);
-    let newName = "./public/img/" + md5(req.files.image.name.split(".")[0]) + ".wepb";
+    let newName = md5(req.files.image.name.split(".")[0]) + ".wepb";
     fs.rename("./public/img/" + req.files.image.name, newName, function (err) {
         if (err) console.log('ERROR: ' + err);
     });
@@ -305,7 +305,7 @@ app.post("/update", (req, res) => {
     catch (err) { }
     try {
         req.files.image.mv("./public/img/" + req.files.image.name);
-        let newName = "./public/img/" + md5(req.files.image.name.split(".")[0]) + ".wepb";
+        let newName = md5(req.files.image.name.split(".")[0]) + ".wepb";
         fs.rename("./public/img/" + req.files.image.name, newName, function (err) {
             if (err) console.log('ERROR: ' + err);
         });
