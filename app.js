@@ -142,6 +142,7 @@ app.get("/items/:id", (req, res) => {
                     data2 = data2.map(function (a) {
                         return { ...a, date: stringData(a.date_creating) };
                     })
+                    console.log(data2)
                     res.render("item",
                         {
                             item: data[0],
