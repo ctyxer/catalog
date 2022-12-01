@@ -2,7 +2,7 @@
 
 <%- include('particles/navigation.ejs') %>
 
-<p class='login__title'>Войти в аккаунт</p>
+<p class='authentication__title'>Войти в аккаунт</p>
 <form action="/login" method="post" class="item-block">
   <div class="form-group">
     <label for="username" class="form-group__label">Имя пользователя</label>
@@ -13,8 +13,9 @@
     <label for="password" class="form-group__label">Пароль</label>
     <input type="password" class="form-group__input" name="password">
   </div>
+  <label for="error" class="authentication__error"><%= error %></label>
   <input type="submit" value="Войти" class="form-button">
 </form>
-<p class="login__link">Еще не зарегестрированы? <a href="/register">Зарегестрироваться</a></p>
+<p class="authentication__link">Еще не зарегестрированы? <a href="/register">Зарегестрироваться</a></p>
 
 <%- include('particles/footer.ejs') %>

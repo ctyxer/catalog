@@ -2,8 +2,6 @@
 
 <%- include('particles/navigation.ejs') %>
 
-<%- include('particles/sorting.ejs') %>
-
 <div style="display: block; margin-left:auto; margin-right:auto; width: fit-content; height: min-content;">
   <% for (let i = 0; i < items.length; i++) { %>
   <a href="/items/<%= items[i].id %>" class="section">
