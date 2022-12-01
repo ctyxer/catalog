@@ -103,18 +103,6 @@ body {
     }
 }
 
-.err__form-group__input {
-    padding: 7px;
-    border: 2px solid red;
-    border-radius: 4px;
-    &:focus {
-        padding: 7px;
-        border: 2px solid red;
-        border-radius: 4px;
-        outline: 0px solid red; /* Параметры рамки */
-    }
-}
-
 .navigation {
     margin: 0px;
     padding: 10px;
@@ -170,7 +158,7 @@ body {
     }
 }
 
-.login {
+.authentication {
     &__title {
         font-size: large;
         font-weight: bold;
@@ -188,6 +176,12 @@ body {
         margin-right: auto;
         text-align: center;
         text-decoration: none;
+    }
+    &__error {
+        font-weight: bold;
+        display: block;
+        margin: 5px;
+        color: red;
     }
 }
 
@@ -230,52 +224,5 @@ body {
         min-width: 430px;
         width: max-content;
         text-align: justify;
-    }
-}
-
-.user-page {
-    margin: 20px;
-    padding: 20px;
-    width: fit-content;
-    border: 4px solid black;
-    border-radius: 8px;
-    margin-left: auto;
-    margin-right: auto;
-    text-align: center;
-    &__username {
-        font-weight: bold;
-        color: blue;
-    }
-}
-
-.sort {
-    margin: 7px;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    width: fit-content;
-    height: min-content;
-    input {
-        display: inline-block;
-        width: fit-content;
-        text-decoration: none;
-        margin: 0px;
-        border: 2px solid black;
-        border-radius: 4px;
-        font-size: 11pt;
-        margin: 5px;
-        padding: 2px;
-    }
-
-    p {
-        display: inline-block;
-        width: fit-content;
-        text-decoration: none;
-        margin: 0px;
-        // border: 2px solid black;
-        // border-radius: 4px;
-        font-size: 11pt;
-        margin: 5px;
-        padding: 2px;
     }
 }
