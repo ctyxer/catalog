@@ -12,7 +12,7 @@
 
     npx prisma migrate dev
 
-Создание css файла с помозбю Sass
+Создание css файла с помощью Sass
 
     npm run build
 
