@@ -11,7 +11,7 @@ declare module "express-session" {
         auth: boolean,
         username: string
     }
-  };
+};
 
 const prisma: PrismaClient = new PrismaClient();
 const app: Express = express();
@@ -22,7 +22,7 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 app.listen(3000, () => {
-    console.log('Server is running on port 3000');
+    console.log('Server is running on port 5000');
 });
 
 // Путь к директории файлов ресурсов (css, js, images)
@@ -32,7 +32,7 @@ app.use(express.static("public"));
 app.set("view engine", "ejs");
 
 // Путь к директории файлов отображения контента
-app.set("views", path.join(__dirname, "views"));
+app.set("views", path.join(__dirname, "./views"));
 
 // Обработка POST-запросов из форм
 app.use(express.urlencoded({ extended: true }));
@@ -43,8 +43,8 @@ app.use(session({ secret: "Secret", resave: false, saveUninitialized: true }));
 // Загрузка изображений на web-сервер
 app.use(fileUpload());
 
-// Запуск веб-сервера по адресу http://localhost:3000
-app.listen(3000);
+// Запуск веб-сервера по адресу http://localhost:5000
+app.listen(5000);
 
 
 function stringData(data: string) {
@@ -283,7 +283,7 @@ app.post("/delete", (req: Request, res: Response) => {
         fs.unlinkSync("./public/img/" + req.body.oldImage);
     }
     catch (err) { }
-    
+
     prisma.comments.deleteMany({
         where: {
             item_id: Number(req.body.id)
