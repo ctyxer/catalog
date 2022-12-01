@@ -156,6 +156,7 @@ app.get("/add", (req: Request, res: Response) => {
 app.get("/login", (req: Request, res: Response) => {
     res.render("login",
         {
+            error: "",
             auth: req.session.auth,
             username: req.session.username,
         });
@@ -164,6 +165,7 @@ app.get("/login", (req: Request, res: Response) => {
 app.get("/register", (req: Request, res: Response) => {
     res.render("register",
         {
+            error: "",
             auth: req.session.auth,
             username: req.session.username,
         });
@@ -172,19 +174,23 @@ app.get("/register", (req: Request, res: Response) => {
 //postes
 
 app.post("/login", async (req: Request, res: Response) => {
-    let redir = "/login";
-    const data = await prisma.users.findMany({
+    const data = await prisma.users.findFirst({
         where: {
             username: req.body.username
         }
     })
-
-    if (md5(String([req.body.password])) == String(data[0].password)) {
-        redir = "/";
-        req.session.auth = true;
-        req.session.username = [req.body.username][0];
+    if (data != null) {
+        if (md5(String([req.body.password])) == String(data.password)) {
+            req.session.auth = true;
+            req.session.username = [req.body.username][0];
+            res.redirect("/")
+        }
     }
-    res.redirect(redir);
+    else res.render("login", {
+        error: "The user does not exist",
+        auth: req.session.auth,
+        username: req.session.username,
+    });
 });
 
 app.post("/logout", (req: Request, res: Response) => {
@@ -197,28 +203,34 @@ app.post("/register", async (req: Request, res: Response) => {
 
     let redir = "/register";
     if (req.body.username == "" || req.body.password == "") {
-        res.redirect(redir);
+        res.render('register', {
+            error: "The field cannot be empty",
+            auth: req.session.auth,
+            username: req.session.username
+        });
     } else {
-        const data = await prisma.users.findMany({
+        const data = await prisma.users.findFirst({
             where: {
                 username: req.body.username
             }
         })
-        if (data[0] != undefined) {
-            res.redirect(redir);
+        if (data != null) {
+            res.render('register', {
+                error: "Username already taken",
+                auth: req.session.auth,
+                username: req.session.username,
+            });
         } else {
-            prisma.users.create({
+            await prisma.users.create({
                 data: {
                     username: req.body.username,
                     password: md5(String(req.body.password)),
                     role: "user"
                 }
-            })
-            redir = "/";
+            });
             req.session.auth = true;
             req.session.username = [req.body.username][0];
-            res.redirect(redir);
-
+            res.redirect('/');
         }
     }
 });
@@ -230,7 +242,7 @@ app.post("/register", async (req: Request, res: Response) => {
 //     fs.rename("./public/img/" + name, "./public/img/" + newName, function (err) {
 //         if (err) console.log('ERROR: ' + err);
 //     });
-//     prisma.items.create({
+//     await prisma.items.create({
 //         data: {
 //             title: req.body.title,
 //             image: newName,
@@ -265,7 +277,7 @@ app.post("/register", async (req: Request, res: Response) => {
 //             return req.body.oldImage
 //         }
 //     }
-//     prisma.items.update({
+//     await prisma.items.update({
 //         data: {
 //             title: req.body.title,
 //             image: retImage(),
@@ -278,18 +290,18 @@ app.post("/register", async (req: Request, res: Response) => {
 //     res.redirect("/");
 // });
 
-app.post("/delete", (req: Request, res: Response) => {
+app.post("/delete", async (req: Request, res: Response) => {
     try {
         fs.unlinkSync("./public/img/" + req.body.oldImage);
     }
     catch (err) { }
 
-    prisma.comments.deleteMany({
+    await prisma.comments.deleteMany({
         where: {
             item_id: Number(req.body.id)
         }
     })
-    prisma.items.delete({
+    await prisma.items.delete({
         where: {
             id: Number(req.body.id)
         }
@@ -298,10 +310,9 @@ app.post("/delete", (req: Request, res: Response) => {
     res.redirect("/");
 });
 
-app.post("/addCommentary", (req: Request, res: Response) => {
+app.post("/addCommentary", async (req: Request, res: Response) => {
     if (req.body.commentary != "") {
-        let date = new Date();
-        prisma.comments.create({
+        await prisma.comments.create({
             data: {
                 author: String(req.session.username),
                 commentary: req.body.commentary,
@@ -313,8 +324,8 @@ app.post("/addCommentary", (req: Request, res: Response) => {
     res.redirect("/items/" + String([req.body.id]));
 });
 
-app.post("/deleteCommentary", (req: Request, res: Response) => {
-    prisma.comments.delete({
+app.post("/deleteCommentary", async (req: Request, res: Response) => {
+    await prisma.comments.delete({
         where: {
             id: Number(req.body.id)
         }
