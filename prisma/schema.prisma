@@ -24,7 +24,7 @@ model comments {
   commentary    String @db.Text
   date_creating String @db.VarChar(32)
   author        String @db.VarChar(255)
-  item_is       Int    @db.Int
+  item_id       Int    @db.Int
 }
 
 model users {
