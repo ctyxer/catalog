@@ -3,18 +3,16 @@ import session from 'express-session';
 import fileUpload from 'express-fileupload';
 import { items, PrismaClient } from "@prisma/client";
 import path from 'path';
-import md5 from "md5";
-import fs from "fs";
+import { ItemsController } from './controllers/itemsController';
+import { AuthenticationController } from './controllers/authenticationController';
+import { CommentariesController } from './controllers/commentariesController';
 
-declare module "express-session" {
-    interface SessionData {
-        auth: boolean,
-        username: string
-    }
-};
-
-const prisma: PrismaClient = new PrismaClient();
 const app: Express = express();
+
+//Controllers
+const itemsController = new ItemsController();
+const authenticationController = new AuthenticationController();
+const commentariesController = new CommentariesController();
 
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }))
@@ -38,6 +36,12 @@ app.set("views", path.join(__dirname, "./views"));
 app.use(express.urlencoded({ extended: true }));
 
 // Инициализация сессии
+declare module "express-session" {
+    interface SessionData {
+        auth: boolean,
+        username: string
+    }
+};
 app.use(session({ secret: "Secret", resave: false, saveUninitialized: true }));
 
 // Загрузка изображений на web-сервер
@@ -47,30 +51,6 @@ app.use(fileUpload());
 app.listen(5000);
 
 
-function stringData(data: string) {
-    let date = new Date(data);
-    function addZero(number: number, col: number) {
-        if (Number(col) - Number(String(number).length) >= 0) {
-            return "0".repeat(Number(col) - Number(String(number).length)) + number;
-        }
-        else {
-            return number;
-        }
-    }
-    return String(
-        addZero(date.getHours(), 2) +
-        ":" +
-        addZero(date.getMinutes(), 2) +
-        " " +
-        addZero(date.getDate(), 2) +
-        "." +
-        addZero(Number(date.getMonth() + 1), 2) +
-        "." +
-        date.getFullYear()
-    );
-
-}
-
 /**
  * Маршруты
  */
@@ -79,162 +59,47 @@ function stringData(data: string) {
 //getters
 
 app.get("/", async (req: Request, res: Response) => {
-
-    let data = await prisma.items.findMany();
-
-    data = data.map(function (a: items) {
-        return { ...a, date_creating: stringData(a.date_creating) };
-    })
-    res.render("home",
-        {
-            items: data,
-            auth: req.session.auth,
-            username: req.session.username,
-        });
+    itemsController.show(req, res);
 });
 
 app.get("/items/:id", async (req: Request, res: Response) => {
-    let data = await prisma.items.findMany({
-        where: {
-            id: Number(req.params.id)
-        }
-    })
-
-    let data2 = await prisma.comments.findMany({
-        where: {
-            id: data[0].id
-        }
-    })
-
-    data = data.map(function (a) {
-        return { ...a, date_creating: stringData(a.date_creating) };
-    })
-    data2 = data2.map(function (a) {
-        return { ...a, date: stringData(a.date_creating) };
-    })
-
-    res.render("item",
-        {
-            item: data[0],
-            comments: data2,
-            auth: req.session.auth,
-            username: req.session.username,
-        });
+    itemsController.item(req, res);
 });
 
 app.get("/items/:id/change", async (req: Request, res: Response) => {
-    const data = await prisma.items.findMany({
-        where: {
-            id: Number(req.params.id)
-        }
-    })
-
-    if (data[0].author != req.session.username) {
-        res.redirect("/");
-    } else {
-        res.render("changeItem",
-            {
-                item: data[0],
-                auth: req.session.auth,
-                username: req.session.username,
-            });
-    }
+    itemsController.itemUpdate(req, res);
 });
 
-app.get("/add", (req: Request, res: Response) => {
-    if (req.session.auth != true) {
-        res.redirect("/");
-    } else {
-        res.render("add",
-            {
-                auth: req.session.auth,
-                username: req.session.username,
-            });
-    }
+app.get("/addItem", async (req: Request, res: Response) => {
+    itemsController.add(req, res);
 });
 
-app.get("/login", (req: Request, res: Response) => {
-    res.render("login",
-        {
-            error: "",
-            auth: req.session.auth,
-            username: req.session.username,
-        });
+app.get("/login", async (req: Request, res: Response) => {
+    authenticationController.login(req, res);
 });
 
-app.get("/register", (req: Request, res: Response) => {
-    res.render("register",
-        {
-            error: "",
-            auth: req.session.auth,
-            username: req.session.username,
-        });
+app.get("/register", async (req: Request, res: Response) => {
+    authenticationController.register(req, res);
 });
 
 //postes
 
-app.post("/login", async (req: Request, res: Response) => {
-    const data = await prisma.users.findFirst({
-        where: {
-            username: req.body.username
-        }
-    })
-    if (data != null) {
-        if (md5(String([req.body.password])) == String(data.password)) {
-            req.session.auth = true;
-            req.session.username = [req.body.username][0];
-            res.redirect("/")
-        }
-    }
-    else res.render("login", {
-        error: "The user does not exist",
-        auth: req.session.auth,
-        username: req.session.username,
-    });
+app.post("/logining", async (req: Request, res: Response) => {
+    authenticationController.logining(req, res);
 });
 
-app.post("/logout", (req: Request, res: Response) => {
+app.post("/logout", async (req: Request, res: Response) => {
     req.session.auth = false;
     req.session.username = undefined;
     res.redirect("/");
 });
 
-app.post("/register", async (req: Request, res: Response) => {
-    if (req.body.username == "" || req.body.password == "") {
-        res.render('register', {
-            error: "The field cannot be empty",
-            auth: req.session.auth,
-            username: req.session.username
-        });
-    } else {
-        const data = await prisma.users.findFirst({
-            where: {
-                username: req.body.username
-            }
-        })
-        if (data != null) {
-            res.render('register', {
-                error: "Username already taken",
-                auth: req.session.auth,
-                username: req.session.username,
-            });
-        } else {
-            await prisma.users.create({
-                data: {
-                    username: req.body.username,
-                    password: md5(String(req.body.password)),
-                    role: "user"
-                }
-            });
-            req.session.auth = true;
-            req.session.username = [req.body.username][0];
-            res.redirect('/');
-        }
-    }
+app.post("/registering", async (req: Request, res: Response) => {
+    authenticationController.registering(req, res);
 });
 
 // app.post("/add", async (req: Request, res: Response) => {
-//     const { name } = await req.files.image.name;
+//     const { name } =  req.files.image.name;
 //     req.files.image.mv("./public/img/" + name);
 //     let newName = md5(name.split(".")[0]) + name.split(".")[1];
 //     fs.rename("./public/img/" + name, "./public/img/" + newName, function (err) {
@@ -245,7 +110,7 @@ app.post("/register", async (req: Request, res: Response) => {
 //             title: req.body.title,
 //             image: newName,
 //             description: req.body.description,
-//             author: req.session.username,
+//             author: String(req.session.username),
 //             date_creating: String(new Date())
 //         }
 //     })
@@ -288,45 +153,14 @@ app.post("/register", async (req: Request, res: Response) => {
 //     res.redirect("/");
 // });
 
-app.post("/delete", async (req: Request, res: Response) => {
-    try {
-        fs.unlinkSync("./public/img/" + req.body.oldImage);
-    }
-    catch (err) { }
-
-    await prisma.comments.deleteMany({
-        where: {
-            item_id: Number(req.body.id)
-        }
-    })
-    await prisma.items.delete({
-        where: {
-            id: Number(req.body.id)
-        }
-    })
-
-    res.redirect("/");
+app.post("/deleteItem", async (req: Request, res: Response) => {
+    itemsController.delete(req, res);
 });
 
 app.post("/addCommentary", async (req: Request, res: Response) => {
-    if (req.body.commentary != "") {
-        await prisma.comments.create({
-            data: {
-                author: String(req.session.username),
-                commentary: req.body.commentary,
-                date_creating: String(new Date()),
-                item_id: req.body.id
-            }
-        })
-    }
-    res.redirect("/items/" + String([req.body.id]));
+    commentariesController.add(req, res);
 });
 
 app.post("/deleteCommentary", async (req: Request, res: Response) => {
-    await prisma.comments.delete({
-        where: {
-            id: Number(req.body.id)
-        }
-    })
-    res.redirect("/items/" + String([req.body.id]));
+    commentariesController.delete(req, res);
 });
