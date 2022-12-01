@@ -200,8 +200,6 @@ app.post("/logout", (req: Request, res: Response) => {
 });
 
 app.post("/register", async (req: Request, res: Response) => {
-
-    let redir = "/register";
     if (req.body.username == "" || req.body.password == "") {
         res.render('register', {
             error: "The field cannot be empty",
