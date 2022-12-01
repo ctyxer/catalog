@@ -1,7 +1,6 @@
 import express, { Express, Request, Response } from 'express';
 import session from 'express-session';
 import fileUpload from 'express-fileupload';
-import { items, PrismaClient } from "@prisma/client";
 import path from 'path';
 import { ItemsController } from './controllers/itemsController';
 import { AuthenticationController } from './controllers/authenticationController';
