@@ -12,6 +12,7 @@ declare module "express-session" {
         username: string
     }
   };
+
 const prisma: PrismaClient = new PrismaClient();
 const app: Express = express();
 
