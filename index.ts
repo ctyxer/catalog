@@ -87,8 +87,8 @@ app.get("/", async (req: Request, res: Response) => {
     res.render("home",
         {
             items: data,
-            auth: session.auth,
-            username: session.username,
+            auth: req.session.auth,
+            username: req.session.username,
         });
 });
 
@@ -116,8 +116,8 @@ app.get("/items/:id", async (req: Request, res: Response) => {
         {
             item: data[0],
             comments: data2,
-            auth: session.auth,
-            username: session.username,
+            auth: req.session.auth,
+            username: req.session.username,
         });
 });
 
@@ -128,26 +128,26 @@ app.get("/items/:id/change", async (req: Request, res: Response) => {
         }
     })
 
-    if (data[0].author != session.username) {
+    if (data[0].author != req.session.username) {
         res.redirect("/");
     } else {
         res.render("changeItem",
             {
                 item: data[0],
-                auth: session.auth,
-                username: session.username,
+                auth: req.session.auth,
+                username: req.session.username,
             });
     }
 });
 
 app.get("/add", (req: Request, res: Response) => {
-    if (session.auth != true) {
+    if (req.session.auth != true) {
         res.redirect("/");
     } else {
         res.render("add",
             {
-                auth: session.auth,
-                username: session.username,
+                auth: req.session.auth,
+                username: req.session.username,
             });
     }
 });
@@ -155,16 +155,16 @@ app.get("/add", (req: Request, res: Response) => {
 app.get("/login", (req: Request, res: Response) => {
     res.render("login",
         {
-            auth: session.auth,
-            username: session.username,
+            auth: req.session.auth,
+            username: req.session.username,
         });
 });
 
 app.get("/register", (req: Request, res: Response) => {
     res.render("register",
         {
-            auth: session.auth,
-            username: session.username,
+            auth: req.session.auth,
+            username: req.session.username,
         });
 });
 
@@ -180,15 +180,15 @@ app.post("/login", async (req: Request, res: Response) => {
 
     if (md5(String([req.body.password])) == String(data[0].password)) {
         redir = "/";
-        session.auth = true;
-        session.username = [req.body.username][0];
+        req.session.auth = true;
+        req.session.username = [req.body.username][0];
     }
     res.redirect(redir);
 });
 
 app.post("/logout", (req: Request, res: Response) => {
-    session.auth = false;
-    session.username = undefined;
+    req.session.auth = false;
+    req.session.username = undefined;
     res.redirect("/");
 });
 
@@ -214,8 +214,8 @@ app.post("/register", async (req: Request, res: Response) => {
                 }
             })
             redir = "/";
-            session.auth = true;
-            session.username = [req.body.username][0];
+            req.session.auth = true;
+            req.session.username = [req.body.username][0];
             res.redirect(redir);
 
         }
@@ -234,7 +234,7 @@ app.post("/register", async (req: Request, res: Response) => {
 //             title: req.body.title,
 //             image: newName,
 //             description: req.body.description,
-//             author: session.username,
+//             author: req.session.username,
 //             date_creating: String(new Date())
 //         }
 //     })
