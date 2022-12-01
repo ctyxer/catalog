@@ -1,10 +1,17 @@
 import express, { Express, Request, Response } from 'express';
 import session from 'express-session';
 import fileUpload from 'express-fileupload';
-import { items, PrismaClient, PrismaPromise } from "@prisma/client";
+import { items, PrismaClient } from "@prisma/client";
 import path from 'path';
 import md5 from "md5";
+import fs from "fs";
 
+declare module "express-session" {
+    interface SessionData {
+        auth: boolean,
+        username: string
+    }
+  };
 const prisma: PrismaClient = new PrismaClient();
 const app: Express = express();
 
@@ -14,7 +21,7 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 app.listen(3000, () => {
-  console.log('Server is running on port 3000');
+    console.log('Server is running on port 3000');
 });
 
 // Путь к директории файлов ресурсов (css, js, images)
@@ -37,6 +44,7 @@ app.use(fileUpload());
 
 // Запуск веб-сервера по адресу http://localhost:3000
 app.listen(3000);
+
 
 function stringData(data: string) {
     let date = new Date(data);
@@ -69,8 +77,7 @@ function stringData(data: string) {
 
 //getters
 
-app.get("/", async (req: Request, res) => {
-    session.loyalPass = true;
+app.get("/", async (req: Request, res: Response) => {
 
     let data = await prisma.items.findMany();
 
@@ -85,7 +92,7 @@ app.get("/", async (req: Request, res) => {
         });
 });
 
-app.get("/items/:id", async (req, res) => {
+app.get("/items/:id", async (req: Request, res: Response) => {
     let data = await prisma.items.findMany({
         where: {
             id: Number(req.params.id)
@@ -114,7 +121,7 @@ app.get("/items/:id", async (req, res) => {
         });
 });
 
-app.get("/items/:id/change", async (req, res) => {
+app.get("/items/:id/change", async (req: Request, res: Response) => {
     const data = await prisma.items.findMany({
         where: {
             id: Number(req.params.id)
@@ -133,7 +140,7 @@ app.get("/items/:id/change", async (req, res) => {
     }
 });
 
-app.get("/add", (req, res) => {
+app.get("/add", (req: Request, res: Response) => {
     if (session.auth != true) {
         res.redirect("/");
     } else {
@@ -145,33 +152,25 @@ app.get("/add", (req, res) => {
     }
 });
 
-app.get("/login", (req, res) => {
-    if (session.loyalPass == undefined) {
-        session.loyalPass = true;
-    }
+app.get("/login", (req: Request, res: Response) => {
     res.render("login",
         {
             auth: session.auth,
-            loyalPass: session.loyalPass,
             username: session.username,
         });
 });
 
-app.get("/register", (req, res) => {
-    if (session.errRegist == undefined) {
-        session.errRegist = true;
-    }
+app.get("/register", (req: Request, res: Response) => {
     res.render("register",
         {
             auth: session.auth,
-            errRegist: session.errRegist,
             username: session.username,
         });
 });
 
 //postes
 
-app.post("/login", async (req, res) => {
+app.post("/login", async (req: Request, res: Response) => {
     let redir = "/login";
     const data = await prisma.users.findMany({
         where: {
@@ -179,30 +178,24 @@ app.post("/login", async (req, res) => {
         }
     })
 
-    if (data[0] == undefined) {
-        session.loyalPass = "Аккаунт не существует";
-    } else if (md5(String([req.body.password])) == String(data[0].password)) {
+    if (md5(String([req.body.password])) == String(data[0].password)) {
         redir = "/";
         session.auth = true;
         session.username = [req.body.username][0];
-        session.loyalPass = true;
-    } else {
-        session.loyalPass = "Неверный логин или пароль";
     }
     res.redirect(redir);
 });
 
-app.post("/logout", (req, res) => {
+app.post("/logout", (req: Request, res: Response) => {
     session.auth = false;
     session.username = undefined;
     res.redirect("/");
 });
 
-app.post("/register", async (req, res) => {
+app.post("/register", async (req: Request, res: Response) => {
 
     let redir = "/register";
     if (req.body.username == "" || req.body.password == "") {
-        session.errRegist = "Ни одно поле не может быть пустым";
         res.redirect(redir);
     } else {
         const data = await prisma.users.findMany({
@@ -211,7 +204,6 @@ app.post("/register", async (req, res) => {
             }
         })
         if (data[0] != undefined) {
-            session.errRegist = "Имя уже занято";
             res.redirect(redir);
         } else {
             prisma.users.create({
@@ -223,7 +215,6 @@ app.post("/register", async (req, res) => {
             })
             redir = "/";
             session.auth = true;
-            session.errRegist = true;
             session.username = [req.body.username][0];
             res.redirect(redir);
 
@@ -231,97 +222,97 @@ app.post("/register", async (req, res) => {
     }
 });
 
-app.post("/add", (req: Request, res) => {    
-    const { name } = req.files.image.name;
-    req.files.image.mv("./public/img/" + name);
-    let newName = md5(name.split(".")[0]) + name.split(".")[1];
-    fs.rename("./public/img/" + name, "./public/img/" + newName, function (err) {
-        if (err) console.log('ERROR: ' + err);
-    });
-    prisma.items.create({
-        data: {
-            title: req.body.title,
-            image: newName,
-            description: req.body.description,
-            author: session.username,
-            date_creating: String(new Date())
-        }
-    })
-    res.redirect("/");
-});
+// app.post("/add", async (req: Request, res: Response) => {
+//     const { name } = await req.files.image.name;
+//     req.files.image.mv("./public/img/" + name);
+//     let newName = md5(name.split(".")[0]) + name.split(".")[1];
+//     fs.rename("./public/img/" + name, "./public/img/" + newName, function (err) {
+//         if (err) console.log('ERROR: ' + err);
+//     });
+//     prisma.items.create({
+//         data: {
+//             title: req.body.title,
+//             image: newName,
+//             description: req.body.description,
+//             author: session.username,
+//             date_creating: String(new Date())
+//         }
+//     })
+//     res.redirect("/");
+// });
 
-app.post("/update", (req, res) => {
+// app.post("/update", (req: Request, res: Response) => {
+//     try {
+//         fs.unlinkSync("./public/img/" + req.body.oldImage);
+//     }
+//     catch (err) {
+//         console.log("cannot delete old image: " + new Date())
+//     }
+//     try {
+//         req.files.image.mv("./public/img/" + req.files.image.name);
+//         let newName = "./public/img/" + md5(req.files.image.name.split(".")[0]) + ".wepb";
+//         fs.rename("./public/img/" + req.files.image.name, newName, function (err) {
+//             if (err) console.log('ERROR: ' + err);
+//         });
+//     }
+//     catch (err) { }
+//     function retImage() {
+//         try {
+//             return md5(req.files.image.name.split(".")[0]) + req.files.image.name.split(".")[1]
+//         }
+//         catch (err) {
+//             return req.body.oldImage
+//         }
+//     }
+//     prisma.items.update({
+//         data: {
+//             title: req.body.title,
+//             image: retImage(),
+//             description: req.body.description,
+//         },
+//         where: {
+//             id: Number(req.body.id)
+//         }
+//     })
+//     res.redirect("/");
+// });
+
+app.post("/delete", (req: Request, res: Response) => {
     try {
         fs.unlinkSync("./public/img/" + req.body.oldImage);
     }
-    catch (err) {
-        console.log("cannot delete old image: " + new Date())
-    }
-    try {
-        req.files.image.mv("./public/img/" + req.files.image.name);
-        let newName = "./public/img/" + md5(req.files.image.name.split(".")[0]) + ".wepb";
-        fs.rename("./public/img/" + req.files.image.name, newName, function (err) {
-            if (err) console.log('ERROR: ' + err);
-        });
-    }
     catch (err) { }
-    function retImage() {
-        try {
-            return md5(req.files.image.name.split(".")[0]) + req.files.image.name.split(".")[1]
-        }
-        catch (err) {
-            return req.body.oldImage
-        }
-    }
-    prisma.items.update({
-        data: {
-            title: req.body.title,
-            image: retImage(),
-            description: req.body.description,
-        },
+    
+    prisma.comments.deleteMany({
         where: {
-            id: Number(req.body.id)
+            item_id: Number(req.body.id)
         }
     })
-    res.redirect("/");
-    ;
-});
-
-app.post("/delete", (req, res) => {
-    try {
-        fs.unlinkSync("./public/img/" + req.body.oldImage);
-    }
-    catch (err) { }
     prisma.items.delete({
         where: {
             id: Number(req.body.id)
         }
     })
-    prisma.comments.delete({
-        where: {
-            item_id: Number(req.body.id)
-        }
-    })
 
     res.redirect("/");
 });
 
-app.post("/addCommentary", (req, res) => {
+app.post("/addCommentary", (req: Request, res: Response) => {
     if (req.body.commentary != "") {
         let date = new Date();
-        prisma.connect.create({
+        prisma.comments.create({
             data: {
-                author: req.session.username,
+                author: String(req.session.username),
                 commentary: req.body.commentary,
-                date_creating: new Date(),
-                item_id: String(req.body.id)
+                date_creating: String(new Date()),
+                item_id: req.body.id
             }
         })
     }
     res.redirect("/items/" + String([req.body.id]));
 });
 
-app.post("/deleteCommentary", (req, res) => {
+app.post("/deleteCommentary", (req: Request, res: Response) => {
     prisma.comments.delete({
         where: {
             id: Number(req.body.id)
