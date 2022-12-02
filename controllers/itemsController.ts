@@ -1,13 +1,12 @@
+import { items, PrismaClient } from "@prisma/client";
 import { Request, Response } from 'express';
-import { items, comments, PrismaClient } from "@prisma/client";
+import fs from "fs";
 import { stringData } from '../init';
-import fileUpload from 'express-fileupload';
 declare module "express-fileupload" {
     interface UploadedFile {
         name: string
     }
 };
-import fs from "fs";
 
 const prisma: PrismaClient = new PrismaClient();
 
