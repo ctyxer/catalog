@@ -104,9 +104,11 @@ body {
 }
 
 .navigation {
-    margin: 0px;
-    padding: 10px;
+    margin: 2px;
+    padding: 5px;
     background-color: black;
+    border: 0px solid black;
+    border-radius: 12px;
 
     &__item {
         display: inline-block;

@@ -18,7 +18,7 @@ app.use(express.urlencoded({ extended: true }))
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-app.listen(6000, () => {
+app.listen(5000, () => {
     console.log('Server is running on port 5000');
 });
 
@@ -45,10 +45,6 @@ app.use(session({ secret: "Secret", resave: false, saveUninitialized: true }));
 
 // Загрузка изображений на web-сервер
 app.use(fileUpload());
-
-// Запуск веб-сервера по адресу http://localhost:5000
-app.listen(5000);
-
 
 /**
  * Маршруты
