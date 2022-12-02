@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { items, comments, PrismaClient } from "@prisma/client";
 import { stringData } from '../init';
-import { UploadedFile } from 'express-fileupload';
+import fileUpload from 'express-fileupload';
 declare module "express-fileupload" {
     interface UploadedFile {
         name: string
@@ -111,7 +111,8 @@ export class ItemsController {
             await prisma.items.create({
                 data: {
                     title: req.body.title,
-                    image: String(req.files.image.name),
+                    // image: String(req.files.image),
+                    image: '/',
                     description: req.body.description,
                     author: String(req.session.username),
                     date_creating: String(new Date())
@@ -130,7 +131,8 @@ export class ItemsController {
             await prisma.items.update({
                 data: {
                     title: req.body.title,
-                    image: req.files.image.name,
+                    // image: req.files.image.name,
+                    image: '/',
                     description: req.body.description,
                 },
                 where: {
