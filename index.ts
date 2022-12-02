@@ -1,7 +1,7 @@
 import express, { Express, Request, Response } from 'express';
 import session from 'express-session';
-import fileUpload from 'express-fileupload';
 import path from 'path';
+import fileUpload from 'express-fileupload';
 import { ItemsController } from './controllers/itemsController';
 import { AuthenticationController } from './controllers/authenticationController';
 import { CommentariesController } from './controllers/commentariesController';
@@ -91,56 +91,13 @@ app.post("/registering", async (req: Request, res: Response) => {
     authenticationController.registering(req, res);
 });
 
-// app.post("/add", async (req: Request, res: Response) => {
-//     const { name } =  req.files.image;
-//     req.files.image.mv("./public/img/" + name);
-//     await prisma.items.create({
-//         data: {
-//             title: req.body.title,
-//             image: newName,
-//             description: req.body.description,
-//             author: String(req.session.username),
-//             date_creating: String(new Date())
-//         }
-//     })
-//     res.redirect("/");
-// });
+app.post("/upload", async (req: Request, res: Response) => {
+    itemsController.upload(req, res);
+});
 
-// app.post("/update", (req: Request, res: Response) => {
-//     try {
-//         fs.unlinkSync("./public/img/" + req.body.oldImage);
-//     }
-//     catch (err) {
-//         console.log("cannot delete old image: " + new Date())
-//     }
-//     try {
-//         req.files.image.mv("./public/img/" + req.files.image.name);
-//         let newName = "./public/img/" + md5(req.files.image.name.split(".")[0]) + ".wepb";
-//         fs.rename("./public/img/" + req.files.image.name, newName, function (err) {
-//             if (err) console.log('ERROR: ' + err);
-//         });
-//     }
-//     catch (err) { }
-//     function retImage() {
-//         try {
-//             return md5(req.files.image.name.split(".")[0]) + req.files.image.name.split(".")[1]
-//         }
-//         catch (err) {
-//             return req.body.oldImage
-//         }
-//     }
-//     await prisma.items.update({
-//         data: {
-//             title: req.body.title,
-//             image: retImage(),
-//             description: req.body.description,
-//         },
-//         where: {
-//             id: Number(req.body.id)
-//         }
-//     })
-//     res.redirect("/");
-// });
+app.post("/update", async (req: Request, res: Response) => {
+    itemsController.update(req, res);
+});
 
 app.post("/deleteItem", async (req: Request, res: Response) => {
     itemsController.delete(req, res);
