@@ -108,11 +108,13 @@ export class ItemsController {
     };
     async upload(req: Request, res: Response) {
         if (req.files != undefined) {
+            req.files.image.mv("./public/img/" + req.files.image.name);
+            console.log(req.files.image)
             await prisma.items.create({
                 data: {
                     title: req.body.title,
-                    // image: String(req.files.image),
-                    image: '/',
+                    image: String(req.files.image.name),
+                    // image: '/',
                     description: req.body.description,
                     author: String(req.session.username),
                     date_creating: String(new Date())

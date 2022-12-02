@@ -91,7 +91,7 @@ app.post("/registering", async (req: Request, res: Response) => {
     authenticationController.registering(req, res);
 });
 
-app.post("/upload", async (req: Request, res: Response) => {
+app.post("/UploadItem", async (req: Request, res: Response) => {
     itemsController.upload(req, res);
 });
 

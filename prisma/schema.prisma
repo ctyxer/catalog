@@ -15,14 +15,14 @@ model items {
   title         String? @db.VarChar(255)
   image         String? @db.VarChar(255)
   description   String? @db.Text
-  date_creating String? @db.VarChar(32)
+  date_creating String? @db.VarChar(64)
   author        String? @db.VarChar(255)
 }
 
 model comments {
   id            Int    @id @default(autoincrement())
   commentary    String? @db.Text
-  date_creating String? @db.VarChar(32)
+  date_creating String? @db.VarChar(64)
   author        String? @db.VarChar(255)
   item_id       Int?    @db.Int
 }
