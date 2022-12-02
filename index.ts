@@ -84,9 +84,7 @@ app.post("/logining", async (req: Request, res: Response) => {
 });
 
 app.post("/logout", async (req: Request, res: Response) => {
-    req.session.auth = false;
-    req.session.username = undefined;
-    res.redirect("/");
+    authenticationController.logout(req, res);
 });
 
 app.post("/registering", async (req: Request, res: Response) => {
@@ -94,12 +92,8 @@ app.post("/registering", async (req: Request, res: Response) => {
 });
 
 // app.post("/add", async (req: Request, res: Response) => {
-//     const { name } =  req.files.image.name;
+//     const { name } =  req.files.image;
 //     req.files.image.mv("./public/img/" + name);
-//     let newName = md5(name.split(".")[0]) + name.split(".")[1];
-//     fs.rename("./public/img/" + name, "./public/img/" + newName, function (err) {
-//         if (err) console.log('ERROR: ' + err);
-//     });
 //     await prisma.items.create({
 //         data: {
 //             title: req.body.title,

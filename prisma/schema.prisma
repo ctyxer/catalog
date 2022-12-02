@@ -12,24 +12,24 @@ datasource db {
 
 model items {
   id            Int    @id @default(autoincrement())
-  title         String @db.VarChar(255)
-  image         String @db.VarChar(255)
-  description   String @db.Text
-  date_creating String @db.VarChar(32)
-  author        String @db.VarChar(255)
+  title         String? @db.VarChar(255)
+  image         String? @db.VarChar(255)
+  description   String? @db.Text
+  date_creating String? @db.VarChar(32)
+  author        String? @db.VarChar(255)
 }
 
 model comments {
   id            Int    @id @default(autoincrement())
-  commentary    String @db.Text
-  date_creating String @db.VarChar(32)
-  author        String @db.VarChar(255)
-  item_id       Int    @db.Int
+  commentary    String? @db.Text
+  date_creating String? @db.VarChar(32)
+  author        String? @db.VarChar(255)
+  item_id       Int?    @db.Int
 }
 
 model users {
   id       Int    @id @default(autoincrement())
-  username String @db.VarChar(255)
-  password String @db.VarChar(255)
-  role     String @db.VarChar(255)
+  username String? @db.VarChar(255)
+  password String? @db.VarChar(255)
+  role     String? @db.VarChar(255)
 }
