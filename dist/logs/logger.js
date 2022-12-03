@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.addLog = void 0;
 const fs_1 = __importDefault(require("fs"));
 function addLog(message) {
-    fs_1.default.appendFile("./logs/logs.txt", '\n\n[' + new Date() + ']\nMessage:' + message, (err) => { });
+    fs_1.default.appendFile("./logs/logs.txt", '\n\n[' + new Date() + ']\n' + message, (err) => { });
     console.log('\n' + new Date() + '\n' + message);
 }
 exports.addLog = addLog;
