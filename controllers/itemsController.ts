@@ -1,7 +1,7 @@
 import { items, PrismaClient } from "@prisma/client";
 import { Request, Response } from 'express';
 import fs from "fs";
-import { stringData } from '../init';
+import { stringData } from '../functions';
 declare module "express-fileupload" {
     interface UploadedFile {
         name: string
