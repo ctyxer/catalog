@@ -1,3 +1,5 @@
+import fs from "fs";
+
 export function stringData(data: string) {
     let date = new Date(data);
     function addZero(number: number, col: number) {
@@ -19,4 +21,10 @@ export function stringData(data: string) {
         "." +
         date.getFullYear()
     );
+}
+
+
+export function addLog(message: string): void{
+    fs.appendFile("./logs/logs.txt", '\n\n[' + new Date() + ']\nMessage:' + message, (err) => {})
+    console.log('\n' + new Date() + '\n' + message)
 }

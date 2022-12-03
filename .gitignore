@@ -6,3 +6,4 @@ dist/*.js
 dist/controllers/*.js
 public/css/*.css*
 public/img/*
+logs/*

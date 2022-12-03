@@ -1,7 +1,7 @@
 import { items, PrismaClient } from "@prisma/client";
 import { Request, Response } from 'express';
 import fs from "fs";
-import { stringData } from '../functions';
+import { stringData, addLog } from '../functions';
 declare module "express-fileupload" {
     interface UploadedFile {
         name: string
@@ -16,7 +16,7 @@ export class ItemsController {
         let data = await prisma.items.findMany();
 
         data = data.map(function (a: items) {
-            return { ...a, date_creating: stringData(a.date_creating) };
+            return { ...a, date_creating: stringData(String(a.date_creating)) };
         })
         res.render("home",
             {
@@ -40,10 +40,10 @@ export class ItemsController {
         })
 
         data = data.map(function (a) {
-            return { ...a, date_creating: stringData(a.date_creating) };
+            return { ...a, date_creating: stringData(String(a.date_creating) };
         })
         data2 = data2.map(function (a) {
-            return { ...a, date: stringData(a.date_creating) };
+            return { ...a, date: stringData(String(a.date_creating) };
         })
 
         res.render("item",
@@ -74,7 +74,7 @@ export class ItemsController {
         }
     }
 
-    async add(req: Request, res: Response) {
+    async addGet(req: Request, res: Response) {
         if (req.session.auth != true) {
             res.redirect("/");
         } else {
@@ -105,7 +105,7 @@ export class ItemsController {
 
         res.redirect("/");
     };
-    async upload(req: Request, res: Response) {
+    async addPost(req: Request, res: Response) {
         if (req.files != undefined) {
             req.files.image.mv("./public/img/" + req.files.image.name);
             console.log(req.files.image)

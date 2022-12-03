@@ -66,7 +66,7 @@ app.get("/items/:id/change", async (req: Request, res: Response) => {
 });
 
 app.get("/addItem", async (req: Request, res: Response) => {
-    itemsController.add(req, res);
+    itemsController.addGet(req, res);
 });
 
 app.get("/login", async (req: Request, res: Response) => {
@@ -91,8 +91,8 @@ app.post("/registering", async (req: Request, res: Response) => {
     authenticationController.registering(req, res);
 });
 
-app.post("/UploadItem", async (req: Request, res: Response) => {
-    itemsController.upload(req, res);
+app.post("/add", async (req: Request, res: Response) => {
+    itemsController.addPost(req, res);
 });
 
 app.post("/update", async (req: Request, res: Response) => {
