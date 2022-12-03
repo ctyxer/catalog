@@ -1,7 +1,7 @@
 import { items, PrismaClient } from "@prisma/client";
 import { Request, Response } from 'express';
 import fs from "fs";
-import { stringData, addLog } from '../functions';
+import { stringData } from '../functions';
 declare module "express-fileupload" {
     interface UploadedFile {
         name: string
@@ -39,11 +39,11 @@ export class ItemsController {
             }
         })
 
-        data = data.map(function (a) {
-            return { ...a, date_creating: stringData(String(a.date_creating) };
+        data = data.map((a) => {
+            return { ...a, date_creating: stringData(String(a.date_creating))};
         })
         data2 = data2.map(function (a) {
-            return { ...a, date: stringData(String(a.date_creating) };
+            return { ...a, date: stringData(String(a.date_creating))}
         })
 
         res.render("item",
