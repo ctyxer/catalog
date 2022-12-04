@@ -2,7 +2,7 @@ import { items, PrismaClient } from "@prisma/client";
 import { Request, Response } from 'express';
 import fs from "fs";
 import { stringData } from '../functions';
-import { addLog } from '../logs/logger'
+import { addLog, catcherErr } from '../logs/logger'
 declare module "express-fileupload" {
     interface UploadedFile {
         name: string
@@ -13,7 +13,7 @@ const prisma: PrismaClient = new PrismaClient();
 
 export class ItemsController {
     async show(req: Request, res: Response) {
-        try {
+        catcherErr(async () => {
             let data = await prisma.items.findMany();
 
             data = data.map(function (a: items) {
@@ -25,15 +25,11 @@ export class ItemsController {
                     auth: req.session.auth,
                     username: req.session.username,
                 });
-
-        }
-        catch (err) {
-            addLog(String(err));
-        }
+        });
     };
 
     async item(req: Request, res: Response) {
-        try {
+        catcherErr(async () => {
             let data = await prisma.items.findMany({
                 where: {
                     id: Number(req.params.id)
@@ -60,14 +56,11 @@ export class ItemsController {
                     auth: req.session.auth,
                     username: req.session.username,
                 });
-        }
-        catch (err) {
-            addLog(String(err));
-        }
+        });
     };
 
     async itemUpdate(req: Request, res: Response) {
-        try {
+        catcherErr(async () => {
             const data = await prisma.items.findMany({
                 where: {
                     id: Number(req.params.id)
@@ -84,14 +77,11 @@ export class ItemsController {
                         username: req.session.username,
                     });
             }
-        }
-        catch (err) {
-            addLog(String(err));
-        }
+        });
     }
 
     async addGet(req: Request, res: Response) {
-        try {
+        catcherErr(async () => {
             if (req.session.auth != true) {
                 res.redirect("/");
             } else {
@@ -101,14 +91,11 @@ export class ItemsController {
                         username: req.session.username,
                     });
             }
-        }
-        catch (err) {
-            addLog(String(err));
-        }
+        });
     };
 
     async delete(req: Request, res: Response) {
-        try {
+        catcherErr(async () => {
             try {
                 fs.unlinkSync("./public/img/" + req.body.oldImage);
             }
@@ -126,14 +113,10 @@ export class ItemsController {
             })
 
             res.redirect("/");
-        }
-
-        catch (err) {
-            addLog(String(err));
-        }
+        });
     };
     async addPost(req: Request, res: Response) {
-        try {
+        catcherErr(async () => {
             if (req.files != undefined) {
                 req.files.image.mv("./public/img/" + req.files.image.name);
                 console.log(req.files.image)
@@ -149,24 +132,22 @@ export class ItemsController {
                 })
             }
             res.redirect("/");
-        }
-        catch (err) {
-            addLog(String(err));
-        }
+        })
     };
 
     async update(req: Request, res: Response) {
-        try {
+        catcherErr(async () => {
             try {
                 fs.unlinkSync("./public/img/" + req.body.oldImage);
             }
             catch (err) { }
             if (req.files != undefined) {
+                req.files.image.mv("./public/img/" + req.files.image.name);
                 await prisma.items.update({
                     data: {
                         title: req.body.title,
-                        // image: req.files.image.name,
-                        image: '/',
+                        image: req.files.image.name,
+                        // image: '/',
                         description: req.body.description,
                     },
                     where: {
@@ -176,9 +157,6 @@ export class ItemsController {
             };
 
             res.redirect("/");
-        }
-        catch(err){
-            addLog(String(err))
-        }
+        });
     };
 }
