@@ -6,5 +6,5 @@ dist/*.js
 dist/logs/*
 dist/controllers/*.js
 public/css/*.css*
-public/img/*
+public/img/*.*
 logs/*.txt

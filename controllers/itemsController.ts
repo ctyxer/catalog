@@ -2,7 +2,7 @@ import { items, PrismaClient } from "@prisma/client";
 import { Request, Response } from 'express';
 import fs from "fs";
 import { stringData } from '../functions';
-import { addLog, catcherErr } from '../logs/logger'
+import { addLog, catcherErr, renderPathClient, getClient } from '../logs/logger'
 declare module "express-fileupload" {
     interface UploadedFile {
         name: string
@@ -100,7 +100,6 @@ export class ItemsController {
                 fs.unlinkSync("./public/img/" + req.body.oldImage);
             }
             catch (err) { }
-
             await prisma.comments.deleteMany({
                 where: {
                     item_id: Number(req.body.id)
@@ -119,7 +118,6 @@ export class ItemsController {
         catcherErr(async () => {
             if (req.files != undefined) {
                 req.files.image.mv("./public/img/" + req.files.image.name);
-                console.log(req.files.image)
                 await prisma.items.create({
                     data: {
                         title: req.body.title,

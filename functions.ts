@@ -20,3 +20,9 @@ export function stringData(data: string) {
         date.getFullYear()
     );
 }
+
+export function getNavObj(req: Request){
+    return {
+        'username' : undefined
+    } 
+}

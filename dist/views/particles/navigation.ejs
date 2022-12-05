@@ -1,15 +1,21 @@
 <div class="navigation">
-  <% if(auth) { %>
-  <p class="navigation__item">Аккаунт: <%=username%></p>
-  <% } %>
-  <a href="/" class="navigation__item">Главная</a>
+  <div class="navigation__block__auth">
+    <% if(auth) { %>
+    <p class="navigation__item">Аккаунт: <%=username%>
+    </p>
+    <form action="/logout" method="post" class="navigation__item">
+      <input class="navigation__item__form-input" type="submit" style="display: block;" value="Выйти" />
+    </form>
+    <% } else {%>
+    <a href="/login" class="navigation__item">Авторизоваться</a>
+    <% } %>
+  </div>
+  <div class="navigation__block" style="margin-top: 0px;">
+    <a href="/" class="navigation__item">Главная</a>
 
-  <% if(auth) { %>
-  <a href="/addItem" class="navigation__item">Добавить</a>
-  <form action="/logout" method="post">
-    <input class="navigation__item" type="submit" value="Выйти" />
-  </form>
-  <% } else {%>
-  <a href="/login" class="navigation__item">Авторизоваться</a>
-  <% } %>
+    <% if(auth) { %>
+    <a href="/addItem" class="navigation__item">Добавить</a>
+    <% } %>
+  </div>
+
 </div>

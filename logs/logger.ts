@@ -1,8 +1,8 @@
 import fs from "fs";
+import { Request } from 'express';
 
-export function addLog(message: string): void{
+export function addLog(message: string | String ): void{
     fs.appendFile("./logs/logs.txt", '\n\n[' + new Date() + ']\n' + message, (err) => {})
-    console.log('\n' + new Date() + '\n' + message)
 }
 
 export async function catcherErr(tryFunc: Function, endFunc?: Function){
@@ -15,4 +15,12 @@ export async function catcherErr(tryFunc: Function, endFunc?: Function){
             endFunc();
         }
     }
+}
+
+export function renderPathClient(req: Request):  String{
+    return getClient(req) + "\nrender page '" + req.url + "'"
+}
+
+export function getClient(req: Request): String{
+    return String(req.headers['user-agent']);
 }
