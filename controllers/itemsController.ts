@@ -1,14 +1,15 @@
-import { items, PrismaClient } from "@prisma/client";
+import { items, comments, PrismaClient } from "@prisma/client";
 import { Request, Response } from 'express';
 import fs from "fs";
+import { Logger } from "../logs/logger";
 import { stringData } from '../functions';
-import { addLog, catcherErr, renderPathClient, getClient } from '../logs/logger'
 
 const prisma: PrismaClient = new PrismaClient();
+const logger = new Logger();
 
 export class ItemsController {
     async show(req: Request, res: Response) {
-        catcherErr(async () => {
+        logger.catcherErr(async () => {
             let data = await prisma.items.findMany();
 
             data = data.map(function (a: items) {
@@ -24,7 +25,7 @@ export class ItemsController {
     };
 
     async item(req: Request, res: Response) {
-        catcherErr(async () => {
+        logger.catcherErr(async () => {
             let data = await prisma.items.findMany({
                 where: {
                     id: Number(req.params.id)
@@ -33,7 +34,7 @@ export class ItemsController {
 
             let data2 = await prisma.comments.findMany({
                 where: {
-                    id: data[0].id
+                    item_id: Number(req.params.id)
                 }
             })
 
@@ -55,7 +56,7 @@ export class ItemsController {
     };
 
     async itemUpdate(req: Request, res: Response) {
-        catcherErr(async () => {
+        logger.catcherErr(async () => {
             const data = await prisma.items.findMany({
                 where: {
                     id: Number(req.params.id)
@@ -76,7 +77,7 @@ export class ItemsController {
     }
 
     async addGet(req: Request, res: Response) {
-        catcherErr(async () => {
+        logger.catcherErr(async () => {
             if (req.session.auth != true) {
                 res.redirect("/");
             } else {
@@ -90,7 +91,7 @@ export class ItemsController {
     };
 
     async delete(req: Request, res: Response) {
-        catcherErr(async () => {
+        logger.catcherErr(async () => {
             try {
                 fs.unlinkSync("./public/img/" + req.body.oldImage);
             }
@@ -110,7 +111,7 @@ export class ItemsController {
         });
     };
     async addPost(req: Request, res: Response) {
-        catcherErr(async () => {
+        logger.catcherErr(async () => {
             if (req.files != undefined) {
                 req.files.image.mv("./public/img/" + req.files.image.name);
                 await prisma.items.create({
@@ -129,7 +130,7 @@ export class ItemsController {
     };
 
     async update(req: Request, res: Response) {
-        catcherErr(async () => {
+        logger.catcherErr(async () => {
             try {
                 fs.unlinkSync("./public/img/" + req.body.oldImage);
             }

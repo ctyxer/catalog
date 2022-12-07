@@ -9,9 +9,9 @@ export class CommentariesController {
             await prisma.comments.create({
                 data: {
                     author: String(req.session.username),
-                    commentary: req.body.commentary,
+                    commentary: String(req.body.commentary),
                     date_creating: String(new Date()),
-                    item_id: req.body.id
+                    item_id: Number(req.body.id)
                 }
             })
         }
