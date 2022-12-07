@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { users, PrismaClient } from "@prisma/client";
-import md5 from "md5";
+import * as argon2 from "argon2";
 
 const prisma: PrismaClient = new PrismaClient();
 
@@ -30,7 +30,7 @@ export class AuthenticationController {
             }
         })
         if (data != null) {
-            if (md5(String([req.body.password])) == String(data.password)) {
+            if (await argon2.verify(String(data.password), String(req.body.password))) {
                 req.session.auth = true;
                 req.session.username = [req.body.username][0];
                 res.redirect("/")
@@ -72,7 +72,7 @@ export class AuthenticationController {
                 await prisma.users.create({
                     data: {
                         username: req.body.username,
-                        password: md5(String(req.body.password)),
+                        password: await argon2.hash(String(req.body.password)),
                         role: "user"
                     }
                 });
