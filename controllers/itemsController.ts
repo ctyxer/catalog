@@ -3,11 +3,6 @@ import { Request, Response } from 'express';
 import fs from "fs";
 import { stringData } from '../functions';
 import { addLog, catcherErr, renderPathClient, getClient } from '../logs/logger'
-declare module "express-fileupload" {
-    interface UploadedFile {
-        name: string
-    }
-};
 
 const prisma: PrismaClient = new PrismaClient();
 
