@@ -19,9 +19,10 @@ export class CommentariesController {
     };
 
     async delete (req: Request, res: Response) {
+        console.log(Number(req.body.id))
         await prisma.comments.delete({
             where: {
-                id: Number(req.body.id)
+                id: Number(req.body.idComment)
             }
         })
         res.redirect("/items/" + String([req.body.id]));

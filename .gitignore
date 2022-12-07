@@ -5,6 +5,6 @@ prisma/migrations
 dist/*.js
 dist/logs/*
 dist/controllers/*.js
-public/css/*.css*
+public/css/output.css
 public/img/*.*
 logs/*.txt
