@@ -1,5 +1,12 @@
 <%- include('particles/header.ejs') %>
 <%- include('particles/navigation.ejs') %>
+
+<% if(items.length == 0){ %>
+  <div>
+    <p></p>
+  </div>
+<% } %>
+
 <% for (let i=0; i < items.length; i++) { %>
 <div name="item" class="rounded-md border-4 border-black p-3 m-1">
   <a href="/items/<%= items[i].id %>" class="w-full h-full">
@@ -9,10 +16,10 @@
         <%= items[i].title %>
       </h2>
       <p href="/users/<%= items[i].author %>" class="mr-auto">
-        Автор - <%= items[i].author %>
+        Author - <%= items[i].author %>
       </p>
       <p class="text-gray-600">
-        Добавлено - <%= items[i].date_creating %>
+        Created - <%= items[i].date_creating %>
       </p>
     </div>
   </a>

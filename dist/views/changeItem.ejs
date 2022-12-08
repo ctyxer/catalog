@@ -1,44 +1,40 @@
 <%- include('particles/header.ejs') %>
 
 <%- include('particles/navigation.ejs') %>
+<form action="/update" method="post" class="p-2 border-4 border-black rounded-md w-fit ml-auto mr-auto m-4" enctype="multipart/form-data">
+  <div class="w-auto p-2">
+    <label for="title">Title</label>
+    <input value="<%= item.title %>" class="block border-2 border-black rounded w-full m-0" type="text" id="title" name="title">
+  </div>
 
-<div style="display: block; margin-left: auto; margin-right: auto; width: min-content;" class="item-rename">
-  <form action="/update" method="post" style="display: inline;" enctype="multipart/form-data">
-    <div class="form-group">
-      <label class="form-group__label" for="title">Заголовок</label>
-      <input value="<%= item.title %>" class="form-group__input" type="text" name="title" placeholder="title">
-    </div>
+  <div class="w-auto p-2">
+    <p>Image</p>
 
-    <div class="form-group">
-      <p>Изображение</p>
-      <label class="form-group__label" for="image" style="width: 161px; padding: 7px; border: 2px solid black;border-radius: 4px; min-height: 10px; background-color: white;">
-        <input value="<%= item.image %>" class="form-group__input" type="file" id="image" name="image" placeholder="image" accept="image/png, image/jpeg, image/jpg, image/webp" style="display:none; width: auto; height: auto;">
-        <p id="imageName" style="margin: 0px;">Выберите изображение</p>
+    <label class="h-min">
+      <span id="imageName" class="inline-block border-2 border-black rounded w-full h-auto m-0"><%= item.image %></span>
+      <input value="<%= item.image %>" class="opacity-0 w-0 h-0 inline-block absolute left-0" type="file" id="image" name="image" placeholder="image" accept="image/png, image/jpeg, image/jpg, image/webp">
+    </label>
+  </div>
 
-      </label>
-    </div>
+  <div class="w-auto p-2">
+    <label for="description">Descripton</label>
+    <input value="<%= item.description %>" class="block border-2 border-black rounded w-full m-0" type="text" id="description" name="description" value="description">
+  </div>
 
-    <div class="form-group">
-      <label class="form-group__label" for="description">Описание</label>
-      <input value="<%= item.description %>" class="form-group__input" type="text" name="description" placeholder="description">
-    </div>
-    <input type="hidden" value="<%= item.id %>" type="text" name="id">
-    <input type="hidden" value="<%= item.image %>" name="oldImage">
+  <% if(auth){ %>
+  <div class="w-min ml-auto mr-auto p-4 pb-2">
+    <input class="border-4 border-black rounded-md" type="submit" value="Update">
+  </div>
+  <% } %>
+</form>
 
-    <div class="form-group">
-      <label class="form-group__label" for="price">Цена</label>
-      <input class="form-group__input" type="text" id="price" name="price" value="<%= item.price %>">
-    </div>
-
-    <input class="form-button" type="submit" value="Обновить">
-  </form>
-  <form action="/deleteItem" method="post" style="display: inline; float: right;">
-
-    <input type="hidden" value="<%= item.id %>" type="text" name="id">
-    <input type="hidden" value="<%= item.image %>" name="oldImage">
-    <input class="form-button" type="submit" value="Удалить">
-  </form>
-</div>
+<% if(auth){ %>
+<form action="/deleteItem" method="post" class="w-min block ml-auto mr-auto">
+  <input type="hidden" value="<%= item.id %>" type="text" name="id">
+  <input type="hidden" value="<%= item.image %>" name="oldImage">
+  <input class="font-bold text-red-600 border-4 border-red-600 rounded-md" type="submit" value="Delete">
+</form>
+<% } %>
 
 <script>
   let input = document.getElementById("image");

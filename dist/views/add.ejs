@@ -2,31 +2,30 @@
 
 <%- include('particles/navigation.ejs') %>
 
-<form action="/add" method="post" class="item-block" enctype="multipart/form-data">
-  <div class="form-group">
-    <label class="form-group__label" for="title">Название</label>
-    <input class="form-group__input" type="text" id="title" name="title">
+<form action="/add" method="post" class="p-2 border-4 border-black rounded-md w-fit ml-auto mr-auto m-4" enctype="multipart/form-data">
+  <div class="w-auto p-2">
+    <label for="title">Title</label>
+    <input class="block border-2 border-black rounded w-full m-0" type="text" id="title" name="title" value="title">
   </div>
 
-  <div class="form-group">
-    <p>Изображение</p>
-    <label class="form-group__label" for="image" style="min-width: 167px; width: auto; padding: 7px; border: 2px solid black;border-radius: 4px; min-height: 10px; background-color: white;">
-      <input class="form-group__input" type="file" id="image" name="image" placeholder="image" accept="image/png, image/jpeg, image/jpg, image/webp" style="display:none; width: auto; height: auto;">
-      <p id="imageName" style="margin: 0px;"></p>
+  <div class="w-auto p-2">
+    <p>Image</p>
+
+    <label class="h-min">
+      <span id="imageName" class="inline-block border-2 border-black rounded w-full h-auto m-0">image</span>
+      <input class="opacity-0 w-0 h-0 inline-block absolute left-0" type="file" id="image" name="image" placeholder="image" accept="image/png, image/jpeg, image/jpg, image/webp">
     </label>
   </div>
 
-  <div class="form-group">
-    <label class="form-group__label" for="description">Описание</label>
-    <input class="form-group__input" type="text" id="description" name="description">
+  <div class="w-auto p-2">
+    <label for="description">Description</label>
+    <input class="block border-2 border-black rounded w-full m-0" type="text" id="description" name="description" value="description">
   </div>
 
-  <div class="form-group">
-    <label class="form-group__label" for="price">Цена</label>
-    <input class="form-group__input" type="text" id="description" name="price">
-  </div>
   <% if(auth){ %>
-  <input class="form-button" type="submit" value="Создать">
+  <div class="w-min ml-auto mr-auto p-4 pb-2">
+    <input class="border-4 border-black rounded-md" type="submit" value="Create">
+  </div>
   <% } %>
 </form>
 

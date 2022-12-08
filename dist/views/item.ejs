@@ -3,8 +3,11 @@
 <%- include('particles/navigation.ejs') %>
 
 <% if(item.author == username) { %>
-<a href="/items/<%= item.id %>/change" class="form-button" style="float: right; margin-right: 20px; text-decoration: none;">Изменить</a>
+<div class="rounded-md border-4 border-black p-1 m-1 w-min ml-auto">
+  <a href="/items/<%= item.id %>/change">change</a>
+</div>
 <% } %>
+
 <div name="item" class="rounded-md border-4 border-black p-3 m-1">
   <img class="inline-block rounded-2xl max-h-60 max-w-60 pr-2" src="../img/<%= item.image %>" />
   <div class="inline-block">
@@ -12,24 +15,24 @@
       <%= item.title %>
     </h2>
     <p href="/users/<%= item.author %>" class="mr-auto">
-      Автор - <%= item.author %>
+      Author - <%= item.author %>
     </p>
     <p class="text-gray-600">
-      Добавлено - <%= item.date_creating %>
+      Created - <%= item.date_creating %>
     </p>
   </div>
 </div>
 
 <div class="rounded-md border-4 border-black p-3 m-1">
   <p>
-    Описание:
+    Description:
   </p>
   <p class="font-bold">
     <%= item.description %>
   </p>
 </div>
 
-<p class="font-bold m-5">Комментарии<%if(comments.length==0){%> отсутствуют<%}else{%>:<%}%></p>
+<p class="font-bold m-5"><%if(comments.length==0){%>No <%}else%>Commentaries<% {%>:<%}%></p>
 
 <% for (let i = 0; i < comments.length; i++) { %>
 
@@ -42,10 +45,10 @@
     <%=comments[i].commentary%>
   </p>
   <p class="text-xs inline-block">
-    Добавлено - <%=comments[i].date%>
+    Created - <%=comments[i].date%>
   </p>
   <% if(comments[i].author == username){ %>
-  <form action="/deleteCommentary" method="post" class=" text-red-600 font-bold inline-block ml-auto">
+  <form action="/deleteCommentary" method="post" class="text-red-600 font-bold inline-block ml-auto">
     <input type="hidden" value="<%=comments[i].id%>" type="text" name="idComment">
     <input type="hidden" value="<%= item.id %>" type="text" name="id">
     <input type="submit" class="form-button" value="Удалить">
@@ -57,12 +60,12 @@
 <% if(auth) { %>
 <form action="/addCommentary" method="post">
 
-  <div class="comment__block">
-    <p style="margin-left: 5px;">Добавить комментарий</p>
+  <div class="m-4 border-4 border-black rounded-md ml-1 mr-1 p-4">
+    <p class="font-bold mb-2">Add commentary</p>
     <span>
-      <input type="text" name="commentary" class="comment">
+      <input type="text" name="commentary" class="inline-block border-2 border-black rounded w-full">
       <input type="hidden" value="<%= item.id %>" type="text" name="id">
-      <input type="submit" class="form-button" value="Добавить">
+      <input type="submit" class="border-4 border-black rounded-md mt-2" value="Upload">
     </span>
   </div>
 </form>
