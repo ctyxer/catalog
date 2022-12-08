@@ -1,21 +1,21 @@
-<div name="navigation" class="w-max bg-black text-white rounded-b-lg h-auto p-1 ml-auto mr-auto">
-  <div name="auth" class="inline-block border-2 border-white rounded-md m-3 font-bold bg-white">
+<div name="navigation" class="w-max border-4 border-black rounded-b-lg h-auto p-1 ml-auto mr-auto">
+  <div name="auth" class="inline-block m-3 font-bold">
     <% if(auth) { %>
-    <p class="inline-block rounded-md m-1 border-2 border-white bg-black p-1">
+    <p class="inline-block rounded-md m-1 border-4 border-black bg-white p-1">
       Аккаунт: <%=username%>
     </p>
-    <form action="/logout" method="post" class="inline-block rounded-md m-1 border-2 border-white bg-black p-1">
+    <form action="/logout" method="post" class="inline-block rounded-md m-1 border-4 border-black bg-white p-1">
       <input class="navigation__item__form-input" type="submit" style="display: block" value="Выйти" />
     </form>
     <% } else {%>
-    <a href="/login" class="inline-block rounded-md m-1 border-2 border-white bg-black p-1">Авторизоваться</a>
+    <a href="/login" class="inline-block rounded-md m-1 border-4 border-black bg-white p-1">Авторизоваться</a>
     <% } %>
   </div>
-  <div name="home" class="inline-block border-2 border-white rounded-md m-3 font-bold bg-white w-max" style="margin-top: 0px">
-    <a href="/" class="inline-block rounded-md m-1 border-2 border-white bg-black p-1">Главная</a>
+  <div name="home" class="inline-block m-3 font-bold" style="margin-top: 0px">
+    <a href="/" class="inline-block rounded-md m-1 border-4 border-black bg-white p-1">Главная</a>
 
     <% if(auth) { %>
-    <a href="/addItem" class="inline-block rounded-md m-1 border-2 border-white bg-black p-1">Добавить</a>
+    <a href="/addItem" class="inline-block rounded-md m-1 border-4 border-black bg-white p-1">Добавить</a>
     <% } %>
   </div>
 </div>

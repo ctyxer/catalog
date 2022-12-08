@@ -2,21 +2,23 @@
 
 <%- include('particles/navigation.ejs') %>
 
-<p class='authentication__title'>Создать аккаунт</p>
-
-<form action="/registering" method="post" class="item-block">
-
-  <div class="form-group">
-    <label for="username" class="form-group__label">Имя пользователя</label>
-    <input type="text" class="form-group__input" name="username">
+<form action="/registering" method="post" class="rounded-md border-4 border-black p-2 w-min ml-auto mr-auto mt-3">
+  <p class='font-bold text-xl'>Registering</p>
+  <div class="mb-4 mt-4">
+    <label for="username">Username</label>
+    <input type="text" class="border-2 border-black rounded p-1" name="username">
   </div>
-  <div class="form-group">
-    <label for="password" class="form-group__label">Пароль</label>
-    <input type="password" class="form-group__input" name="password">
+
+  <div class="mb-4 mt-4">
+    <label for="password">Password</label>
+    <input type="password" class="border-2 border-black rounded p-1" name="password">
   </div>
-  <label for="error" class="authentication__error"><%= error %></label>
-  <input type="submit" value="Зарегестрироваться" class="form-button">
+  
+  <label for="error" class="font-bold text-red-600"><%= error %></label>
+  <input type="submit" value="Sign in" class="rounded-md border-4 border-black m-2 ml-auto mr-auto">
 </form>
-<p class="authentication__link">Уже есть аккаунт - <a href="/login">Войти</a></p>
+<div class="mr-auto ml-auto w-fit m-2">
+  <a href="/logining" class="font-bold text-xl underline h-min">Sing in</a>
+</div>
 
 <%- include('particles/footer.ejs') %>
