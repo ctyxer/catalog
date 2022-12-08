@@ -106,6 +106,9 @@ export class ItemsController {
                     id: Number(req.body.id)
                 }
             })
+            logger.addLog(
+                `user ${req.session.username} delete item by id=${req.body.id}, delete comments bu item_id=${req.body.id}`
+            )
 
             res.redirect("/");
         });
@@ -114,6 +117,7 @@ export class ItemsController {
         logger.catcherErr(async () => {
             if (req.files != undefined) {
                 req.files.image.mv("./public/img/" + req.files.image.name);
+                const date = String(new Date().getTime())
                 await prisma.items.create({
                     data: {
                         title: req.body.title,
@@ -121,9 +125,12 @@ export class ItemsController {
                         // image: '/',
                         description: req.body.description,
                         author: String(req.session.username),
-                        date_creating: String(new Date())
+                        date_creating: date
                     }
                 })
+                logger.addLog(
+                    `user ${req.session.username} create item: title=${req.body.title}, date_creating=${date}`
+                )
             }
             res.redirect("/");
         })
@@ -141,13 +148,15 @@ export class ItemsController {
                     data: {
                         title: req.body.title,
                         image: req.files.image.name,
-                        // image: '/',
                         description: req.body.description,
                     },
                     where: {
                         id: Number(req.body.id)
                     }
                 })
+                logger.addLog(
+                    `user ${req.session.username} update item: id=${req.body.id}`
+                )
             };
 
             res.redirect("/");

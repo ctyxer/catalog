@@ -40,13 +40,22 @@ export class AuthenticationController {
                 if (await argon2.verify(String(data.password), String(req.body.password))) {
                     req.session.auth = true;
                     req.session.username = [req.body.username][0];
+                    logger.addLog(
+                        `${req.ip} is login on account ${req.body.username}`
+                    )
                     res.redirect("/");
                 }
-                else res.render("login", {
-                    error: "Password is not correct",
-                    auth: req.session.auth,
-                    username: req.session.username,
-                });
+
+                else {
+                    logger.addLog(
+                        `${req.ip} is error logining on account ${req.body.username}. error: password is not correct`
+                    )
+                    res.render("login", {
+                        error: "Password is not correct",
+                        auth: req.session.auth,
+                        username: req.session.username,
+                    });
+                }
             }
             else res.render("login", {
                 error: "The user does not exist",

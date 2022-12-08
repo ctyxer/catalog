@@ -9,8 +9,7 @@
         "express-fileupload": "^1.4.0",
         "express-session": "^1.17.3",
         "mysql": "^2.18.1",
-        "prisma": "^4.5.0",
-        "sass": "^1.54.0"
+        "prisma": "^4.5.0"
     },
     "devDependencies": {
         "@types/express": "^4.17.14",

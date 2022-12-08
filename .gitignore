@@ -3,8 +3,8 @@ node_modules
 .env
 prisma/migrations
 dist/*.js
-dist/logs/logger.js
 dist/controllers/*.js
 public/css/output.css
 public/img/*.*
 logs/*.txt
+dist/logs/*
