@@ -138,26 +138,29 @@ export class ItemsController {
 
     async update(req: Request, res: Response) {
         logger.catcherErr(async () => {
-            try {
-                fs.unlinkSync("./public/img/" + req.body.oldImage);
-            }
-            catch (err) { }
+            let image = req.body.oldImage;
             if (req.files != undefined) {
-                req.files.image.mv("./public/img/" + req.files.image.name);
-                await prisma.items.update({
-                    data: {
-                        title: req.body.title,
-                        image: req.files.image.name,
-                        description: req.body.description,
-                    },
-                    where: {
-                        id: Number(req.body.id)
-                    }
-                })
-                logger.addLog(
-                    `user ${req.session.username} update item: id=${req.body.id}`
-                )
+                try {
+                    fs.unlinkSync("./public/img/" + req.body.oldImage);
+                }
+                catch (err) { }
+
+                image = req.files.image.name;
+                req.files.image.mv("./public/img/" + image);
             };
+            await prisma.items.update({
+                data: {
+                    title: req.body.title,
+                    image: image,
+                    description: req.body.description,
+                },
+                where: {
+                    id: Number(req.body.id)
+                }
+            })
+            logger.addLog(
+                `user ${req.session.username} update item: id=${req.body.id}`
+            )
 
             res.redirect("/");
         });
