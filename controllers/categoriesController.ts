@@ -5,5 +5,7 @@ import { Logger } from "../logs/logger";
 import { stringData } from '../functions';
 
 export class CategoriesController{
+    async addGet(req: Request, res: Response){
 
+    }
 }

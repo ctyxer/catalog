@@ -3,6 +3,7 @@ import { users, PrismaClient } from "@prisma/client";
 import * as argon2 from "argon2";
 import { Logger } from "../logs/logger";
 import * as ip from 'ip';
+import { renderObject } from '../functions';
 
 const prisma: PrismaClient = new PrismaClient();
 const logger = new Logger();
@@ -11,22 +12,18 @@ export class AuthenticationController {
     async login(req: Request, res: Response) {
         logger.catcherErr(() => {
             res.render("login",
-                {
-                    error: "",
-                    auth: req.session.auth,
-                    username: req.session.username,
-                });
+                renderObject(req, {
+                    'error': ""
+                }));
         });
     };
 
     async register(req: Request, res: Response) {
         logger.catcherErr(() => {
             res.render("register",
-                {
-                    error: "",
-                    auth: req.session.auth,
-                    username: req.session.username,
-                });
+                renderObject(req, {
+                    'error': ""
+                }));
         });
     };
 
@@ -51,22 +48,20 @@ export class AuthenticationController {
                     logger.addLog(
                         `${ip.address()} is error logining on account ${req.body.username}. error: password is not correct`
                     );
-                    res.render("login", {
-                        error: "Password is not correct",
-                        auth: req.session.auth,
-                        username: req.session.username,
-                    });
+                    res.render("login", 
+                    renderObject(req, {
+                        'error': "Password is not correct"
+                    }));
                 }
             }
             else {
                 logger.addLog(
                     `${ip.address()} is error logining on account ${req.body.username}. error: user does not exist`
                 );
-                res.render("login", {
-                    error: "The user does not exist",
-                    auth: req.session.auth,
-                    username: req.session.username,
-                });
+                res.render("login", 
+                renderObject(req, {
+                    'error': "User does not exist"
+                }));
             }
         });
     };
@@ -88,11 +83,10 @@ export class AuthenticationController {
                 logger.addLog(
                     `${ip.address()} is error registering on account ${req.body.username}. error: the field cannot be empty`
                 );
-                res.render('register', {
-                    error: "The field cannot be empty",
-                    auth: req.session.auth,
-                    username: req.session.username
-                });
+                res.render('register', 
+                renderObject(req, {
+                    'error': "The field cannot be empty"
+                }));
             } else {
                 const data = await prisma.users.findFirst({
                     where: {
@@ -103,15 +97,14 @@ export class AuthenticationController {
                     logger.addLog(
                         `${ip.address()} is error registering on account ${req.body.username}. error: username already taken`
                     );
-                    res.render('register', {
-                        error: "Username already taken",
-                        auth: req.session.auth,
-                        username: req.session.username,
-                    });
+                    res.render('register',  
+                    renderObject(req, {
+                        'error': "Username already taken"
+                    }));
                 } else {
                     logger.addLog(
                         `${ip.address()} is registering on account ${req.body.username}`
-                    );                    
+                    );
                     await prisma.users.create({
                         data: {
                             username: req.body.username,

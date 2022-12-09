@@ -1,3 +1,5 @@
+import { Express, Request, Response } from 'express';
+
 export function stringData(data: string | String | number | Number) {
     let date = new Date(Number(data));
     function addZero(number: number, col: number) {
@@ -21,8 +23,11 @@ export function stringData(data: string | String | number | Number) {
     );
 }
 
-export function getNavObj(req: Request){
+export function renderObject(req: Request, obj?: Object | object): object {
     return {
-        'username' : undefined
-    } 
+        ...{
+            'auth': req.session.auth
+        },
+        ...obj
+    }
 }

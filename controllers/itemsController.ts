@@ -2,7 +2,7 @@ import { items, comments, PrismaClient } from "@prisma/client";
 import { Request, Response } from 'express';
 import fs from "fs";
 import { Logger } from "../logs/logger";
-import { stringData } from '../functions';
+import { stringData, renderObject } from '../functions';
 
 const prisma: PrismaClient = new PrismaClient();
 const logger = new Logger();
@@ -16,11 +16,8 @@ export class ItemsController {
                 return { ...a, date_creating: stringData(String(a.date_creating)) };
             })
             res.render("home",
-                {
-                    items: data,
-                    auth: req.session.auth,
-                    username: req.session.username,
-                });
+                renderObject(req, { 'items': data })
+            );
         });
     };
 
@@ -46,12 +43,11 @@ export class ItemsController {
             })
 
             res.render("item",
-                {
-                    item: data[0],
-                    comments: data2,
-                    auth: req.session.auth,
-                    username: req.session.username,
-                });
+                renderObject(req, {
+                    'item': data[0],
+                    'comments': data2,
+                    'username': req.session.username
+                }));
         });
     };
 
@@ -67,11 +63,9 @@ export class ItemsController {
                 res.redirect("/");
             } else {
                 res.render("changeItem",
-                    {
-                        item: data[0],
-                        auth: req.session.auth,
-                        username: req.session.username,
-                    });
+                    renderObject(req, {
+                        'item': data[0]
+                    }));
             }
         });
     }
@@ -82,10 +76,7 @@ export class ItemsController {
                 res.redirect("/");
             } else {
                 res.render("add",
-                    {
-                        auth: req.session.auth,
-                        username: req.session.username,
-                    });
+                    renderObject(req));
             }
         });
     };
