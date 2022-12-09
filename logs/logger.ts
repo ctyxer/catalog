@@ -1,9 +1,12 @@
 import fs from "fs";
 import { Request } from 'express';
+import { FileLogger } from "./fileLogger";
 
 export class Logger{
+    fileLogger = new FileLogger();
+
     addLog(message: string | String ): void{
-        fs.appendFile("./logs/logs.txt", '\n\n[' + new Date() + ']\n' + message, (err) => {})
+        this.fileLogger.addLog(message)
     }
     
     catcherErr(tryFunc: Function, endFunc?: Function){
@@ -17,13 +20,4 @@ export class Logger{
             }
         }
     }
-    
-    renderPathClient(req: Request):  String{
-        return this.getClient(req) + "\nrender page '" + req.url + "'"
-    }
-    
-    getClient(req: Request): String{
-        return String(req.headers['user-agent']);
-    }
-
 }

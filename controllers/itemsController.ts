@@ -130,7 +130,7 @@ export class ItemsController {
                 })
                 logger.addLog(
                     `user ${req.session.username} create item: title=${req.body.title}, date_creating=${date}`
-                )
+                );
             }
             res.redirect("/");
         })
