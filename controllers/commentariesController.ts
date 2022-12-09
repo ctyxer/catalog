@@ -30,7 +30,6 @@ export class CommentariesController {
 
     async delete(req: Request, res: Response) {
         logger.catcherErr(async () => {
-            console.log(Number(req.body.id))
             await prisma.comments.delete({
                 where: {
                     id: Number(req.body.idComment)
