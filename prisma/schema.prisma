@@ -11,7 +11,7 @@ datasource db {
 }
 
 model items {
-  id            Int    @id @default(autoincrement())
+  id            Int     @id @default(autoincrement())
   title         String? @db.VarChar(255)
   image         String? @db.VarChar(255)
   description   String? @db.Text
@@ -20,7 +20,7 @@ model items {
 }
 
 model comments {
-  id            Int    @id @default(autoincrement())
+  id            Int     @id @default(autoincrement())
   commentary    String? @db.Text
   date_creating String? @db.VarChar(64)
   author        String? @db.VarChar(255)
@@ -28,8 +28,14 @@ model comments {
 }
 
 model users {
-  id       Int    @id @default(autoincrement())
+  id       Int     @id @default(autoincrement())
   username String? @db.VarChar(255)
   password String? @db.VarChar(255)
   role     String? @db.VarChar(255)
+}
+
+model categories {
+  id       Int     @id @default(autoincrement())
+  item_id  Int     @db.Int
+  category String? @db.VarChar(128)
 }
