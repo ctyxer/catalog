@@ -1,0 +1,28 @@
+<%- include('particles/header.ejs') %>
+<%- include('particles/navigation.ejs') %>
+
+<% if(items.length == 0){ %>
+  <div>
+    <p>No Items</p>
+  </div>
+<% } %>
+
+<% for (let i=0; i < items.length; i++) { %>
+<div name="item" class="rounded-md border-4 border-black p-3 m-1">
+  <a href="/items/<%= items[i].id %>" class="w-full h-full">
+    <img class="inline-block rounded-2xl max-h-60 max-w-60 pr-2" src="img/<%= items[i].image %>"/>
+    <div class="inline-block">
+      <h2 class="text-lg font-bold mb-auto">
+        <%= items[i].title %>
+      </h2>
+      <p href="/users/<%= items[i].author %>" class="mr-auto">
+        Author - <%= items[i].author %>
+      </p>
+      <p class="text-gray-600">
+        Created - <%= items[i].date_creating %>
+      </p>
+    </div>
+  </a>
+</div>
+<% } %>
+<%- include('particles/footer.ejs') %>

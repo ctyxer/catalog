@@ -1,0 +1,18 @@
+<%- include('particles/header.ejs') %>
+
+<%- include('particles/navigation.ejs') %>
+
+<form action="/addCategory" method="post" class="p-2 border-4 border-black rounded-md w-fit ml-auto mr-auto m-4" enctype="multipart/form-data">
+  <div class="w-auto p-2">
+    <label for="name">Name</label>
+    <input class="block border-2 border-black rounded w-full m-0" type="text" id="name" name="name" value="name">
+  </div>
+  <label for="error" class="font-bold text-red-600"><%= error %></label>
+  <% if(auth){ %>
+  <div class="w-min ml-auto mr-auto p-4 pb-2">
+    <input class="border-4 border-black rounded-md" type="submit" value="Create">
+  </div>
+  <% } %>
+</form>
+
+<%- include('particles/footer.ejs') %>

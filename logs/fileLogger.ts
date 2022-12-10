@@ -1,7 +1,14 @@
 import fs from "fs";
+import { stringData } from "../functions";
 
 export class FileLogger{
     addLog(message: String | string){
-        fs.appendFile("./logs/logs.txt", '\n\n[' + new Date() + ']\n' + message, (err) => {})
+        const date = new Date();
+        fs.appendFile("./logs/logs.txt", 
+        `${stringData(String(date.getTime()))}:${date.getMilliseconds()} ${date.getTime()}
+${message}
+
+`
+        , (err) => {});
     }
 }

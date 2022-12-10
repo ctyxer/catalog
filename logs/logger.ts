@@ -5,8 +5,10 @@ import { FileLogger } from "./fileLogger";
 export class Logger{
     fileLogger = new FileLogger();
 
-    addLog(message: string | String ): void{
-        this.fileLogger.addLog(message)
+    addLog(message: any): void{
+        this.fileLogger.addLog(
+            `${String(message)}`
+        )
     }
     
     catcherErr(tryFunc: Function, endFunc?: Function){

@@ -39,14 +39,14 @@ export class AuthenticationController {
                     req.session.auth = true;
                     req.session.username = [req.body.username][0];
                     logger.addLog(
-                        `${ip.address()} is login on account ${req.body.username}`
+                        `${ip.address()} is login on account ${req.session.username}`
                     );
                     res.redirect("/");
                 }
 
                 else {
                     logger.addLog(
-                        `${ip.address()} is error logining on account ${req.body.username}. error: password is not correct`
+                        `${ip.address()} is error logining on account ${req.session.username}. error: password is not correct`
                     );
                     res.render("login", 
                     renderObject(req, {
@@ -56,7 +56,7 @@ export class AuthenticationController {
             }
             else {
                 logger.addLog(
-                    `${ip.address()} is error logining on account ${req.body.username}. error: user does not exist`
+                    `${ip.address()} is error logining on account ${req.session.username}. error: user does not exist`
                 );
                 res.render("login", 
                 renderObject(req, {
@@ -67,9 +67,9 @@ export class AuthenticationController {
     };
 
     async logout(req: Request, res: Response) {
-        logger.catcherErr(() => {
-            logger.addLog(
-                `${ip.address()} is logout from account ${req.body.username}`
+        logger.catcherErr(async () => {
+            await logger.addLog(
+                `${ip.address()} is logout from account ${req.session.username}`
             );
             req.session.auth = false;
             req.session.username = undefined;
@@ -81,7 +81,7 @@ export class AuthenticationController {
         logger.catcherErr(async () => {
             if (req.body.username == "" || req.body.password == "") {
                 logger.addLog(
-                    `${ip.address()} is error registering on account ${req.body.username}. error: the field cannot be empty`
+                    `${ip.address()} is error registering on account ${req.session.username}. error: the field cannot be empty`
                 );
                 res.render('register', 
                 renderObject(req, {
@@ -95,7 +95,7 @@ export class AuthenticationController {
                 })
                 if (data != null) {
                     logger.addLog(
-                        `${ip.address()} is error registering on account ${req.body.username}. error: username already taken`
+                        `${ip.address()} is error registering on account ${req.session.username}. error: username already taken`
                     );
                     res.render('register',  
                     renderObject(req, {
@@ -103,7 +103,7 @@ export class AuthenticationController {
                     }));
                 } else {
                     logger.addLog(
-                        `${ip.address()} is registering on account ${req.body.username}`
+                        `${ip.address()} is registering on account ${req.session.username}`
                     );
                     await prisma.users.create({
                         data: {

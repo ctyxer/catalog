@@ -1,0 +1,20 @@
+<%- include('particles/header.ejs') %>
+<%- include('particles/navigation.ejs') %>
+
+<% if(categories.length == 0){ %>
+  <div class="font-bold m-4">
+    <p>No Categories</p>
+  </div>
+<% } %>
+
+<% for (let i=0; i < categories.length; i++) { %>
+<div name="category" class="rounded-md border-4 border-black m-4 p-2">
+  <a href="/categories/<%= categories[i].id %>" class="font-bold"><%= categories[i].name %></a>
+</div>
+<% } %>
+
+<div>
+    <a href="/addCategory" class="rounded-md border-4 border-black font-bold p-1 m-4">Upload</a>
+</div>
+
+<%- include('particles/footer.ejs') %>

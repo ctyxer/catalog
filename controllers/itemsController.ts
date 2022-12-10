@@ -15,7 +15,7 @@ export class ItemsController {
             data = data.map(function (a: items) {
                 return { ...a, date_creating: stringData(String(a.date_creating)) };
             })
-            res.render("home",
+            res.render("items",
                 renderObject(req, { 'items': data })
             );
         });
@@ -60,7 +60,7 @@ export class ItemsController {
             })
 
             if (data[0].author != req.session.username) {
-                res.redirect("/");
+                res.redirect("/items");
             } else {
                 res.render("changeItem",
                     renderObject(req, {
@@ -75,8 +75,9 @@ export class ItemsController {
             if (req.session.auth != true) {
                 res.redirect("/");
             } else {
+                const categories = await prisma.categories.findMany();
                 res.render("add",
-                    renderObject(req));
+                    renderObject(req, {'categories': categories}));
             }
         });
     };
@@ -101,7 +102,7 @@ export class ItemsController {
                 `user ${req.session.username} delete item by id=${req.body.id}, delete comments bu item_id=${req.body.id}`
             )
 
-            res.redirect("/");
+            res.redirect("/items");
         });
     };
     async addPost(req: Request, res: Response) {
@@ -116,14 +117,15 @@ export class ItemsController {
                         // image: '/',
                         description: req.body.description,
                         author: String(req.session.username),
-                        date_creating: date
+                        date_creating: date,
+                        'category_id': Number(req.body.categories)
                     }
-                })
+                });
                 logger.addLog(
                     `user ${req.session.username} create item: title=${req.body.title}, date_creating=${date}`
                 );
             }
-            res.redirect("/");
+            res.redirect("/items");
         })
     };
 
@@ -153,7 +155,7 @@ export class ItemsController {
                 `user ${req.session.username} update item: id=${req.body.id}`
             )
 
-            res.redirect("/");
+            res.redirect("/items");
         });
     };
 }

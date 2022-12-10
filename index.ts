@@ -5,6 +5,8 @@ import fileUpload from 'express-fileupload';
 import { ItemsController } from './controllers/itemsController';
 import { AuthenticationController } from './controllers/authenticationController';
 import { CommentariesController } from './controllers/commentariesController';
+import { GlobalController } from './controllers/globalController';
+import { CategoriesController } from './controllers/categoriesController';
 
 const app: Express = express();
 
@@ -12,6 +14,8 @@ const app: Express = express();
 const itemsController = new ItemsController();
 const authenticationController = new AuthenticationController();
 const commentariesController = new CommentariesController();
+const categoriesController = new CategoriesController();
+const globalController = new GlobalController();
 
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }))
@@ -38,7 +42,8 @@ app.use(express.urlencoded({ extended: true }));
 declare module "express-session" {
     interface SessionData {
         auth: boolean,
-        username: string
+        username: string,
+        role: string
     }
 };
 app.use(session({ secret: "Secret", resave: false, saveUninitialized: true }));
@@ -54,8 +59,12 @@ app.use(fileUpload());
 //getters
 
 app.get("/", async (req: Request, res: Response) => {
-    itemsController.show(req, res);
+    globalController.show(req, res);
 });
+
+app.get('/items', async (req:  Request, res: Response) => {
+    itemsController.show(req, res);
+})
 
 app.get("/items/:id", async (req: Request, res: Response) => {
     itemsController.item(req, res);
@@ -67,6 +76,22 @@ app.get("/items/:id/change", async (req: Request, res: Response) => {
 
 app.get("/addItem", async (req: Request, res: Response) => {
     itemsController.addGet(req, res);
+});
+
+app.get('/categories', async (req, res) => {
+    categoriesController.show(req, res);
+});
+
+app.get('/categories/:id', async (req, res) => {
+    categoriesController.item(req, res);
+});
+
+app.get("/addCategory", async (req: Request, res: Response) => {
+    categoriesController.addGet(req, res);
+});
+
+app.post("/addCategory", async (req: Request, res: Response) => {
+    categoriesController.addPost(req, res);
 });
 
 app.get("/login", async (req: Request, res: Response) => {

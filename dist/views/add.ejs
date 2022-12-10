@@ -22,6 +22,17 @@
     <input class="block border-2 border-black rounded w-full m-0" type="text" id="description" name="description" value="description">
   </div>
 
+  <div class="w-auto p-2">
+    <label for="category">Category</label>
+    <input type="hidden" id="category" name="category" value="0">
+    <select id="categories" name="categories" class="block border-2 border-black rounded w-full m-0">
+      <option value="0">None</option>
+      <% for(let i = 0; i < categories.length; i++) { %>
+        <option value="<%= categories[i].id %>"><%= categories[i].name %></option>
+      <% } %>
+    </select>
+  </div>
+
   <% if(auth){ %>
   <div class="w-min ml-auto mr-auto p-4 pb-2">
     <input class="border-4 border-black rounded-md" type="submit" value="Create">
@@ -38,6 +49,12 @@
 
     imageName.innerText = inputImage.name;
   })
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script>
+  $('select#categories').on('change', function() {
+    $('input[name="category"]').val(this.value);
+  });
 </script>
 
 <%- include('particles/footer.ejs') %>

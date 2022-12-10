@@ -11,15 +11,7 @@ export function stringData(data: string | String | number | Number) {
         }
     }
     return String(
-        addZero(date.getHours(), 2) +
-        ":" +
-        addZero(date.getMinutes(), 2) +
-        " " +
-        addZero(date.getDate(), 2) +
-        "." +
-        addZero(Number(date.getMonth() + 1), 2) +
-        "." +
-        date.getFullYear()
+        `${date.getFullYear()}.${addZero(Number(date.getMonth() + 1), 2)}.${addZero(date.getDate(), 2)} ${addZero(date.getHours(), 2)}:${addZero(date.getMinutes(), 2)}`
     );
 }
 
