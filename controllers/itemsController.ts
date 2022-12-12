@@ -16,7 +16,7 @@ export class ItemsController {
                 }
             });
             console.log(data)
-            data = data.map(function (a: items) {
+            data = data.map(function (a: any) {
                 return { ...a, date_creating: stringData(String(a.date_creating)) };
             })
             res.render("items",
