@@ -10,8 +10,12 @@ const logger = new Logger();
 export class ItemsController {
     async show(req: Request, res: Response) {
         logger.catcherErr(async () => {
-            let data = await prisma.items.findMany();
-
+            let data = await prisma.items.findMany({
+                include: {
+                    category: true
+                }
+            });
+            console.log(data)
             data = data.map(function (a: items) {
                 return { ...a, date_creating: stringData(String(a.date_creating)) };
             })
@@ -26,6 +30,9 @@ export class ItemsController {
             let data = await prisma.items.findMany({
                 where: {
                     id: Number(req.params.id)
+                },
+                include: {
+                    category: true
                 }
             })
 
@@ -56,15 +63,20 @@ export class ItemsController {
             const data = await prisma.items.findMany({
                 where: {
                     id: Number(req.params.id)
+                }, 
+                include: {
+                    category: true
                 }
             })
 
             if (data[0].author != req.session.username) {
                 res.redirect("/items");
             } else {
+                const categories = await prisma.categories.findMany();
                 res.render("changeItem",
                     renderObject(req, {
-                        'item': data[0]
+                        'item': data[0], 
+                        'categories': categories
                     }));
             }
         });
@@ -77,7 +89,7 @@ export class ItemsController {
             } else {
                 const categories = await prisma.categories.findMany();
                 res.render("add",
-                    renderObject(req, {'categories': categories}));
+                    renderObject(req, { 'categories': categories }));
             }
         });
     };
@@ -99,7 +111,7 @@ export class ItemsController {
                 }
             })
             logger.addLog(
-                `user ${req.session.username} delete item by id=${req.body.id}, delete comments bu item_id=${req.body.id}`
+                `user ${req.session.username} delete item by id=${req.body.id}, delete comments by item_id=${req.body.id}`
             )
 
             res.redirect("/items");
@@ -146,6 +158,7 @@ export class ItemsController {
                     title: req.body.title,
                     image: image,
                     description: req.body.description,
+                    'category_id': Number(req.body.categories)
                 },
                 where: {
                     id: Number(req.body.id)
