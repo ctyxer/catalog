@@ -1,4 +1,4 @@
-import { items, comments, PrismaClient } from "@prisma/client";
+import { items, comments, categories,  PrismaClient } from "@prisma/client";
 import { Request, Response } from 'express';
 import fs from "fs";
 import { Logger } from "../logs/logger";
@@ -16,7 +16,9 @@ export class ItemsController {
                 }
             });
             console.log(data)
-            data = data.map(function (a: any) {
+            data = data.map(function (a: items & {
+                category: categories | null;
+            }) {
                 return { ...a, date_creating: stringData(String(a.date_creating)) };
             })
             res.render("items",

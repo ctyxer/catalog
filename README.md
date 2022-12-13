@@ -12,9 +12,9 @@
 
     npx prisma migrate dev
 
-Создание css файла с помощью Sass
+Запуск taiwindcss
 
-    npm run sass
+    npm run tailwind
 
 Запуск веб-сервера
 

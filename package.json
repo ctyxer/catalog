@@ -24,7 +24,7 @@
         "typescript": "^4.9.3"
     },
     "scripts": {
-        "sass": "sass public/css/input.scss public/css/style.css",
-        "dev": "concurrently \"npx tailwindcss -i ./public/css/input.css -o ./public/css/output.css --watch\" \"npx tsc --watch\" \"nodemon -q dist/index.js\""
+        "tailwind": "npx tailwindcss -i ./public/css/input.css -o ./public/css/output.css --watch",
+        "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\""
     }
 }
