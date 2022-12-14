@@ -19,6 +19,7 @@ model items {
   author        String?     @db.VarChar(255)
   category      categories? @relation(fields: [category_id], references: [id])
   category_id   Int?
+  comments      comments[]
 }
 
 model comments {
@@ -26,6 +27,7 @@ model comments {
   commentary    String? @db.Text
   date_creating String? @db.VarChar(64)
   author        String? @db.VarChar(255)
+  item          items?  @relation(fields: [item_id], references: [id], onDelete: Cascade)
   item_id       Int?    @db.Int
 }
 

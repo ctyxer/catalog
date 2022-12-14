@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { comments, PrismaClient } from "@prisma/client";
 import { Logger } from "../logs/logger";
+import { stringData } from '../functions';
 
 const prisma: PrismaClient = new PrismaClient();
 const logger = new Logger();
@@ -14,7 +15,7 @@ export class CommentariesController {
                     data: {
                         author: String(req.session.username),
                         commentary: String(req.body.commentary),
-                        date_creating: data,
+                        date_creating: stringData(data),
                         item_id: Number(req.body.id)
                     }
                 })

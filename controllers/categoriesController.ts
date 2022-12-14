@@ -68,12 +68,21 @@ export class CategoriesController {
         let items = await prisma.items.findMany({
             where: {
                 'category_id': Number(req.params.id)
+            }, 
+            include: {
+                category: true
+            }
+        });
+
+        const categories = await prisma.categories.findMany({
+            include: {
+                items: true
             }
         });
 
         items = items.map(function (a: items) {
             return { ...a, date_creating: stringData(String(a.date_creating)) };
-        })
+        });
         res.render('items', renderObject(req, {
             'items': items
         }))

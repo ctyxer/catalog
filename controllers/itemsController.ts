@@ -14,49 +14,31 @@ export class ItemsController {
                 category: true
             }
         });
-        data = data.map(function (a: items & {
-            'category': categories | null;
-        }) {
-            return { ...a, date_creating: stringData(String(a.date_creating)) };
-        })
         res.render("items",
             renderObject(req, { 'items': data })
         );
     };
 
     async item(req: Request, res: Response) {
-        let data = await prisma.items.findMany({
+        let data = await prisma.items.findUniqueOrThrow({
             'where': {
                 id: Number(req.params.id)
             },
             'include': {
-                category: true
+                category: true,
+                comments: true
             }
-        })
-
-        let data2 = await prisma.comments.findMany({
-            'where': {
-                item_id: Number(req.params.id)
-            }
-        })
-
-        data = data.map((a) => {
-            return { ...a, date_creating: stringData(String(a.date_creating)) };
-        })
-        data2 = data2.map(function (a) {
-            return { ...a, date: stringData(String(a.date_creating)) }
-        })
+        });
 
         res.render("item",
             renderObject(req, {
-                'item': data[0],
-                'comments': data2,
+                'item': data,
                 'username': req.session.username
             }));
     };
 
     async itemUpdate(req: Request, res: Response) {
-        const data = await prisma.items.findMany({
+        const data = await prisma.items.findUnique({
             'where': {
                 id: Number(req.params.id)
             },
@@ -65,13 +47,13 @@ export class ItemsController {
             }
         })
 
-        if (data[0].author != req.session.username) {
+        if (data != null && data.author != req.session.username) {
             res.redirect("/items");
         } else {
             const categories = await prisma.categories.findMany();
             res.render("changeItem",
                 renderObject(req, {
-                    'item': data[0],
+                    'item': data,
                     'categories': categories
                 }));
         };
@@ -92,11 +74,6 @@ export class ItemsController {
             fs.unlinkSync("./public/img/" + req.body.oldImage);
         }
         catch (err) { }
-        await prisma.comments.deleteMany({
-            where: {
-                'item_id': Number(req.body.id)
-            }
-        })
         await prisma.items.delete({
             where: {
                 'id': Number(req.body.id)
@@ -118,7 +95,7 @@ export class ItemsController {
                     'image': String(req.files.image.name),
                     'description': req.body.description,
                     'author': String(req.session.username),
-                    'date_creating': date,
+                    'date_creating': stringData(date),
                     'category_id': Number(req.body.categories)
                 }
             });

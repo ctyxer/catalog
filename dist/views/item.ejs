@@ -35,30 +35,35 @@
   </p>
 </div>
 
-<p class="font-bold m-5"><%if(comments.length==0){%>No <%}else%>Commentaries<% {%>:<%}%></p>
+<p class="font-bold m-5"><%if(item.comments.length==0){%>No <%}else%>Commentaries<% {%>:<%}%></p>
 
-<% for (let i = 0; i < comments.length; i++) { %>
+<% for (let i = 0; i < item.comments.length; i++) { %>
 
 <div class="rounded-md border-4 border-black p-3 m-1">
   <p class="text-blue-900 font-bold">
-    <%=comments[i].author%>
+    <%=item.comments[i].author%>
   </p>
 
   <p class="bg-blue-200 rounded-md p-1">
-    <%=comments[i].commentary%>
+    <%=item.comments[i].commentary%>
   </p>
   <p class="text-xs inline-block">
-    Created - <%=comments[i].date%>
+    Created - <%=item.comments[i].date_creating%>
   </p>
-  <% if(comments[i].author == username){ %>
+  <% if(item.comments[i].author == username){ %>
   <form action="/deleteCommentary" method="post" class="text-red-600 font-bold inline-block ml-auto">
-    <input type="hidden" value="<%=comments[i].id%>" type="text" name="idComment">
+    <input type="hidden" value="<%=item.comments[i].id%>" type="text" name="idComment">
     <input type="hidden" value="<%= item.id %>" type="text" name="id">
     <input type="submit" class="form-button" value="Удалить">
   </form>
   <% } %>
 </div>
 <% } %>
+
+<script>
+  
+
+</script>
 
 <% if(auth) { %>
 <form action="/addCommentary" method="post">
