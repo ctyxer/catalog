@@ -38,4 +38,19 @@ export class CommentariesController {
         )
         res.redirect("/items/" + String([req.body.id]));
     };
+
+    async show(req: Request, res: Response){
+        const { id, skip } = req.params;
+        const data = await prisma.comments.findMany({
+            take: 20,
+            skip: Number(skip),
+            where: {
+                id: Number(id)
+            }
+        });
+
+        console.log(data);
+        res.header('Access-Control-Allow-Origin', '*');
+        res.send(data);
+    }
 };

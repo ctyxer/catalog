@@ -102,6 +102,10 @@ app.get("/register", async (req: Request, res: Response) => {
     authenticationController.register(req, res);
 });
 
+app.get('/comment/:id/:skip', (req: Request, res: Response) => {
+    commentariesController.show(req, res);
+});
+
 //postes
 
 app.post("/logining", async (req: Request, res: Response) => {

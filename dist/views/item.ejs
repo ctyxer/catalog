@@ -37,6 +37,8 @@
 
 <p class="font-bold m-5"><%if(item.comments.length==0){%>No <%}else%>Commentaries<% {%>:<%}%></p>
 
+<div id="comments"></div>
+
 <% for (let i = 0; i < item.comments.length; i++) { %>
 
 <div class="rounded-md border-4 border-black p-3 m-1">
@@ -59,10 +61,41 @@
   <% } %>
 </div>
 <% } %>
-
+<button onclick='getComments()'>
+  Get Comments
+</button>
 <script>
-  
+  let skip = 0;
 
+  function getComments(skip = 0) {
+    fetch(`http://localhost:5000/comment/<%= item.id %>/${skip}`, {
+        method: 'GET',
+        headers: {
+          'Access-Control-Allow-Origin': 'http://localhost:5000',
+        },
+      })
+      .then((response) => {
+        console.log(response);
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data)
+        document.getElementById('comments').innerHTML =
+          `<div class="rounded-md border-4 border-black p-3 m-1">
+  <p class="text-blue-900 font-bold">
+    ${data.author}
+  </p>
+  <p class="bg-blue-200 rounded-md p-1">
+    ${data.commentary}
+  </p>
+  <p class="text-xs inline-block">
+    Created - ${data.date_creating}
+  </p>
+</div>`;
+        skip = skip + 20;
+      })
+
+  }
 </script>
 
 <% if(auth) { %>

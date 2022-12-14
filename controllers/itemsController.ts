@@ -20,7 +20,7 @@ export class ItemsController {
     };
 
     async item(req: Request, res: Response) {
-        let data = await prisma.items.findUniqueOrThrow({
+        let data = await prisma.items.findUnique({
             'where': {
                 id: Number(req.params.id)
             },
