@@ -6,8 +6,6 @@ const logger = new Logger();
 
 export class GlobalController {
     async show(req: Request, res: Response) {
-        logger.catcherErr(async () => {
-            res.render('home', renderObject(req));
-        });
+        res.render('home', renderObject(req));
     }
 }

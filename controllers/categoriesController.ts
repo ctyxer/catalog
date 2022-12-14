@@ -26,46 +26,45 @@ export class CategoriesController {
     };
 
     async addPost(req: Request, res: Response) {
-        logger.catcherErr(async () => {
-            const { name } = req.body;
-            if (name == undefined) {
+        const { name } = req.body;
+        if (name == undefined) {
+            logger.addLog(
+                `${req.session.username} cannot add category. error: the field cannot be empty`
+            );
+            res.render('addCategory',
+                renderObject(req, {
+                    'error': "The field cannot be empty"
+                }));
+        } else {
+            const data = await prisma.categories.findFirst({
+                where: {
+                    'name': name
+                }
+            })
+            if (data != null) {
                 logger.addLog(
-                    `${req.session.username} cannot add category. error: the field cannot be empty`
+                    `${req.session.username} cannot add category. error: name already taken`
                 );
                 res.render('addCategory',
                     renderObject(req, {
-                        'error': "The field cannot be empty"
+                        'error': "Name already taken"
                     }));
             } else {
-                const data = await prisma.categories.findFirst({
-                    where: {
+                logger.addLog(
+                    `${req.session.username} add category name=${name}`
+                );
+                await prisma.categories.create({
+                    data: {
                         'name': name
                     }
-                })
-                if (data != null) {
-                    logger.addLog(
-                        `${req.session.username} cannot add category. error: name already taken`
-                    );
-                    res.render('addCategory',
-                        renderObject(req, {
-                            'error': "Name already taken"
-                        }));
-                } else {
-                    logger.addLog(
-                        `${req.session.username} add category name=${name}`
-                    );
-                    await prisma.categories.create({
-                        data: {
-                            'name': name
-                        }
-                    });
-                    res.redirect('/categories');
-                }
+                });
+                res.redirect('/categories');
             }
-        });
+        }
+
     };
 
-    async item(req: Request, res: Response){
+    async item(req: Request, res: Response) {
         let items = await prisma.items.findMany({
             where: {
                 'category_id': Number(req.params.id)
@@ -75,7 +74,7 @@ export class CategoriesController {
         items = items.map(function (a: items) {
             return { ...a, date_creating: stringData(String(a.date_creating)) };
         })
-        res.render('items', renderObject(req,{ 
+        res.render('items', renderObject(req, {
             'items': items
         }))
     };
