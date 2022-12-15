@@ -15,7 +15,19 @@ export function stringData(data: string | String | number | Number) {
     );
 }
 
-export function renderObject(req: Request, obj?: Object | object): object {
+export function renderObject(req: Request, obj?: Object | object){
+    if(req.session.messageAlert != undefined){
+        let messageAlert = req.session.messageAlert;
+        req.session.messageAlert = undefined;
+        return {
+            ...{
+                'auth': req.session.auth,
+                'message': messageAlert
+            },
+            ...obj
+        }
+    }
+
     return {
         ...{
             'auth': req.session.auth

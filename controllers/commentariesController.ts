@@ -21,7 +21,8 @@ export class CommentariesController {
                 })
                 logger.addLog(
                     `user ${req.session.username} upload comment on item by id=${req.body.id}, date_creating=${data}`
-                )
+                );
+                req.session.messageAlert = 'comment created successfully'
             }
         }
         res.redirect("/items/" + String([req.body.id]));
@@ -35,7 +36,8 @@ export class CommentariesController {
         })
         logger.addLog(
             `user ${req.session.username} delete comment by id=${req.body.idComment}`
-        )
+        );
+        req.session.messageAlert = 'comment deleted successfully';
         res.redirect("/items/" + String([req.body.id]));
     };
 

@@ -43,7 +43,7 @@ declare module "express-session" {
     interface SessionData {
         auth: boolean,
         username: string,
-        role: string
+        messageAlert: string
     }
 };
 app.use(session({ secret: "Secret", resave: false, saveUninitialized: true }));

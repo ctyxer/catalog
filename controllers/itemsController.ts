@@ -82,7 +82,8 @@ export class ItemsController {
         logger.addLog(
             `user ${req.session.username} delete item by id=${req.body.id}, delete comments by item_id=${req.body.id}`
         )
-
+        
+        req.session.messageAlert = 'item deleted successfully'
         res.redirect("/items");
     };
     async addPost(req: Request, res: Response) {
@@ -102,6 +103,7 @@ export class ItemsController {
             logger.addLog(
                 `user ${req.session.username} create item: title=${req.body.title}, date_creating=${date}`
             );
+            req.session.messageAlert = 'item created successfully'
         }
         res.redirect("/items");
     };
@@ -131,6 +133,7 @@ export class ItemsController {
         logger.addLog(
             `user ${req.session.username} update item: id=${req.body.id}`
         );
+        req.session.messageAlert = 'item updated successfully'
         res.redirect("/items");
     };
 }
