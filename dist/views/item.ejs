@@ -2,6 +2,9 @@
 
 <%- include('particles/navigation.ejs') %>
 
+<input type="hidden" id="username" value="<%= username %>">
+<input type="hidden" id="id" value="<%= item.id %>">
+
 <% if(item.author == username) { %>
 <div class="rounded-md border-4 border-black p-1 m-1 w-min ml-auto">
   <a href="/items/<%= item.id %>/change">change</a>
@@ -39,7 +42,7 @@
 
 <div id="comments"></div>
 
-<% for (let i = 0; i < item.comments.length; i++) { %>
+<!-- <% for (let i = 0; i < item.comments.length; i++) { %>
 
 <div class="rounded-md border-4 border-black p-3 m-1">
   <p class="text-blue-900 font-bold">
@@ -60,14 +63,14 @@
   </form>
   <% } %>
 </div>
-<% } %>
-<button onclick='getComments()'>
-  Get Comments
+<% } %> -->
+<button onclick='getComments()' class="rounded-md border-4 border-black m-1 p-1">
+  Get Comments (20)
 </button>
 <script>
-  let skip = 0;
+  var skip = 0;
 
-  function getComments(skip = 0) {
+  function getComments() {
     fetch(`http://localhost:5000/comment/<%= item.id %>/${skip}`, {
         method: 'GET',
         headers: {
@@ -75,24 +78,37 @@
         },
       })
       .then((response) => {
-        console.log(response);
         return response.json();
       })
-      .then((data) => {
-        console.log(data)
-        document.getElementById('comments').innerHTML =
-          `<div class="rounded-md border-4 border-black p-3 m-1">
+      .then(function(data) {
+        for (let i = 0; i < data.length; i++) {
+          let deleteText = ``;
+          if (document.getElementById('username').value == data[i].author) {
+            const item_id = document.getElementById('id').value;
+            console.log(item_id)
+            deleteText = `<form action="/deleteCommentary" method="post" class="text-red-600 font-bold inline-block ml-auto">
+    <input type="hidden" value="${data[i].id}" type="text" name="idComment">
+    <input type="hidden" value="${item_id}" type="text" name="id">
+    <input type="submit" class="form-button" value="Удалить">
+  </form>`;
+          }
+
+          let div = document.createElement('div')
+          div.innerHTML = `<div class="rounded-md border-4 border-black p-3 m-1">
   <p class="text-blue-900 font-bold">
-    ${data.author}
+    ${data[i].author}
   </p>
   <p class="bg-blue-200 rounded-md p-1">
-    ${data.commentary}
+    ${data[i].commentary}
   </p>
   <p class="text-xs inline-block">
-    Created - ${data.date_creating}
+    Created - ${data[i].date_creating}
   </p>
+  ${deleteText}
 </div>`;
-        skip = skip + 20;
+          document.getElementById('comments').appendChild(div);
+        }
+        skip = Number(skip) + 20;
       })
 
   }

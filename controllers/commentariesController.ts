@@ -45,11 +45,9 @@ export class CommentariesController {
             take: 20,
             skip: Number(skip),
             where: {
-                id: Number(id)
+                item_id: Number(id)
             }
         });
-
-        console.log(data);
         res.header('Access-Control-Allow-Origin', '*');
         res.send(data);
     }
