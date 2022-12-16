@@ -12,7 +12,7 @@ if(!fs.existsSync('./logs/chat_ids.json')){
     fs.appendFile('./logs/chat_ids.json', '[]', () => {});
 }
 
-bot.on('message', async (msg) => {
+bot.onText(/\/start/, async (msg) => {
     console.log(msg.chat.id)
     let data = JSON.parse(fs.readFileSync('./logs/chat_ids.json', 'utf8'));
     data.push(msg.chat.id);

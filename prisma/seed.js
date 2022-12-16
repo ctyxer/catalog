@@ -2,9 +2,6 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 async function main() {
-    await prisma.categories.delete();
-    await prisma.items.delete();
-    await prisma.users.delete();
     const createMany = await prisma.categories.createMany({
         data: [
             { name: "None" }

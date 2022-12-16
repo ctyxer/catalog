@@ -25,6 +25,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.listen(5000, () => {
     console.log('Server is running on port 5000');
 });
+
 // Путь к директории файлов ресурсов (css, js, images)
 app.use(express.static("public"));
 
