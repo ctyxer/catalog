@@ -8,7 +8,7 @@
 
     DATABASE_URL="mysql://root:secret@localhost:3306/project"
 
-И токеном вашего бота Telegram(по дефолту бот https://t.me/catalog_new_logs_bot) 
+Добавить в .env токен вашего бота Telegram(по дефолту бот https://t.me/catalog_new_logs_bot) 
 
     TELEGRAM_API="<token>"
 
