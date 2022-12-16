@@ -2,7 +2,7 @@
 
 <%- include('particles/navigation.ejs') %>
 
-<form action="/add" method="post" class="p-2 border-4 border-black rounded-md w-fit ml-auto mr-auto m-4" enctype="multipart/form-data">
+<form action="/items/store" method="post" class="p-2 border-4 border-black rounded-md w-fit ml-auto mr-auto m-4" enctype="multipart/form-data">
   <div class="w-auto p-2">
     <label for="title">Title</label>
     <input class="block border-2 border-black rounded w-full m-0" type="text" id="title" name="title" value="title">
@@ -26,7 +26,6 @@
     <label for="category">Category</label>
     <input type="hidden" id="category" name="category" value="0">
     <select id="categories" name="categories" class="block border-2 border-black rounded w-full m-0">
-      <option value="0">None</option>
       <% for(let i = 0; i < categories.length; i++) { %>
         <option value="<%= categories[i].id %>"><%= categories[i].name %></option>
       <% } %>

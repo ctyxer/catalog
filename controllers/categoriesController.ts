@@ -1,40 +1,53 @@
 import { Request, Response } from 'express';
 import { categories, users, items, PrismaClient } from "@prisma/client";
-import { Logger } from "../logs/logger";
-import { renderObject, stringData } from '../functions';
+import { renderObject } from '../functions';
+import { addLog } from '../logs/addLog';
 
 const prisma: PrismaClient = new PrismaClient();
-const logger = new Logger();
 
 export class CategoriesController {
-    async show(req: Request, res: Response) {
+    async index(req: Request, res: Response) {
         const categories = await prisma.categories.findMany();
 
         res.render('categories',
             renderObject(req, {
                 'categories': categories
-            }));
+            })
+        );
     };
 
-    async addGet(req: Request, res: Response) {
+    async show(req: Request, res: Response) {
+        let data = await prisma.items.findMany({
+            'include': {
+                category: true
+            }
+        });
+        res.render("items",
+            renderObject(req, { 'items': data })
+        );
+    };
+
+    async create(req: Request, res: Response) {
         if (req.session.auth != true) {
             res.redirect("/");
         } else {
             res.render("addCategory",
-                renderObject(req, { 'error': '' }));
+                renderObject(req, { 'error': '' })
+            );
         }
     };
 
-    async addPost(req: Request, res: Response) {
+    async store(req: Request, res: Response) {
         const { name } = req.body;
         if (name == undefined) {
-            logger.addLog(
+            addLog(
                 `${req.session.username} cannot add category. error: the field cannot be empty`
             );
             res.render('addCategory',
                 renderObject(req, {
                     'error': "The field cannot be empty"
-                }));
+                })
+            );
         } else {
             const data = await prisma.categories.findFirst({
                 where: {
@@ -42,15 +55,16 @@ export class CategoriesController {
                 }
             })
             if (data != null) {
-                logger.addLog(
+                addLog(
                     `${req.session.username} cannot add category. error: name already taken`
                 );
                 res.render('addCategory',
                     renderObject(req, {
                         'error': "Name already taken"
-                    }));
+                    })
+                );
             } else {
-                logger.addLog(
+                addLog(
                     `${req.session.username} add category name=${name}`
                 );
                 await prisma.categories.create({
@@ -63,16 +77,5 @@ export class CategoriesController {
             }
         }
 
-    };
-
-    async item(req: Request, res: Response) {
-        let data = await prisma.items.findMany({
-            'include': {
-                category: true
-            }
-        });
-        res.render("items",
-            renderObject(req, { 'items': data })
-        );
     };
 };

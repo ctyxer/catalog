@@ -7,7 +7,7 @@
 
 <% if(item.author == username) { %>
 <div class="rounded-md border-4 border-black p-1 m-1 w-min ml-auto">
-  <a href="/items/<%= item.id %>/change">change</a>
+  <a href="/items/<%= item.id %>/edit">change</a>
 </div>
 <% } %>
 
@@ -92,7 +92,7 @@
           if (document.getElementById('username').value == data[i].author) {
             const item_id = document.getElementById('id').value;
             console.log(item_id)
-            deleteText = `<form action="/deleteCommentary" method="post" class="text-red-600 font-bold inline-block ml-auto">
+            deleteText = `<form action="/comments/delete" method="post" class="text-red-600 font-bold inline-block ml-auto">
     <input type="hidden" value="${data[i].id}" type="text" name="idComment">
     <input type="hidden" value="${item_id}" type="text" name="id">
     <input type="submit" class="form-button" value="Удалить">
@@ -121,7 +121,7 @@
 </script>
 
 <% if(auth) { %>
-<form action="/addCommentary" method="post">
+<form action="/comments/store" method="post">
 
   <div class="m-4 border-4 border-black rounded-md ml-1 mr-1 p-4">
     <p class="font-bold mb-2">Add commentary</p>

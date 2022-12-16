@@ -1,13 +1,12 @@
 import { Request, Response } from 'express';
 import { comments, PrismaClient } from "@prisma/client";
-import { Logger } from "../logs/logger";
 import { stringData } from '../functions';
+import { addLog } from '../logs/addLog';
 
 const prisma: PrismaClient = new PrismaClient();
-const logger = new Logger();
 
-export class CommentariesController {
-    async add(req: Request, res: Response) {
+export class CommentsController {
+    async store(req: Request, res: Response) {
         if (req.session.username != undefined) {
             if (req.body.commentary != "") {
                 const data = String(new Date().getTime());
@@ -19,7 +18,7 @@ export class CommentariesController {
                         item_id: Number(req.body.id)
                     }
                 })
-                logger.addLog(
+                addLog(
                     `user ${req.session.username} upload comment on item by id=${req.body.id}, date_creating=${data}`
                 );
                 req.session.messageAlert = 'comment created successfully'
@@ -34,7 +33,7 @@ export class CommentariesController {
                 id: Number(req.body.idComment)
             }
         })
-        logger.addLog(
+        addLog(
             `user ${req.session.username} delete comment by id=${req.body.idComment}`
         );
         req.session.messageAlert = 'comment deleted successfully';

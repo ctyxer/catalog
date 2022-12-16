@@ -4,7 +4,7 @@ import path from 'path';
 import fileUpload from 'express-fileupload';
 import { ItemsController } from './controllers/itemsController';
 import { AuthenticationController } from './controllers/authenticationController';
-import { CommentariesController } from './controllers/commentariesController';
+import { CommentsController } from './controllers/commentsController';
 import { GlobalController } from './controllers/globalController';
 import { CategoriesController } from './controllers/categoriesController';
 
@@ -13,7 +13,7 @@ const app: Express = express();
 //Controllers
 const itemsController = new ItemsController();
 const authenticationController = new AuthenticationController();
-const commentariesController = new CommentariesController();
+const commentsController = new CommentsController();
 const categoriesController = new CategoriesController();
 const globalController = new GlobalController();
 
@@ -54,45 +54,57 @@ app.use(fileUpload());
  * Маршруты
  */
 
-
-//getters
-
 app.get("/", async (req: Request, res: Response) => {
-    globalController.show(req, res);
+    globalController.index(req, res);
 });
 
+// items
 app.get('/items', async (req:  Request, res: Response) => {
-    itemsController.show(req, res);
-})
+    itemsController.index(req, res);
+});
+
+app.get("/items/create", async (req: Request, res: Response) => {
+    itemsController.create(req, res);
+});
+
+app.post("/items/store", async (req: Request, res: Response) => {
+    itemsController.store(req, res);
+});
+
+app.post("/items/update", async (req: Request, res: Response) => {
+    itemsController.update(req, res);
+});
+
+app.post("/items/delete", async (req: Request, res: Response) => {
+    itemsController.delete(req, res);
+});
 
 app.get("/items/:id", async (req: Request, res: Response) => {
-    itemsController.item(req, res);
+    itemsController.show(req, res);
 });
 
-app.get("/items/:id/change", async (req: Request, res: Response) => {
-    itemsController.itemUpdate(req, res);
+app.get("/items/:id/edit", async (req: Request, res: Response) => {
+    itemsController.edit(req, res);
 });
 
-app.get("/addItem", async (req: Request, res: Response) => {
-    itemsController.addGet(req, res);
-});
-
+// categories
 app.get('/categories', async (req, res) => {
-    categoriesController.show(req, res);
+    categoriesController.index(req, res);
+});
+
+app.get("/categories/create", async (req: Request, res: Response) => {
+    categoriesController.create(req, res);
+});
+
+app.post("/categories/store", async (req: Request, res: Response) => {
+    categoriesController.store(req, res);
 });
 
 app.get('/categories/:id', async (req, res) => {
-    categoriesController.item(req, res);
+    categoriesController.show(req, res);
 });
 
-app.get("/addCategory", async (req: Request, res: Response) => {
-    categoriesController.addGet(req, res);
-});
-
-app.post("/addCategory", async (req: Request, res: Response) => {
-    categoriesController.addPost(req, res);
-});
-
+// auth
 app.get("/login", async (req: Request, res: Response) => {
     authenticationController.login(req, res);
 });
@@ -101,40 +113,28 @@ app.get("/register", async (req: Request, res: Response) => {
     authenticationController.register(req, res);
 });
 
-app.get('/comment/:id/:skip', (req: Request, res: Response) => {
-    commentariesController.show(req, res);
-});
-
-//postes
-
-app.post("/logining", async (req: Request, res: Response) => {
-    authenticationController.logining(req, res);
-});
-
-app.post("/logout", async (req: Request, res: Response) => {
+app.post("/auth/logout", async (req: Request, res: Response) => {
     authenticationController.logout(req, res);
 });
 
-app.post("/registering", async (req: Request, res: Response) => {
-    authenticationController.registering(req, res);
+app.post("/auth/login", async (req: Request, res: Response) => {
+    authenticationController.loginUser(req, res);
 });
 
-app.post("/add", async (req: Request, res: Response) => {
-    itemsController.addPost(req, res);
+app.post("/auth/register", async (req: Request, res: Response) => {
+    authenticationController.registerUser(req, res);
 });
 
-app.post("/update", async (req: Request, res: Response) => {
-    itemsController.update(req, res);
+//
+app.get('/comment/:id/:skip', (req: Request, res: Response) => {
+    commentsController.show(req, res);
 });
 
-app.post("/deleteItem", async (req: Request, res: Response) => {
-    itemsController.delete(req, res);
+//post
+app.post("/comments/store", async (req: Request, res: Response) => {
+    commentsController.store(req, res);
 });
 
-app.post("/addCommentary", async (req: Request, res: Response) => {
-    commentariesController.add(req, res);
-});
-
-app.post("/deleteCommentary", async (req: Request, res: Response) => {
-    commentariesController.delete(req, res);
+app.post("/comments/delete", async (req: Request, res: Response) => {
+    commentsController.delete(req, res);
 });

@@ -1,14 +1,13 @@
 import { items, comments, categories, PrismaClient } from "@prisma/client";
 import { Request, Response } from 'express';
 import fs from "fs";
-import { Logger } from "../logs/logger";
 import { stringData, renderObject } from '../functions';
+import { addLog } from "../logs/addLog";
 
 const prisma: PrismaClient = new PrismaClient();
-const logger = new Logger();
 
 export class ItemsController {
-    async show(req: Request, res: Response) {
+    async index(req: Request, res: Response) {
         let data = await prisma.items.findMany({
             'include': {
                 category: true
@@ -19,7 +18,7 @@ export class ItemsController {
         );
     };
 
-    async item(req: Request, res: Response) {
+    async show(req: Request, res: Response) {
         let data = await prisma.items.findUnique({
             'where': {
                 id: Number(req.params.id)
@@ -34,10 +33,11 @@ export class ItemsController {
             renderObject(req, {
                 'item': data,
                 'username': req.session.username
-            }));
+            })
+        );
     };
 
-    async itemUpdate(req: Request, res: Response) {
+    async edit(req: Request, res: Response) {
         const data = await prisma.items.findUnique({
             'where': {
                 id: Number(req.params.id)
@@ -45,7 +45,7 @@ export class ItemsController {
             'include': {
                 category: true
             }
-        })
+        });
 
         if (data != null && data.author != req.session.username) {
             res.redirect("/items");
@@ -55,17 +55,19 @@ export class ItemsController {
                 renderObject(req, {
                     'item': data,
                     'categories': categories
-                }));
+                })
+            );
         };
     }
 
-    async addGet(req: Request, res: Response) {
+    async create(req: Request, res: Response) {
         if (req.session.auth != true) {
             res.redirect("/");
         } else {
             const categories = await prisma.categories.findMany();
             res.render("add",
-                renderObject(req, { 'categories': categories }));
+                renderObject(req, { 'categories': categories })
+            );
         };
     };
 
@@ -79,14 +81,15 @@ export class ItemsController {
                 'id': Number(req.body.id)
             }
         })
-        logger.addLog(
+        addLog(
             `user ${req.session.username} delete item by id=${req.body.id}, delete comments by item_id=${req.body.id}`
         )
-        
+
         req.session.messageAlert = 'item deleted successfully'
         res.redirect("/items");
     };
-    async addPost(req: Request, res: Response) {
+
+    async store(req: Request, res: Response) {
         if (req.files != undefined) {
             req.files.image.mv("./public/img/" + req.files.image.name);
             const date = String(new Date().getTime())
@@ -100,7 +103,7 @@ export class ItemsController {
                     'category_id': Number(req.body.categories)
                 }
             });
-            logger.addLog(
+            addLog(
                 `user ${req.session.username} create item: title=${req.body.title}, date_creating=${date}`
             );
             req.session.messageAlert = 'item created successfully'
@@ -114,7 +117,7 @@ export class ItemsController {
             try {
                 fs.unlinkSync("./public/img/" + req.body.oldImage);
             }
-            catch (err) { }
+            catch (err) {}
 
             image = req.files.image.name;
             req.files.image.mv("./public/img/" + image);
@@ -130,7 +133,7 @@ export class ItemsController {
                 id: Number(req.body.id)
             }
         })
-        logger.addLog(
+        addLog(
             `user ${req.session.username} update item: id=${req.body.id}`
         );
         req.session.messageAlert = 'item updated successfully'
