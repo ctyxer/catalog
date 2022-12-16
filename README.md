@@ -4,9 +4,13 @@
 
     npm install
 
-Создать файл .env в корневом каталоге и добавить конфигурацию БД
+Создать файл .env в корневом каталоге и добавить конфигурацию БД 
 
     DATABASE_URL="mysql://root:secret@localhost:3306/project"
+
+И токеном вашего бота Telegram(по дефолту бот https://t.me/catalog_new_logs_bot) 
+
+    TELEGRAM_API="<token>"
 
 Выполнить миграцию БД из конфигурации ORM Prisma
 

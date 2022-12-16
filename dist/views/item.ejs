@@ -38,8 +38,6 @@
   </p>
 </div>
 
-<p class="font-bold m-5"><%if(item.comments.length==0){%>No <%}else%>Commentaries<% {%>:<%}%></p>
-
 <div id="comments"></div>
 
 <!-- <% for (let i = 0; i < item.comments.length; i++) { %>
@@ -69,6 +67,7 @@
 </button>
 <script>
   var skip = 0;
+  var showError = true;
 
   function getComments() {
     fetch(`http://localhost:5000/comment/<%= item.id %>/${skip}`, {
@@ -81,6 +80,13 @@
         return response.json();
       })
       .then(function(data) {
+        if(data.length === 0 && showError){
+          showError = false;
+          let p = document.createElement('p')
+          if(skip === 0)  p.innerHTML = `<p class="font-bold m-1">No Commentaries</p>`;
+          else  p.innerHTML = `<p class="font-bold m-1">No more commentaries</p>`;
+          document.getElementById('comments').appendChild(p);
+        }
         for (let i = 0; i < data.length; i++) {
           let deleteText = ``;
           if (document.getElementById('username').value == data[i].author) {

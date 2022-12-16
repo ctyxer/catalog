@@ -7,4 +7,5 @@ dist/controllers/*.js
 public/css/output.css
 public/img/*.*
 logs/*.txt
+logs/*.json
 dist/logs/*

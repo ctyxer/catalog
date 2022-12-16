@@ -61,8 +61,9 @@ export class AuthenticationController {
     };
 
     async logout(req: Request, res: Response) {
+        let username = req.session.username;
         await logger.addLog(
-            `${ip.address()} is logout from account ${req.session.username}`
+            `${ip.address()} is logout from account ${username}`
         );
         req.session.auth = false;
         req.session.username = undefined;
