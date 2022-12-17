@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { categories, users, items, PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { renderObject } from '../functions';
 import { addLog } from '../logs/addLog';
 
@@ -11,7 +11,8 @@ export class CategoriesController {
 
         res.render('categories',
             renderObject(req, {
-                'categories': categories
+                'categories': categories,
+                'username': req.session.username
             })
         );
     };
@@ -32,13 +33,16 @@ export class CategoriesController {
             res.redirect("/");
         } else {
             res.render("addCategory",
-                renderObject(req, { 'error': '' })
+                renderObject(req, {
+                    'error': '',
+                    'username': req.session.username
+                })
             );
         }
     };
 
     async store(req: Request, res: Response) {
-        const { name } = req.body;
+        const { name, owner } = req.body;
         if (name == undefined) {
             addLog(
                 `${req.session.username} cannot add category. error: the field cannot be empty`
@@ -69,13 +73,35 @@ export class CategoriesController {
                 );
                 await prisma.categories.create({
                     data: {
-                        'name': name
+                        'name': name,
+                        'owner': owner
                     }
                 });
                 req.session.messageAlert = 'category created successfully';
                 res.redirect('/categories');
             }
         }
+    };
 
+    async delete(req: Request, res: Response) {
+        if (req.session.auth != true) {
+            res.redirect("/");
+        } else {
+            const { id } = req.body;
+
+            await prisma.items.updateMany({
+                where: { 'category_id': Number(id) },
+                data: { 'category_id': Number(1) }
+            });
+
+            await prisma.categories.delete({
+                where: {
+                    id: Number(id)
+                }
+            });
+            addLog(`user ${req.session.username} deleted category id=${id}`);
+            req.session.messageAlert = 'category deleted successfully';
+            res.redirect('/categories');
+        }
     };
 };

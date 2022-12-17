@@ -91,7 +91,6 @@
           let deleteText = ``;
           if (document.getElementById('username').value == data[i].author) {
             const item_id = document.getElementById('id').value;
-            console.log(item_id)
             deleteText = `<form action="/comments/delete" method="post" class="text-red-600 font-bold inline-block ml-auto">
     <input type="hidden" value="${data[i].id}" type="text" name="idComment">
     <input type="hidden" value="${item_id}" type="text" name="id">

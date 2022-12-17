@@ -101,6 +101,10 @@ app.post("/categories/store", async (req: Request, res: Response) => {
     categoriesController.store(req, res);
 });
 
+app.post("/categories/delete", async (req: Request, res: Response) => {
+    categoriesController.delete(req, res);
+});
+
 app.get('/categories/:id', async (req, res) => {
     categoriesController.show(req, res);
 });

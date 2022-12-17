@@ -13,6 +13,7 @@ export class ItemsController {
                 category: true
             }
         });
+        
         res.render("items",
             renderObject(req, { 'items': data })
         );
@@ -130,7 +131,7 @@ export class ItemsController {
                 'category_id': Number(req.body.categories)
             },
             where: {
-                id: Number(req.body.id)
+                'id': Number(req.body.id)
             }
         })
         addLog(

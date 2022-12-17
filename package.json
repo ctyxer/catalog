@@ -26,7 +26,7 @@
         "typescript": "^4.9.3"
     },
     "scripts": {
-        "prisma": "concurrently \"npx prisma migrate dev\" \"node ./prisma/seed.js\"",
+        "prisma": "node ./prisma/seed.js",
         "tailwind": "npx tailwindcss -i ./public/css/input.css -o ./public/css/output.css",
         "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\""
     }

@@ -2,7 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["fullTextSearch", "fullTextIndex"]
 }
 
@@ -19,7 +19,7 @@ model items {
   date_creating String?     @db.VarChar(64)
   author        String?     @db.VarChar(255)
   category      categories? @relation(fields: [category_id], references: [id])
-  category_id   Int?
+  category_id   Int?        @db.Int
   comments      comments[]
 }
 
@@ -42,5 +42,6 @@ model users {
 model categories {
   id    Int     @id @default(autoincrement())
   name  String? @db.VarChar(128)
+  owner String? @db.VarChar(255)
   items items[]
 }

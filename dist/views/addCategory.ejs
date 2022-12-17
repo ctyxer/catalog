@@ -7,6 +7,7 @@
     <label for="name">Name</label>
     <input class="block border-2 border-black rounded w-full m-0" type="text" id="name" name="name" value="name">
   </div>
+  <input type="hidden" name="owner" id="owner" value="<%= username %>">
   <label for="error" class="font-bold text-red-600"><%= error %></label>
   <% if(auth){ %>
   <div class="w-min ml-auto mr-auto p-4 pb-2">

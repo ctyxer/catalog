@@ -4,12 +4,11 @@ const prisma = new PrismaClient();
 async function main() {
     const createMany = await prisma.categories.createMany({
         data: [
-            { name: "None" }
+            { name: "other", owner: 'admin' }
         ],
         skipDuplicates: true
         }
     );
-    console.log("done!")
 }
 
 main()
