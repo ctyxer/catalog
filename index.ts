@@ -59,6 +59,10 @@ app.get("/", async (req: Request, res: Response) => {
     globalController.index(req, res);
 });
 
+app.get('/find', async (req: Request, res: Response) => {
+    globalController.find(req, res);
+});
+
 // items
 app.get('/items', async (req:  Request, res: Response) => {
     itemsController.index(req, res);
@@ -78,6 +82,10 @@ app.post("/items/update", async (req: Request, res: Response) => {
 
 app.post("/items/delete", async (req: Request, res: Response) => {
     itemsController.delete(req, res);
+});
+
+app.post("/items/find", async (req: Request, res: Response) => {
+    itemsController.search(req, res);
 });
 
 app.get("/items/:id", async (req: Request, res: Response) => {

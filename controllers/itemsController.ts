@@ -1,5 +1,5 @@
-import { items, comments, categories, PrismaClient } from "@prisma/client";
-import { Request, Response } from 'express';
+import { PrismaClient } from "@prisma/client";
+import { query, Request, Response } from 'express';
 import fs from "fs";
 import { stringData, renderObject } from '../functions';
 import { addLog } from "../logs/addLog";
@@ -139,5 +139,23 @@ export class ItemsController {
         );
         req.session.messageAlert = 'item updated successfully'
         res.redirect("/items");
+    };
+
+    async search(req: Request, res: Response) {
+        const { search } = req.body;
+        const items = await prisma.items.findMany({
+            where: {
+                'title': {
+                    contains: search
+                }
+            },
+            include: {
+                category: true
+            }
+        });
+
+        res.render("items",
+            renderObject(req, { 'items': items , 'search': search})
+        );
     };
 }

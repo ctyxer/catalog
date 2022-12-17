@@ -1,0 +1,10 @@
+<%- include('particles/header.ejs') %>
+<%- include('particles/navigation.ejs') %>
+
+<form action="/items/find" method="post" class="p-2 border-4 border-black rounded-md w-fit ml-auto mr-auto m-4">
+    <input type="text" name="search" class="border-2 border-black rounded w-full m-0">
+    <input type="submit" value="Search" class="font-bold border-2 border-black rounded-md mt-1">
+</form>
+
+<%- include('particles/message.ejs') %>
+<%- include('particles/footer.ejs') %>
