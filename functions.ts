@@ -1,4 +1,4 @@
-import { Express, Request, Response } from 'express';
+import { Request } from 'express';
 
 export function stringData(data: string | String | number | Number) {
     let date = new Date(Number(data));

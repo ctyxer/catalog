@@ -6,12 +6,12 @@
 <input type="hidden" id="id" value="<%= item.id %>">
 
 <% if(item.author == username) { %>
-<div class="rounded-md border-4 border-black p-1 m-1 w-min ml-auto">
+<div class="bg-white rounded-md border-4 border-black p-1 m-1 w-min ml-auto">
   <a href="/items/<%= item.id %>/edit">change</a>
 </div>
 <% } %>
 
-<div name="item" class="rounded-md border-4 border-black p-3 m-1">
+<div name="item" class="bg-white rounded-md border-4 border-black p-3 m-1">
   <img class="inline-block rounded-2xl max-h-60 max-w-60 pr-2" src="../img/<%= item.image %>" />
   <div class="inline-block">
     <h2 class="text-lg font-bold mb-auto">
@@ -29,7 +29,7 @@
   </div>
 </div>
 
-<div class="rounded-md border-4 border-black p-3 m-1">
+<div class="bg-white rounded-md border-4 border-black p-3 m-1">
   <p>
     Description:
   </p>
@@ -39,30 +39,7 @@
 </div>
 
 <div id="comments"></div>
-
-<!-- <% for (let i = 0; i < item.comments.length; i++) { %>
-
-<div class="rounded-md border-4 border-black p-3 m-1">
-  <p class="text-blue-900 font-bold">
-    <%=item.comments[i].author%>
-  </p>
-
-  <p class="bg-blue-200 rounded-md p-1">
-    <%=item.comments[i].commentary%>
-  </p>
-  <p class="text-xs inline-block">
-    Created - <%=item.comments[i].date_creating%>
-  </p>
-  <% if(item.comments[i].author == username){ %>
-  <form action="/deleteCommentary" method="post" class="text-red-600 font-bold inline-block ml-auto">
-    <input type="hidden" value="<%=item.comments[i].id%>" type="text" name="idComment">
-    <input type="hidden" value="<%= item.id %>" type="text" name="id">
-    <input type="submit" class="form-button" value="Удалить">
-  </form>
-  <% } %>
-</div>
-<% } %> -->
-<button onclick='getComments()' class="rounded-md border-4 border-black m-1 p-1">
+<button onclick='getComments()' class="bg-white rounded-md border-4 border-black m-1 p-1">
   Get Comments (20)
 </button>
 <script>
@@ -94,12 +71,12 @@
             deleteText = `<form action="/comments/delete" method="post" class="text-red-600 font-bold inline-block ml-auto">
     <input type="hidden" value="${data[i].id}" type="text" name="idComment">
     <input type="hidden" value="${item_id}" type="text" name="id">
-    <input type="submit" class="form-button" value="Удалить">
+    <input type="submit" class="form-button" value="Delete">
   </form>`;
           }
 
           let div = document.createElement('div')
-          div.innerHTML = `<div class="rounded-md border-4 border-black p-3 m-1">
+          div.innerHTML = `<div class="bg-white rounded-md border-4 border-black p-3 m-1">
   <p class="text-blue-900 font-bold">
     ${data[i].author}
   </p>
@@ -122,7 +99,7 @@
 <% if(auth) { %>
 <form action="/comments/store" method="post">
 
-  <div class="m-4 border-4 border-black rounded-md ml-1 mr-1 p-4">
+  <div class="bg-white m-4 border-4 border-black rounded-md ml-1 mr-1 p-4">
     <p class="font-bold mb-2">Add commentary</p>
     <span>
       <input type="text" name="commentary" class="inline-block border-2 border-black rounded w-full">

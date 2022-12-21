@@ -3,7 +3,6 @@
 
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["fullTextSearch", "fullTextIndex"]
 }
 
 datasource db {
@@ -21,8 +20,6 @@ model items {
   category      categories? @relation(fields: [category_id], references: [id])
   category_id   Int?        @db.Int
   comments      comments[]
-
-  @@fulltext([title])
 }
 
 model comments {

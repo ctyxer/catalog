@@ -8,7 +8,7 @@
 <% } %>
 
 <% for (let i=0; i < categories.length; i++) { %>
-<div name="category" class="rounded-md border-4 border-black m-4 p-2">
+<div name="category" class="bg-white rounded-md border-4 border-black m-4 p-2">
   <a href="/categories/<%= categories[i].id %>" class="font-bold inline-block"><%= categories[i].name %></a>
   <% if(categories[i].owner == username) { %> 
   <form action="/categories/delete" method="post" class="w-min mr-auto rounded-md border-4 border-red-600 p-0 inline-block">
@@ -20,7 +20,7 @@
 <% } %>
 
 <div>
-    <a href="/categories/create" class="rounded-md border-4 border-black font-bold p-1 m-4">Upload</a>
+    <a href="/categories/create" class="bg-white rounded-md border-4 border-black font-bold p-1 m-4">Upload</a>
 </div>
 
 <%- include('particles/footer.ejs') %>
