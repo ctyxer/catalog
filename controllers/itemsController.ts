@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
-import { query, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import fs from "fs";
-import { stringData, renderObject } from '../functions';
+import { stringData, renderObject, sortAlfabet, sortDate } from '../functions';
 import { addLog } from "../logs/addLog";
 
 const prisma: PrismaClient = new PrismaClient();
@@ -93,14 +93,16 @@ export class ItemsController {
     async store(req: Request, res: Response) {
         if (req.files != undefined) {
             req.files.image.mv("./public/img/" + req.files.image.name);
-            const date = String(new Date().getTime())
+            const date = new Date();
+
             await prisma.items.create({
                 data: {
                     'title': req.body.title,
                     'image': String(req.files.image.name),
                     'description': req.body.description,
                     'author': String(req.session.username),
-                    'date_creating': stringData(date),
+                    'date': Number(date.getTime()),
+                    'date_creating': stringData(date.getTime()),
                     'category_id': Number(req.body.categories)
                 }
             });
@@ -158,4 +160,32 @@ export class ItemsController {
             renderObject(req, { 'items': items , 'search': search})
         );
     };
+
+    async sortAlfabet(req: Request, res: Response){
+        let data = await prisma.items.findMany({
+            'include': {
+                category: true
+            }
+        });
+        
+        data = sortAlfabet(data);
+
+        res.render("items",
+            renderObject(req, { 'items': data })
+        );
+    }
+
+    async sortDate(req: Request, res: Response){
+        let data = await prisma.items.findMany({
+            'include': {
+                category: true
+            }
+        });
+        
+        data = sortDate(data);
+
+        res.render("items",
+            renderObject(req, { 'items': data })
+        );
+    }
 }

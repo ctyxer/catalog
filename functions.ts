@@ -1,3 +1,4 @@
+import { categories, items } from '@prisma/client';
 import { Request } from 'express';
 
 export function stringData(data: string | String | number | Number) {
@@ -15,8 +16,8 @@ export function stringData(data: string | String | number | Number) {
     );
 }
 
-export function renderObject(req: Request, obj?: Object | object){
-    if(req.session.messageAlert != undefined){
+export function renderObject(req: Request, obj?: Object | object) {
+    if (req.session.messageAlert != undefined) {
         let messageAlert = req.session.messageAlert;
         req.session.messageAlert = undefined;
         return {
@@ -34,4 +35,19 @@ export function renderObject(req: Request, obj?: Object | object){
         },
         ...obj
     }
+}
+
+export function sortAlfabet(array: any) {
+    array.sort(function (a: any, b: any) {
+        return a.title - b.title;
+    });
+    array = array.reverse();
+    return array;
+}
+
+export function sortDate(array: any) {
+    array.sort(function (a: any, b: any) {
+        return Number(a.date) - Number(b.date);
+    });
+    return array;
 }

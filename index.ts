@@ -88,6 +88,14 @@ app.post("/items/find", async (req: Request, res: Response) => {
     itemsController.search(req, res);
 });
 
+app.get("/items/sort/alfabet", async (req: Request, res: Response) => {
+    itemsController.sortAlfabet(req, res);
+});
+
+app.get("/items/sort/date", async (req: Request, res: Response) => {
+    itemsController.sortDate(req, res);
+});
+
 app.get("/items/:id", async (req: Request, res: Response) => {
     itemsController.show(req, res);
 });

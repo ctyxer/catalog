@@ -9,17 +9,17 @@ export class CommentsController {
     async store(req: Request, res: Response) {
         if (req.session.username != undefined) {
             if (req.body.commentary != "") {
-                const data = String(new Date().getTime());
+                const date = new Date();
                 await prisma.comments.create({
                     data: {
                         author: String(req.session.username),
                         commentary: String(req.body.commentary),
-                        date_creating: stringData(data),
+                        date_creating: stringData(date.getTime()),
                         item_id: Number(req.body.id)
                     }
                 })
                 addLog(
-                    `user ${req.session.username} upload comment on item by id=${req.body.id}, date_creating=${data}`
+                    `user ${req.session.username} upload comment on item by id=${req.body.id}, date_creating=${date}`
                 );
                 req.session.messageAlert = 'comment created successfully'
             }
