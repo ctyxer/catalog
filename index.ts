@@ -63,6 +63,10 @@ app.get('/find', async (req: Request, res: Response) => {
     globalController.find(req, res);
 });
 
+app.get('/user/:username', async (req: Request, res: Response) => {
+    globalController.userPage(req, res);
+});
+
 // items
 app.get('/items', async (req:  Request, res: Response) => {
     itemsController.index(req, res);
