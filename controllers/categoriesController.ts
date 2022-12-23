@@ -1,9 +1,11 @@
 import { Request, Response } from 'express';
 import { PrismaClient } from "@prisma/client";
 import { renderObject } from '../functions';
-import { addLog } from '../logs/addLog';
+import { CategoriesRepository } from '../repositories/CategoriesRepository';
 
 const prisma: PrismaClient = new PrismaClient();
+
+let categoriesRepository = new CategoriesRepository();
 
 export class CategoriesController {
     async index(req: Request, res: Response) {
@@ -20,14 +22,10 @@ export class CategoriesController {
     async show(req: Request, res: Response) {
         const { id } = req.params; 
 
-        let data = await prisma.items.findMany({
-            'where': {
-                'category_id': Number(id)
-            },
-            'include': {
-                category: true
-            }
-        });
+        // CategoriesRepository.findById()
+
+        let data = categoriesRepository.store(Number(id));
+        
         res.render("items",
             renderObject(req, { 'items': data })
         );
@@ -49,9 +47,9 @@ export class CategoriesController {
     async store(req: Request, res: Response) {
         const { name, owner } = req.body;
         if (name == undefined) {
-            addLog(
-                `${req.session.username} cannot add category. error: the field cannot be empty`
-            );
+            // addLog(
+            //     `${req.session.username} cannot add category. error: the field cannot be empty`
+            // );
             res.render('addCategory',
                 renderObject(req, {
                     'error': "The field cannot be empty"
@@ -64,24 +62,20 @@ export class CategoriesController {
                 }
             })
             if (data != null) {
-                addLog(
-                    `${req.session.username} cannot add category. error: name already taken`
-                );
+                // addLog(
+                //     `${req.session.username} cannot add category. error: name already taken`
+                // );
                 res.render('addCategory',
                     renderObject(req, {
                         'error': "Name already taken"
                     })
                 );
             } else {
-                addLog(
-                    `${req.session.username} add category name=${name}`
-                );
-                await prisma.categories.create({
-                    data: {
-                        'name': name,
-                        'owner': owner
-                    }
-                });
+                // addLog(
+                //     `${req.session.username} add category name=${name}`
+                // );
+                categoriesRepository.storeLog(String(req.session.username), name);
+                categoriesRepository.create(name, owner);
                 req.session.messageAlert = 'category created successfully';
                 res.redirect('/categories');
             }
@@ -99,12 +93,8 @@ export class CategoriesController {
                 data: { 'category_id': Number(1) }
             });
 
-            await prisma.categories.delete({
-                where: {
-                    id: Number(id)
-                }
-            });
-            addLog(`user ${req.session.username} deleted category id=${id}`);
+            categoriesRepository.delete(Number(id));
+            categoriesRepository.deleteLog(String(req.session.username), id);
             req.session.messageAlert = 'category deleted successfully';
             res.redirect('/categories');
         }

@@ -1,7 +1,8 @@
 import TelegramBot = require('node-telegram-bot-api');
 import * as dotenv from "dotenv";
 import fs from 'fs';
-import { Logger } from './logger';
+import { Logger } from './Logger';
+import { Observer } from '../Observer/Observer';
 
 dotenv.config({ path: __dirname + './../.env' });
 
@@ -23,11 +24,26 @@ bot.onText(/\/sendLogs/, async (msg) => {
     }
 });
 
-export class TelegramLogger implements Logger {
-    async addLog(message: String) {
+
+export class LogToTelegram implements Logger, Observer {
+    message: string;
+
+    constructor() {
+        this.message = "";
+    }
+
+    setMessage(message: string) {
+        this.message = message;
+    }
+
+    async addLog() {
         chatIDs = JSON.parse(fs.readFileSync('./logs/chat_ids.json', 'utf8'));
         chatIDs.forEach((chatID) => {
-            bot.sendMessage(chatID, String(message));
+            bot.sendMessage(chatID, String(this.message));
         });
+    }
+
+    async handle() {
+        this.addLog();
     }
 }
