@@ -18,7 +18,12 @@ export class CategoriesController {
     };
 
     async show(req: Request, res: Response) {
+        const { id } = req.params; 
+
         let data = await prisma.items.findMany({
+            'where': {
+                'category_id': Number(id)
+            },
             'include': {
                 category: true
             }
