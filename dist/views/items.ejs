@@ -23,9 +23,9 @@
       <h2 class="text-lg font-bold mb-auto">
         <%= items[i].title %>
       </h2>
-      <p href="/users/<%= items[i].author %>" class="mr-auto">
+      <a href="/users/<%= items[i].author %>" class="mr-auto">
         Author - <%= items[i].author %>
-      </p>
+      </a>
       <p href="/users/<%= items[i].author %>" class="mr-auto">
         Category - <%= items[i].category.name %>
       </p>

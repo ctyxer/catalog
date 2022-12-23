@@ -7,7 +7,7 @@ import { addLog } from '../logs/addLog';
 
 const prisma: PrismaClient = new PrismaClient();
 
-export class AuthenticationController {
+export class UserController {
     async login(req: Request, res: Response) {
         res.render("login",
             renderObject(req, {
@@ -111,5 +111,16 @@ export class AuthenticationController {
                 res.redirect('/');
             }
         };
+    };
+
+    async show(req: Request, res: Response) {
+        const { username } = req.params;
+        const user = await prisma.users.findFirst({
+            where: {
+                'username': username
+            }
+        });
+
+        res.render('userpage', renderObject(req, { 'user': user }));
     };
 }

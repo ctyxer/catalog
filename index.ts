@@ -3,7 +3,7 @@ import session from 'express-session';
 import path from 'path';
 import fileUpload from 'express-fileupload';
 import { ItemsController } from './controllers/itemsController';
-import { AuthenticationController } from './controllers/authenticationController';
+import { UserController } from './controllers/userController';
 import { CommentsController } from './controllers/commentsController';
 import { GlobalController } from './controllers/globalController';
 import { CategoriesController } from './controllers/categoriesController';
@@ -12,7 +12,7 @@ const app: Express = express();
 
 //Controllers
 const itemsController = new ItemsController();
-const authenticationController = new AuthenticationController();
+const userController = new UserController();
 const commentsController = new CommentsController();
 const categoriesController = new CategoriesController();
 const globalController = new GlobalController();
@@ -131,23 +131,28 @@ app.get('/categories/:id', async (req, res) => {
 
 // auth
 app.get("/login", async (req: Request, res: Response) => {
-    authenticationController.login(req, res);
+    userController.login(req, res);
 });
 
 app.get("/register", async (req: Request, res: Response) => {
-    authenticationController.register(req, res);
+    userController.register(req, res);
 });
 
 app.post("/auth/logout", async (req: Request, res: Response) => {
-    authenticationController.logout(req, res);
+    userController.logout(req, res);
 });
 
 app.post("/auth/login", async (req: Request, res: Response) => {
-    authenticationController.loginUser(req, res);
+    userController.loginUser(req, res);
 });
 
 app.post("/auth/register", async (req: Request, res: Response) => {
-    authenticationController.registerUser(req, res);
+    userController.registerUser(req, res);
+});
+
+//user
+app.get('/users/:username', async (req: Request, res: Response) => {
+    userController.show(req, res);
 });
 
 //
