@@ -1,34 +1,24 @@
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from 'express';
+import { UploadedFile } from "express-fileupload";
 import fs from "fs";
-import { stringData, renderObject, sortAlfabet, sortDate } from '../functions';
-import { addLog } from "../logs/addLog";
+import { renderObject, sortAlfabet, sortDate } from '../functions';
+import { ItemsRepository } from "../repositories/ItemsRepository";
 
 const prisma: PrismaClient = new PrismaClient();
+const itemsRepository = new ItemsRepository();
 
 export class ItemsController {
     async index(req: Request, res: Response) {
-        let data = await prisma.items.findMany({
-            'include': {
-                category: true
-            }
-        });
-        
+        let data = await itemsRepository.index();
+
         res.render("items",
             renderObject(req, { 'items': data })
         );
     };
 
     async show(req: Request, res: Response) {
-        let data = await prisma.items.findUnique({
-            'where': {
-                id: Number(req.params.id)
-            },
-            'include': {
-                category: true,
-                comments: true
-            }
-        });
+        let data = await itemsRepository.show(Number(req.params.id));
 
         res.render("item",
             renderObject(req, {
@@ -39,19 +29,12 @@ export class ItemsController {
     };
 
     async edit(req: Request, res: Response) {
-        const data = await prisma.items.findUnique({
-            'where': {
-                id: Number(req.params.id)
-            },
-            'include': {
-                category: true
-            }
-        });
+        const data = await itemsRepository.editItem(Number(req.params.id));
 
         if (data != null && data.author != req.session.username) {
             res.redirect("/items");
         } else {
-            const categories = await prisma.categories.findMany();
+            const categories = await itemsRepository.editCategories();
             res.render("changeItem",
                 renderObject(req, {
                     'item': data,
@@ -65,7 +48,7 @@ export class ItemsController {
         if (req.session.auth != true) {
             res.redirect("/");
         } else {
-            const categories = await prisma.categories.findMany();
+            const categories = await itemsRepository.create();
             res.render("add",
                 renderObject(req, { 'categories': categories })
             );
@@ -77,14 +60,8 @@ export class ItemsController {
             fs.unlinkSync("./public/img/" + req.body.oldImage);
         }
         catch (err) { }
-        await prisma.items.delete({
-            where: {
-                'id': Number(req.body.id)
-            }
-        })
-        addLog(
-            `user ${req.session.username} delete item by id=${req.body.id}, delete comments by item_id=${req.body.id}`
-        )
+        itemsRepository.delete(Number(req.body.id))
+        itemsRepository.deleteLog(String(req.session.username), req.body.id)
 
         req.session.messageAlert = 'item deleted successfully'
         res.redirect("/items");
@@ -92,100 +69,62 @@ export class ItemsController {
 
     async store(req: Request, res: Response) {
         if (req.files != undefined) {
-            req.files.image.mv("./public/img/" + req.files.image.name);
+            const image = req.files.image as UploadedFile;
+            image.mv("./public/img/" + image.name);
             const date = new Date();
 
-            await prisma.items.create({
-                data: {
-                    'title': req.body.title,
-                    'image': String(req.files.image.name),
-                    'description': req.body.description,
-                    'author': String(req.session.username),
-                    'date': Number(date.getTime()),
-                    'date_creating': stringData(date.getTime()),
-                    'category_id': Number(req.body.categories)
-                }
-            });
-            addLog(
-                `user ${req.session.username} create item: title=${req.body.title}, date_creating=${date}`
-            );
+            itemsRepository.store(req.body, image, date, String(req.session.username));
+            itemsRepository.storeLog(String(req.session.username), req.body.title);
             req.session.messageAlert = 'item created successfully'
         }
         res.redirect("/items");
     };
 
     async update(req: Request, res: Response) {
-        let image = req.body.oldImage;
         if (req.files != undefined) {
-            try {
-                fs.unlinkSync("./public/img/" + req.body.oldImage);
-            }
-            catch (err) {}
+            const oldImage = req.body.oldImage;
 
-            image = req.files.image.name;
-            req.files.image.mv("./public/img/" + image);
-        };
-        await prisma.items.update({
-            data: {
-                'title': req.body.title,
-                'image': image,
-                'description': req.body.description,
-                'category_id': Number(req.body.categories)
-            },
-            where: {
-                'id': Number(req.body.id)
+            try {
+                fs.unlinkSync("./public/img/" + oldImage);
             }
-        })
-        addLog(
-            `user ${req.session.username} update item: id=${req.body.id}`
-        );
-        req.session.messageAlert = 'item updated successfully'
+            catch (err) { }
+
+            const image = req.files.image as UploadedFile;
+            image.mv("./public/img/" + image.name);
+
+            itemsRepository.update(req.body, image);
+            itemsRepository.updateLog(String(req.session.username), req.body.id)
+            req.session.messageAlert = 'item updated successfully'
+        };
         res.redirect("/items");
     };
 
     async search(req: Request, res: Response) {
         const { search } = req.body;
-        const items = await prisma.items.findMany({
-            where: {
-                'title': {
-                    contains: search
-                }
-            },
-            include: {
-                category: true
-            }
-        });
+        const items = itemsRepository.search(search);
 
         res.render("items",
-            renderObject(req, { 'items': items , 'search': search})
+            renderObject(req, { 'items': items, 'search': search })
         );
     };
 
-    async sortAlfabet(req: Request, res: Response){
-        let data = await prisma.items.findMany({
-            'include': {
-                category: true
-            }
-        });
-        
-        data = sortAlfabet(data);
+    async sortAlfabet(req: Request, res: Response) {
+        let items = await itemsRepository.sort();
+
+        items = sortAlfabet(items);
 
         res.render("items",
-            renderObject(req, { 'items': data })
+            renderObject(req, { 'items': items })
         );
     }
 
-    async sortDate(req: Request, res: Response){
-        let data = await prisma.items.findMany({
-            'include': {
-                category: true
-            }
-        });
-        
-        data = sortDate(data);
+    async sortDate(req: Request, res: Response) {
+        let items = await itemsRepository.sort();
+
+        items = sortDate(items);
 
         res.render("items",
-            renderObject(req, { 'items': data })
+            renderObject(req, { 'items': items })
         );
     }
 }

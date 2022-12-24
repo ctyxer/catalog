@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { users, PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import * as argon2 from "argon2";
 import * as ip from 'ip';
 import { renderObject } from '../functions';

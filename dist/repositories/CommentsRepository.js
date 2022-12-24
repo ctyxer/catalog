@@ -29,7 +29,7 @@ class CommentsRepository extends Repository_1.Repository {
         });
     }
     async show(id, skip) {
-        return await prisma.comments.findMany({
+        return prisma.comments.findMany({
             take: 20,
             skip: skip,
             where: {

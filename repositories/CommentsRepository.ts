@@ -34,7 +34,7 @@ export class CommentsRepository extends Repository implements Subject{
     }
 
     async show(id: number, skip: number){
-        return await prisma.comments.findMany({
+        return prisma.comments.findMany({
             take: 20,
             skip: skip,
             where: {
