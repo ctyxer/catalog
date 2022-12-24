@@ -1,10 +1,7 @@
 import { Request, Response } from 'express';
-import { comments, PrismaClient } from "@prisma/client";
 import { stringData } from '../functions';
-import { addLog } from '../logs/addLog';
 import { CommentsRepository } from '../repositories/CommentsRepository';
 
-const prisma: PrismaClient = new PrismaClient();
 const commentsRepository = new CommentsRepository();
 
 export class CommentsController {
@@ -15,9 +12,8 @@ export class CommentsController {
                 const { commentary, id } = req.body;
 
                 commentsRepository.store(String(req.session.username), String(commentary), stringData(date.getTime()), Number(id));
-                addLog(
-                    `user ${req.session.username} upload comment on item by id=${req.body.id}, date_creating=${date}`
-                );
+                commentsRepository.storeLog(req.session.username, id);
+
                 req.session.messageAlert = 'comment created successfully'
             }
         }
@@ -25,27 +21,15 @@ export class CommentsController {
     };
 
     async delete(req: Request, res: Response) {
-        await prisma.comments.delete({
-            where: {
-                id: Number(req.body.idComment)
-            }
-        })
-        addLog(
-            `user ${req.session.username} delete comment by id=${req.body.idComment}`
-        );
+        commentsRepository.delete(Number(req.body.idComment));
+        commentsRepository.deleteLog(req.session.username, req.body.idComment);
         req.session.messageAlert = 'comment deleted successfully';
         res.redirect("/items/" + String([req.body.id]));
     };
 
     async show(req: Request, res: Response) {
         const { id, skip } = req.params;
-        const data = await prisma.comments.findMany({
-            take: 20,
-            skip: Number(skip),
-            where: {
-                item_id: Number(id)
-            }
-        });
+        const data = await commentsRepository.show(Number(id), Number(skip));
         res.header('Access-Control-Allow-Origin', '*');
         res.send(data);
     }

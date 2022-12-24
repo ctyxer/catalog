@@ -24,4 +24,40 @@ export class CommentsRepository extends Repository implements Subject{
             }
         })
     }
+
+    async delete(id: number){
+        await prisma.comments.delete({
+            where: {
+                id: id
+            }
+        })
+    }
+
+    async show(id: number, skip: number){
+        return await prisma.comments.findMany({
+            take: 20,
+            skip: skip,
+            where: {
+                item_id: id
+            }
+        });
+    }
+
+
+    //log
+    log(message: string){
+        this.observers.forEach(observer => {
+            observer.setMessage(message);
+        });
+
+        super.notify();
+    }
+
+    storeLog(username: string, id: string){
+        this.log(`user ${username} upload comment on item by id=${id}`);
+    }
+
+    deleteLog(username: string | undefined, id: string){
+        this.log(`user ${username} delete comment id=${id}`);
+    }
 }

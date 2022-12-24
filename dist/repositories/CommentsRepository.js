@@ -21,5 +21,34 @@ class CommentsRepository extends Repository_1.Repository {
             }
         });
     }
+    async delete(id) {
+        await prisma.comments.delete({
+            where: {
+                id: id
+            }
+        });
+    }
+    async show(id, skip) {
+        return await prisma.comments.findMany({
+            take: 20,
+            skip: skip,
+            where: {
+                item_id: id
+            }
+        });
+    }
+    //log
+    log(message) {
+        this.observers.forEach(observer => {
+            observer.setMessage(message);
+        });
+        super.notify();
+    }
+    storeLog(username, id) {
+        this.log(`user ${username} upload comment on item by id=${id}`);
+    }
+    deleteLog(username, id) {
+        this.log(`user ${username} delete comment id=${id}`);
+    }
 }
 exports.CommentsRepository = CommentsRepository;

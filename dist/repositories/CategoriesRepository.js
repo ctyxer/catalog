@@ -52,6 +52,7 @@ class CategoriesRepository extends Repository_1.Repository {
             data: { 'category_id': 1 }
         });
     }
+    //logs
     log(message) {
         this.observers.forEach(observer => {
             observer.setMessage(message);

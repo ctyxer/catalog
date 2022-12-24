@@ -4,7 +4,7 @@ import path from 'path';
 import fileUpload from 'express-fileupload';
 import { ItemsController } from './controllers/itemsController';
 import { UserController } from './controllers/userController';
-import { CommentsController } from './controllers/commentsController';
+import { CommentsController } from './controllers/CommentsController';
 import { GlobalController } from './controllers/globalController';
 import { CategoriesController } from './controllers/CategoriesController';
 

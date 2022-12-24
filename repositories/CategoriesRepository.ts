@@ -61,6 +61,8 @@ export class CategoriesRepository extends Repository implements Subject {
         });
     } 
 
+
+    //logs
     log(message: string){
         this.observers.forEach(observer => {
             observer.setMessage(message);

@@ -57,7 +57,7 @@ class LogToTelegram {
     async addLog() {
         chatIDs = JSON.parse(fs_1.default.readFileSync('./logs/chat_ids.json', 'utf8'));
         chatIDs.forEach((chatID) => {
-            bot.sendMessage(chatID, String(this.message));
+            bot.sendMessage(chatID, this.message);
         });
     }
     async handle() {
