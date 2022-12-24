@@ -1,5 +1,3 @@
-import { Logger } from "../contracts/Logger/Logger";
-import { Observer } from "../contracts/Observer/Observer";
 import { Subject } from "../contracts/Observer/Subject";
 import { Repository } from "./Repository";
 import { LogToFile } from '../contracts/Logger/LogToFile';
@@ -11,7 +9,7 @@ export class CategoriesRepository extends Repository implements Subject {
     constructor() {
         super();
 
-        let logToFile = new LogToFile();
+        const logToFile = new LogToFile();
 
         this.attach(logToFile);
     }

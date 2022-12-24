@@ -2,22 +2,19 @@ import { Request, Response } from 'express';
 import { comments, PrismaClient } from "@prisma/client";
 import { stringData } from '../functions';
 import { addLog } from '../logs/addLog';
+import { CommentsRepository } from '../repositories/CommentsRepository';
 
 const prisma: PrismaClient = new PrismaClient();
+const commentsRepository = new CommentsRepository();
 
 export class CommentsController {
     async store(req: Request, res: Response) {
         if (req.session.username != undefined) {
             if (req.body.commentary != "") {
                 const date = new Date();
-                await prisma.comments.create({
-                    data: {
-                        author: String(req.session.username),
-                        commentary: String(req.body.commentary),
-                        date_creating: stringData(date.getTime()),
-                        item_id: Number(req.body.id)
-                    }
-                })
+                const { commentary, id } = req.body;
+
+                commentsRepository.store(String(req.session.username), String(commentary), stringData(date.getTime()), Number(id));
                 addLog(
                     `user ${req.session.username} upload comment on item by id=${req.body.id}, date_creating=${date}`
                 );
@@ -40,7 +37,7 @@ export class CommentsController {
         res.redirect("/items/" + String([req.body.id]));
     };
 
-    async show(req: Request, res: Response){
+    async show(req: Request, res: Response) {
         const { id, skip } = req.params;
         const data = await prisma.comments.findMany({
             take: 20,

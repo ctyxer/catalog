@@ -8,7 +8,7 @@ const prisma = new client_1.PrismaClient();
 class CategoriesRepository extends Repository_1.Repository {
     constructor() {
         super();
-        let logToFile = new LogToFile_1.LogToFile();
+        const logToFile = new LogToFile_1.LogToFile();
         this.attach(logToFile);
     }
     async index() {
