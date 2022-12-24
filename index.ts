@@ -6,7 +6,7 @@ import { ItemsController } from './controllers/itemsController';
 import { UserController } from './controllers/userController';
 import { CommentsController } from './controllers/commentsController';
 import { GlobalController } from './controllers/globalController';
-import { CategoriesController } from './controllers/categoriesController';
+import { CategoriesController } from './controllers/CategoriesController';
 
 const app: Express = express();
 

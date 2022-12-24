@@ -7,5 +7,13 @@ class Repository {
     constructor() {
         this.observers = [];
     }
+    attach(observer) {
+        this.observers.push(observer);
+    }
+    notify() {
+        this.observers.forEach(observer => {
+            observer.handle();
+        });
+    }
 }
 exports.Repository = Repository;

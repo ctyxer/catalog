@@ -16,8 +16,12 @@ export class CategoriesRepository extends Repository implements Subject {
         this.attach(logToFile);
     }
 
-    async store(category_id: number){
-        return await prisma.items.findMany({
+    async index(){
+        return prisma.categories.findMany()
+    }
+
+    async show(category_id: number){
+        return prisma.items.findMany({
             'where': {
                 'category_id': category_id
             },
@@ -27,11 +31,19 @@ export class CategoriesRepository extends Repository implements Subject {
         });
     }
 
-    async create(name: string, owner: string){
+    async storeCreate(name: string, owner: string){
         await prisma.categories.create({
             data: {
                 'name': name,
                 'owner': owner
+            }
+        });
+    }
+
+    async storeFindUniq(name: string){
+        return prisma.categories.findFirst({
+            where: {
+                'name': name
             }
         });
     }
@@ -44,25 +56,22 @@ export class CategoriesRepository extends Repository implements Subject {
         });
     }
 
-    /**
-     * index
-     * update
-     * store
-     * destroy
-     * show
-     */
+    async deleteUpdateItems(category_id: number){
+        await prisma.items.updateMany({
+            where: { 'category_id': category_id },
+            data: { 'category_id': 1 }
+        });
+    } 
 
     log(message: string){
         this.observers.forEach(observer => {
             observer.setMessage(message);
         });
 
-        this.notify();
+        super.notify();
     }
 
     storeLog(username: string, name: string) {
-        // log message "Category ${name} created."
-
         this.log(`${username} add category name=${name}`)
     }
 
