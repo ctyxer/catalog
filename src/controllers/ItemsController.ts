@@ -101,7 +101,7 @@ export class ItemsController {
 
     async search(req: Request, res: Response) {
         const { search } = req.body;
-        const items = itemsRepository.search(search);
+        const items = await itemsRepository.search(search);
 
         res.render("items",
             renderObject(req, { 'items': items, 'search': search })
