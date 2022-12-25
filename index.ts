@@ -2,11 +2,11 @@ import express, { Express, Request, Response } from 'express';
 import session from 'express-session';
 import path from 'path';
 import fileUpload from 'express-fileupload';
-import { ItemsController } from './controllers/ItemsController';
-import { UserController } from './controllers/UserController';
-import { CommentsController } from './controllers/CommentsController';
-import { GlobalController } from './controllers/GlobalController';
-import { CategoriesController } from './controllers/CategoriesController';
+import { ItemsController } from './src/controllers/ItemsController';
+import { UserController } from './src/controllers/UserController';
+import { CommentsController } from './src/controllers/CommentsController';
+import { GlobalController } from './src/controllers/GlobalController';
+import { CategoriesController } from './src/controllers/CategoriesController';
 
 const app: Express = express();
 

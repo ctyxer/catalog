@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { stringData } from '../functions';
+import { stringData } from '../../functions';
 import { CommentsRepository } from '../repositories/CommentsRepository';
 
 const commentsRepository = new CommentsRepository();

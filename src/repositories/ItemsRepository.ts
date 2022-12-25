@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { LogToFile } from "../contracts/Logger/LogToFile";
 import { Subject } from "../contracts/Observer/Subject";
-import { stringData } from "../functions";
+import { stringData } from "../../functions";
 import { Repository } from "./Repository";
 
 const prisma: PrismaClient = new PrismaClient();
