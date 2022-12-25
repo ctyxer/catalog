@@ -29,7 +29,7 @@ export class CategoriesRepository extends Repository implements Subject {
         });
     }
 
-    async storeCreate(name: string, owner: string){
+    async storeCreate(name: string | undefined, owner: string){
         await prisma.categories.create({
             data: {
                 'name': name,
@@ -38,7 +38,7 @@ export class CategoriesRepository extends Repository implements Subject {
         });
     }
 
-    async storeFindUniq(name: string){
+    async storeFindFirst(name: string | undefined){
         return prisma.categories.findFirst({
             where: {
                 'name': name
@@ -71,7 +71,7 @@ export class CategoriesRepository extends Repository implements Subject {
         super.notify();
     }
 
-    storeLog(username: string, name: string) {
+    storeLog(username: string | undefined, name: string) {
         this.log(`${username} add category name=${name}`)
     }
 

@@ -3,9 +3,9 @@ import { PrismaClient } from "@prisma/client";
 import * as argon2 from "argon2";
 import * as ip from 'ip';
 import { renderObject } from '../functions';
-import { addLog } from '../logs/addLog';
+import { UserRepository } from '../repositories/UserRepository';
 
-const prisma: PrismaClient = new PrismaClient();
+const userRepository = new UserRepository();
 
 export class UserController {
     async login(req: Request, res: Response) {
@@ -25,23 +25,15 @@ export class UserController {
     };
 
     async loginUser(req: Request, res: Response) {
-        const data = await prisma.users.findFirst({
-            where: {
-                username: req.body.username
-            }
-        })
+        const data = await userRepository.loginUser(req.session.username);
+
         if (data != null) {
             if (await argon2.verify(String(data.password), String(req.body.password))) {
                 req.session.auth = true;
                 req.session.username = [req.body.username][0];
-                addLog(
-                    `${ip.address()} is login on account ${req.session.username}`
-                );
+                userRepository.loginUserLog(ip.address(), String(req.session.username));
                 res.redirect("/");
             } else {
-                addLog(
-                    `${ip.address()} is error logining on account ${req.session.username}. error: password is not correct`
-                );
                 res.render("login",
                     renderObject(req, {
                         'error': "Password is not correct"
@@ -49,9 +41,6 @@ export class UserController {
                 );
             }
         } else {
-            addLog(
-                `${ip.address()} is error logining on account ${req.session.username}. error: user does not exist`
-            );
             res.render("login",
                 renderObject(req, {
                     'error': "User does not exist"
@@ -62,9 +51,7 @@ export class UserController {
 
     async logout(req: Request, res: Response) {
         let username = req.session.username;
-        addLog(
-            `${ip.address()} is logout from account ${username}`
-        );
+        userRepository.logoutLog(ip.address(), String(username));
         req.session.auth = false;
         req.session.username = undefined;
         res.redirect("/");
@@ -72,40 +59,22 @@ export class UserController {
 
     async registerUser(req: Request, res: Response) {
         if (req.body.username == "" || req.body.password == "") {
-            addLog(
-                `${ip.address()} is error registering on account ${req.session.username}. error: the field cannot be empty`
-            );
             res.render('register',
                 renderObject(req, {
                     'error': "The field cannot be empty"
                 })
             );
         } else {
-            const data = await prisma.users.findFirst({
-                where: {
-                    username: req.body.username
-                }
-            })
+            const data = await userRepository.registerUserFindFirst(req.session.username);
             if (data != null) {
-                addLog(
-                    `${ip.address()} is error registering on account ${req.session.username}. error: username already taken`
-                );
                 res.render('register',
                     renderObject(req, {
                         'error': "Username already taken"
                     })
                 );
             } else {
-                addLog(
-                    `${ip.address()} is registering on account ${req.session.username}`
-                );
-                await prisma.users.create({
-                    data: {
-                        username: req.body.username,
-                        password: await argon2.hash(String(req.body.password)),
-                        role: "user"
-                    }
-                });
+                userRepository.registerUserLog(ip.address(), req.session.username);
+                userRepository.registerUserCreate(req.session.username, req.body.password);
                 req.session.auth = true;
                 req.session.username = [req.body.username][0];
                 res.redirect('/');
@@ -115,11 +84,7 @@ export class UserController {
 
     async show(req: Request, res: Response) {
         const { username } = req.params;
-        const user = await prisma.users.findFirst({
-            where: {
-                'username': username
-            }
-        });
+        const user = await userRepository.show(username);
 
         res.render('userpage', renderObject(req, { 'user': user }));
     };

@@ -62,7 +62,7 @@ export class ItemsRepository extends Repository implements Subject{
         })
     }
 
-    async store(body: any, image: any, date: Date, author: string){
+    async store(body: any, image: any, date: Date, author: string | undefined){
         await prisma.items.create({
             data: {
                 'title': body.title,
@@ -90,7 +90,7 @@ export class ItemsRepository extends Repository implements Subject{
         })
     }
 
-    async search(search: string){
+    async search(search: string | undefined){
         return prisma.items.findMany({
             where: {
                 'title': {

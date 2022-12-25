@@ -32,7 +32,7 @@ class CategoriesRepository extends Repository_1.Repository {
             }
         });
     }
-    async storeFindUniq(name) {
+    async storeFindFirst(name) {
         return prisma.categories.findFirst({
             where: {
                 'name': name

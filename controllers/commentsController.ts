@@ -11,7 +11,7 @@ export class CommentsController {
                 const date = new Date();
                 const { commentary, id } = req.body;
 
-                commentsRepository.store(String(req.session.username), String(commentary), stringData(date.getTime()), Number(id));
+                commentsRepository.store(req.session.username, commentary, stringData(date.getTime()), Number(id));
                 commentsRepository.storeLog(req.session.username, id);
 
                 req.session.messageAlert = 'comment created successfully'

@@ -14,7 +14,7 @@ export class CommentsRepository extends Repository implements Subject{
         this.attach(logToFile);
     }
 
-    async store(author: string, commentary: string, date_creating: string, item_id: number){
+    async store(author: string | undefined, commentary: string | undefined, date_creating: string, item_id: number){
         await prisma.comments.create({
             data: {
                 author: author,

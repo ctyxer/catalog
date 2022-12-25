@@ -49,7 +49,7 @@ export class CategoriesController {
                 })
             );
         } else {
-            const data = await categoriesRepository.storeFindUniq(name);
+            const data = await categoriesRepository.storeFindFirst(name);
             if (data != null) {
                 // cannot add category. error: name already taken
                 res.render('addCategory',
@@ -59,7 +59,7 @@ export class CategoriesController {
                 );
             } else {
                 // add category name=${name}
-                categoriesRepository.storeLog(String(req.session.username), name);
+                categoriesRepository.storeLog(req.session.username, name);
                 categoriesRepository.storeCreate(name, owner);
                 req.session.messageAlert = 'category created successfully';
                 res.redirect('/categories');
