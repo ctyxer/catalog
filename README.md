@@ -16,7 +16,11 @@
 
     npx prisma migrate dev
 
-Запуск taiwindcss
+Заполнение БД данными по умолчанию
+
+    npm run prisma
+
+Создание стилей tailwind
 
     npm run tailwind
 
