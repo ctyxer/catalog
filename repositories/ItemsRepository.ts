@@ -24,7 +24,7 @@ export class ItemsRepository extends Repository implements Subject{
     }
 
     async show(id: number){
-        prisma.items.findUnique({
+        return prisma.items.findUnique({
             'where': {
                 id: id
             },
