@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import { Request, Response } from 'express';
 import { UploadedFile } from "express-fileupload";
 import fs from "fs";
-import { renderObject, sortAlfabet, sortDate } from '../../functions';
+import { renderObject, sortAlfabet, sortDate } from '../functions';
 import { ItemsRepository } from "../repositories/ItemsRepository";
 
 const prisma: PrismaClient = new PrismaClient();

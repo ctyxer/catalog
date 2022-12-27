@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { renderObject } from '../../functions';
+import { renderObject } from '../functions';
 import { CategoriesRepository } from '../repositories/CategoriesRepository';
 
 let categoriesRepository = new CategoriesRepository();

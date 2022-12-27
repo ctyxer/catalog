@@ -1,4 +1,4 @@
-import { stringData } from "../../../functions";
+import { stringData } from "../../functions";
 import { Observer } from "../Observer/Observer";
 import { Logger } from "./Logger";
 import fs from 'fs';

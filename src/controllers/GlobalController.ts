@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { Request, Response } from 'express';
-import { renderObject } from '../../functions';
+import { renderObject } from '../functions';
 import { GlobalRepository } from '../repositories/GlobalRepository';
 
 const prisma: PrismaClient = new PrismaClient();
