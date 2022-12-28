@@ -17,10 +17,10 @@ export class CategoriesController {
     };
 
     async show(req: Request, res: Response) {
-        const { id } = req.params; 
+        const { id } = req.params;
 
         let data = await categoriesRepository.show(Number(id));
-        
+
         res.render("items",
             renderObject(req, { 'items': data })
         );
@@ -81,4 +81,25 @@ export class CategoriesController {
             res.redirect('/categories');
         }
     };
+
+    async edit(req: Request, res: Response) {
+        const category = await categoriesRepository.edit(Number(req.params.id));
+
+        if (category != null && category.owner != req.session.username) {
+            res.redirect("/categories");
+        } else {
+            res.render("changeCategory",
+                renderObject(req, {
+                    'category': category
+                })
+            );
+        };
+    };
+
+    async update(req: Request, res: Response) {
+        categoriesRepository.update(req.body);
+        categoriesRepository.updateLog(String(req.session.username), req.body.id)
+        req.session.messageAlert = 'category updated successfully'
+        res.redirect("/categories");
+    }
 };

@@ -8,10 +8,6 @@
 
     DATABASE_URL="mysql://root:secret@localhost:3306/project"
 
-Добавить в .env токен вашего бота Telegram(по дефолту бот <https://t.me/catalog_new_logs_bot>)
-
-    TELEGRAM_TOKEN="5746339461:AAE_3h1Yiv05YZ6ma9vCmPprfhQaazKWrFA"
-
 Выполнить миграцию БД из конфигурации ORM Prisma
 
     npx prisma migrate dev
