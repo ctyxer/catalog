@@ -16,7 +16,7 @@ export class UserRepository extends Repository implements Subject{
         const logToTelegram = new LogToTelegram();
 
         this.attach(logToFile);
-        // this.attach(logToTelegram);
+        this.attach(logToTelegram);
     }
 
     async loginUser(username: string | undefined){

@@ -16,20 +16,21 @@ export class LogToTelegram implements Logger, Observer {
         this.chatIDs = [];
         this.bot = new TelegramBot(String(process.env.TELEGRAM_TOKEN), { polling: true });
 
-        if (!fs.existsSync('./logs/chat_ids.json')) {
-            fs.appendFile('./logs/chat_ids.json', '[]', () => { });
+        if (!fs.existsSync('./logs/chat_ids.txt')) {
+            fs.appendFileSync('./logs/chat_ids.txt', '[]');
         }
+
         this.bot.onText(/\/sendLogs/, async (msg) => {
             this.bot.sendMessage(msg.chat.id, 'Wait please...')
             this.addChatID(msg.chat.id);
         });
     }
 
-    addChatID(id: number) {
-        let data = JSON.parse(fs.readFileSync('./logs/chat_ids.json', 'utf8'));
+    async addChatID(id: number) {
+        let data = JSON.parse(fs.readFileSync('./logs/chat_ids.txt', 'utf-8'));
         if (!data.includes(id)) {
             data.push(id);
-            fs.writeFile('./logs/chat_ids.json', JSON.stringify(data), (err) => { });
+            fs.writeFileSync('./logs/chat_ids.txt', JSON.stringify(data));
             this.bot.sendMessage(id, `Done! Your chat id: ${id}`);
         } else {
             this.bot.sendMessage(id, "You are already receiving logs");
@@ -41,7 +42,7 @@ export class LogToTelegram implements Logger, Observer {
     }
 
     async addLog() {
-        this.chatIDs = JSON.parse(fs.readFileSync('./logs/chat_ids.json', 'utf8'));
+        this.chatIDs = JSON.parse(fs.readFileSync('./logs/chat_ids.txt', 'utf8'));
         this.chatIDs.forEach((chatID) => {
             this.bot.sendMessage(chatID, this.message);
         });

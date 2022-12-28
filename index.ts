@@ -10,6 +10,10 @@ import { CategoriesController } from './src/controllers/CategoriesController';
 
 const app: Express = express();
 
+app.listen(5000, () => {
+    console.log('Server is running on port 5000');
+});
+
 //Controllers
 const itemsController = new ItemsController();
 const userController = new UserController();
@@ -22,9 +26,6 @@ app.use(express.urlencoded({ extended: true }))
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-app.listen(5000, () => {
-    console.log('Server is running on port 5000');
-});
 
 // Путь к директории файлов ресурсов (css, js, images)
 app.use(express.static("public"));
