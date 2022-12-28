@@ -8,3 +8,4 @@ public/css/output.css
 public/img/*.*
 logs/*.txt
 dist/logs
+*.pptx
