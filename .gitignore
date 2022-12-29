@@ -4,6 +4,7 @@ node_modules
 prisma/migrations
 dist/*.js
 dist/src
+dist/prisma
 public/css/output.css
 public/img/*.*
 logs/*.txt
