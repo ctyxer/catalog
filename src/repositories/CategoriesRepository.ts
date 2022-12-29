@@ -2,6 +2,7 @@ import { Subject } from "../contracts/Observer/Subject";
 import { Repository } from "./Repository";
 import { LogToFile } from '../contracts/Logger/LogToFile';
 import { PrismaClient } from "@prisma/client";
+import { brotliDecompressSync } from "zlib";
 
 const prisma: PrismaClient = new PrismaClient();
 
@@ -61,6 +62,25 @@ export class CategoriesRepository extends Repository implements Subject {
         });
     } 
 
+    async edit(id: number){
+        return prisma.categories.findFirst({
+            where: { 
+                id: id
+            }
+        })
+    }
+
+    async update(body: any){
+        await prisma.categories.update({
+            where: {
+                id: Number(body.id)
+            },
+            data: {
+                name: body.name
+            }
+        });
+    }
+
 
     //logs
     log(message: string){
@@ -78,6 +98,14 @@ export class CategoriesRepository extends Repository implements Subject {
     deleteLog(username: string, id: number){
         this.observers.forEach(observer => {
             observer.setMessage(`user ${username} deleted category id=${id}`);
+        });
+
+        this.notify();   
+    }
+
+    updateLog(username: string, id: number){
+        this.observers.forEach(observer => {
+            observer.setMessage(`user ${username} updated category id=${id}`);
         });
 
         this.notify();   

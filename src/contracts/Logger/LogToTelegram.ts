@@ -21,7 +21,7 @@ export class LogToTelegram implements Logger, Observer {
         }
 
         this.bot.onText(/\/sendLogs/, async (msg) => {
-            this.bot.sendMessage(msg.chat.id, 'Wait please...')
+            this.bot.sendMessage(msg.chat.id, 'Wait please...');
             this.addChatID(msg.chat.id);
         });
     }
