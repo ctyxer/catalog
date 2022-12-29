@@ -16,8 +16,8 @@ export class LogToTelegram implements Logger, Observer {
         this.chatIDs = [];
         this.bot = new TelegramBot(String(process.env.TELEGRAM_TOKEN), { polling: true });
 
-        if (!fs.existsSync('./logs/chat_ids.txt')) {
-            fs.appendFileSync('./logs/chat_ids.txt', '[]');
+        if (!fs.existsSync('./logs/chatIds.txt')) {
+            fs.appendFileSync('./logs/chatIds.txt', '[]');
         }
 
         this.bot.onText(/\/sendLogs/, async (msg) => {
@@ -27,10 +27,10 @@ export class LogToTelegram implements Logger, Observer {
     }
 
     async addChatID(id: number) {
-        let data = JSON.parse(fs.readFileSync('./logs/chat_ids.txt', 'utf-8'));
+        let data = JSON.parse(fs.readFileSync('./logs/chatIds.txt', 'utf-8'));
         if (!data.includes(id)) {
             data.push(id);
-            fs.writeFileSync('./logs/chat_ids.txt', JSON.stringify(data));
+            fs.writeFileSync('./logs/chatIds.txt', JSON.stringify(data));
             this.bot.sendMessage(id, `Done! Your chat id: ${id}`);
         } else {
             this.bot.sendMessage(id, "You are already receiving logs");
@@ -42,7 +42,7 @@ export class LogToTelegram implements Logger, Observer {
     }
 
     async addLog() {
-        this.chatIDs = JSON.parse(fs.readFileSync('./logs/chat_ids.txt', 'utf8'));
+        this.chatIDs = JSON.parse(fs.readFileSync('./logs/chatIds.txt', 'utf8'));
         this.chatIDs.forEach((chatID) => {
             this.bot.sendMessage(chatID, this.message);
         });

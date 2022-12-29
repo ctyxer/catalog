@@ -11,9 +11,11 @@
 <div class="font-bold m-4">
   <p>No Items</p>
 </div>
-<% } %>
+<% } else { %>
 
 <%- include('particles/sort.ejs') %>
+
+<% } %> 
 
 <% for (let i=0; i < items.length; i++) { %>
 <div name="item" class="bg-white rounded-md border-4 border-black p-3 m-1">
