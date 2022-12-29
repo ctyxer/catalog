@@ -72,6 +72,6 @@ export class UserRepository extends Repository implements Subject{
     }
 
     registerUserLog(ip: number | string, username: string | undefined){
-        `${ip} is registering on account ${username}`
+        this.log(`${ip} is registering on account ${username}`);
     }
 }

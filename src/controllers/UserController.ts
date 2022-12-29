@@ -65,7 +65,7 @@ export class UserController {
                 })
             );
         } else {
-            const data = await userRepository.registerUserFindFirst(req.session.username);
+            const data = await userRepository.registerUserFindFirst(req.body.username);
             if (data != null) {
                 res.render('register',
                     renderObject(req, {
@@ -73,8 +73,8 @@ export class UserController {
                     })
                 );
             } else {
-                userRepository.registerUserLog(ip.address(), req.session.username);
-                userRepository.registerUserCreate(req.session.username, req.body.password);
+                userRepository.registerUserLog(ip.address(), req.body.username);
+                userRepository.registerUserCreate(req.body.username, req.body.password);
                 req.session.auth = true;
                 req.session.username = [req.body.username][0];
                 res.redirect('/');
